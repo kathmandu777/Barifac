@@ -204,6 +204,7 @@ optional = false
 python-versions = ">=3.6.1"
 
 [package.dependencies]
+python-dotenv = {version = ">=0.10.4", optional = true, markers = "extra == \"dotenv\""}
 typing-extensions = ">=3.7.4.3"
 
 [package.extras]
@@ -388,7 +389,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "48eb8eb5891a0a8a230c2ec98b195ef45fa26c2dca29748cb122e24cf47510df"
+content-hash = "45cb4baacb074f1ef39506662bdffde3806e9be2becb37f9c4725446a221e61c"
 
 [metadata.files]
 aiomysql = [

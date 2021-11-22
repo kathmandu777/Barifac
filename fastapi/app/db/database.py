@@ -1,19 +1,9 @@
-import os
-
+from app.core.settings import get_env
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-DB_USER: str = os.getenv("DB_USER", "")
-DB_NAME: str = os.getenv("DB_USER", "")
-DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
-DB_HOST: str = os.getenv("DB_HOST", "")
-DB_PORT: str = os.getenv("DB_PORT", "")
-DB_NAME: str = os.getenv("DB_NAME", "")
-DATABASE_URL: str = (
-    f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
-
+DATABASE_URL: str = get_env().db_url
 
 engine = create_engine(DATABASE_URL, echo=True)
 local_session = scoped_session(
