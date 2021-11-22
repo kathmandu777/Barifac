@@ -1,0 +1,42 @@
+{
+  "name": "barifac",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "husky": "^4.3.8",
+    "lint-staged": "^12.1.1",
+    "markdownlint": "^0.24.0",
+    "markdownlint-cli": "^0.29.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "lint-staged"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kathmandu777/barifac.git"
+  },
+  "author": "kathmandu777",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kathmandu777/barifac/issues"
+  },
+  "homepage": "https://github.com/kathmandu777/barifac#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+      "*.py": [
+        "isort -m 3",
+        "autoflake -i --remove-all-unused-imports --ignore-init-module-imports --remove-unused-variables",
+        "black",
+        "flake8"
+      ],
+      "*.md": [
+        "markdownlint -f"
+      ]
+  }
+}
