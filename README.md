@@ -18,6 +18,7 @@
 
    ```bash
    build
+   docker-compose run --entrypoint "poetry install" fastapi
    up
    ```
 
