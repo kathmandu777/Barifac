@@ -21,12 +21,12 @@ useradd -u $USER_ID -o -m $USER_NAME
 groupadd -g $GROUP_ID $USER_NAME
 
 # migration & seed
-# cd /src/app/db
+cd /src/app/db
 # poetry run alembic upgrade head
-# poetry run python seed.py
+poetry run python seed.py
 
 # fastapiサーバーの起動
-# cd /src
-# poetry run uvicorn app.main:app --host 0.0.0.0 --reload
+cd /src
+poetry run uvicorn app.main:app --host 0.0.0.0 --reload
 
 exec /usr/sbin/gosu $USER_NAME "$@"
