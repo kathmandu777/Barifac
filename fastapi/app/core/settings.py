@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     db_password: str = "password"
     db_url: str = f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{str(db_port)}/{db_name}"
 
+    # cors
+    allow_origins: list = ["*"]
+    allow_headers: list = ["*"]
+
     class Config:
         env_file = os.path.join(BASE_DIR, "fastapi.env")
 
