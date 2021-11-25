@@ -1,0 +1,18 @@
+name: Check type & Lint
+
+on: push
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+      - name: npm setup
+        run: |
+          npm ci
+      - name: Check type
+        run: npm run type
