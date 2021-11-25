@@ -28,6 +28,8 @@ services:
     tty: true
     volumes:
       - pgadmin4_data:/var/lib/pgadmin
+    logging:
+      driver: none
 volumes:
   postgres_data:
   pgadmin4_data:
