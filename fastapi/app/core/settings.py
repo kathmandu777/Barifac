@@ -16,10 +16,14 @@ class Settings(BaseSettings):
     db_port: int = 5432
     db_user: str = "postgres"
     db_password: str = "password"
-    db_url: str = f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{str(db_port)}/{db_name}"
 
     class Config:
         env_file = os.path.join(BASE_DIR, "fastapi.env")
+
+    @property
+    def db_url(self):
+        s = Settings()
+        return f"postgresql+psycopg2://{s.db_user}:{s.db_password}@{s.db_host}:{str(s.db_port)}/{s.db_name}"
 
 
 @lru_cache
