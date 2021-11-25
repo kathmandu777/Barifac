@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     db_user: str = "postgres"
     db_password: str = "password"
 
+    # cors
+    allow_origins: list = ["*"]
+    allow_headers: list = ["*"]
+
     class Config:
         env_file = os.path.join(BASE_DIR, "fastapi.env")
 

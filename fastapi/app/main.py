@@ -1,12 +1,15 @@
 from fastapi import APIRouter, FastAPI
 
-from .middlwares import DBSessionMiddleware, HttpRequestMiddleware
+from .middlwares import DBSessionMiddleware, HttpRequestMiddleware, CORSMiddleware
 from .routers.v1 import api_v1_router
 from .routers.monitoring import monitoring_router
 
 app = FastAPI()
+
+# middlewares (後に追加したものが先に実行される)
 app.add_middleware(DBSessionMiddleware)
 app.add_middleware(HttpRequestMiddleware)
+app.add_middleware(CORSMiddleware)
 
 router = APIRouter()
 router.include_router(monitoring_router, tags=["monitoring"])
