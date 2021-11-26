@@ -2,7 +2,7 @@ import { Grade, User } from '.';
 
 export interface UserObject {
   id: number;
-  uid: number;
+  uid: string;
   name: string;
   email: string;
   school: string;
