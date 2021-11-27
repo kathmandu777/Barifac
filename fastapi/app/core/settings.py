@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     db_port: int = 5432
     db_user: str = "postgres"
     db_password: str = "password"
+    dp_engine: str = "postgresql+psycopg2"
 
     # cors
     allow_origins: list = ["*"]
