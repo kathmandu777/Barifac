@@ -258,3 +258,7 @@ cython_debug/
 ### custom settings ###
 *.env
 node_modules/
+
+# typescript
+*.tsbuildinfo
+
