@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     db_port: int = 5432
     db_user: str = "postgres"
     db_password: str = "password"
-    dp_engine: str = "postgresql+psycopg2"
+    db_engine: str = "postgresql+psycopg2"
 
     # cors
     allow_origins: list = ["*"]
@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     @property
     def db_url(self):
         s = Settings()
-        return f"postgresql+psycopg2://{s.db_user}:{s.db_password}@{s.db_host}:{str(s.db_port)}/{s.db_name}"
+        return f"{s.db_engine}://{s.db_user}:{s.db_password}@{s.db_host}:{str(s.db_port)}/{s.db_name}"
 
 
 @lru_cache
