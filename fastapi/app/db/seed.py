@@ -1,6 +1,10 @@
+from logging import getLogger
+
 from app.crud import UserCRUD
 from app.schemas import CreateUserSchema
 from database import get_db_session
+
+logger = getLogger(__name__)
 
 db_session = get_db_session()
 
@@ -19,16 +23,16 @@ def seed_users():
                 password=user["password"],
             )
             created_user = UserCRUD(db_session).create(user_schema.dict())
-            print(f"Created {created_user.username}")
+            logger.info(f"Created {created_user.username}")
         else:
-            print(
+            logger.info(
                 f"Skipped to create {user['username']} because that user is already exists."
             )
     db_session.commit()
 
 
 if __name__ == "__main__":
-    print("Seeding data...")
+    logger.info("Seeding data...")
     # call seed function for each model
     seed_users()
-    print("done")
+    logger.info("done")
