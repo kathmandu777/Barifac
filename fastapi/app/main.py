@@ -6,6 +6,8 @@ from pytz import timezone
 
 from fastapi import APIRouter, FastAPI
 
+from .core.exceptions import ApiException
+from .core.handlers import api_exception_handler
 from .core.log import LogConfig
 from .middlwares import CORSMiddleware, DBSessionMiddleware, HttpRequestMiddleware
 from .routers.monitoring import monitoring_router
@@ -20,6 +22,15 @@ logging.Formatter.converter = tokyoTime
 logging.config.dictConfig(LogConfig().dict())
 
 app = FastAPI()
+
+# exception handler
+"""
+TODO
+As far as I know, everyone doesn't work this properly.
+So, at this stage, I left this code as comment out.
+"""
+# app.add_exception_handler(Exception, system_exception_handler)
+app.add_exception_handler(ApiException, api_exception_handler)
 
 # middlewares (後に追加したものが先に実行される)
 app.add_middleware(DBSessionMiddleware)
