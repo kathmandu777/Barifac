@@ -27,6 +27,6 @@ poetry run python seed.py
 
 # fastapiサーバーの起動
 cd /src
-poetry run uvicorn app.main:app --host 0.0.0.0 --reload
+poetry run uvicorn app.main:app --host 0.0.0.0 --reload --use-colors
 
 exec /usr/sbin/gosu $USER_NAME "$@"
