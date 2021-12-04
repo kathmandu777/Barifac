@@ -1,12 +1,19 @@
 from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel
+from app.core.constants import (
+    PASSWORD_MIN_LENGTH,
+    USERNAME_MAX_LENGTH,
+    USERNAME_MIN_LENGTH,
+)
+from pydantic import BaseModel, Field
 
 
 class BaseUserSchema(BaseModel):
-    username: str
-    email: str
+    username: str = Field(
+        ..., min_length=USERNAME_MIN_LENGTH, max_length=USERNAME_MAX_LENGTH
+    )
+    email: str = Field(..., regex=r"[^\s]+@[^\s]+")
 
     class Config:
         orm_mode = True
@@ -14,12 +21,12 @@ class BaseUserSchema(BaseModel):
 
 class CreateUserSchema(BaseUserSchema):
     uid: Optional[str]
-    password: Optional[str]
+    password: Optional[str] = Field(..., min_length=PASSWORD_MIN_LENGTH)
 
 
 class UpdateUserSchema(BaseUserSchema):
     uid: Optional[str]
-    password: Optional[str]
+    password: Optional[str] = Field(..., min_length=PASSWORD_MIN_LENGTH)
     is_admin: bool
 
 
