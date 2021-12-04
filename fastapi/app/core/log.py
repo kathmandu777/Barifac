@@ -66,4 +66,8 @@ class LogConfig(BaseModel):
             "propagate": True,
             "level": "WARNING",
         },
+        "app": {
+            "handlers": ["console", "file"],
+            "level": LOG_LOGGER_LEVEL,
+        },
     }
