@@ -1,5 +1,5 @@
 import sys
-
+from typing import Type
 
 from fastapi import HTTPException, status
 
@@ -13,8 +13,22 @@ class FAILURE_LOGIN(BaseError):
     detail = "Failure login"
 
 
+class INVALID_EMAIL_OR_PASSWORD(BaseError):
+    detail = "email or password was incorrect."
+
+
+class INVALID_TOKEN(BaseError):
+    code = status.HTTP_401_UNAUTHORIZED
+    detail = "Invalid token"
+
+
+class EXPIRED_TOKEN(BaseError):
+    code = status.HTTP_401_UNAUTHORIZED
+    detail = "Token was expired."
+
+
 class ApiException(HTTPException):
-    def __init__(self, *errors: BaseError) -> None:
+    def __init__(self, *errors: Type[BaseError]) -> None:
         self.status_code = status.HTTP_400_BAD_REQUEST
         self.detail = [
             {
@@ -27,7 +41,7 @@ class ApiException(HTTPException):
 
 
 class SystemException(HTTPException):
-    def __init__(self, e: Exception) -> None:
+    def __init__(self, e: Type[Exception]) -> None:
         _, value, _ = sys.exc_info()
         self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         self.detail = [
