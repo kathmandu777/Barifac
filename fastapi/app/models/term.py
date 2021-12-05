@@ -1,4 +1,5 @@
 from sqlalchemy import VARCHAR, Column, Integer
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import UniqueConstraint
 
 from ..models import BaseModelMixin
@@ -10,3 +11,5 @@ class Term(BaseModelMixin):
 
     academic_year = Column(Integer, nullable=False)
     semester = Column(VARCHAR(10), nullable=False)
+
+    subjects = relationship("Subject", backref="term")

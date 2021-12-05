@@ -11,3 +11,4 @@ class School(BaseModelMixin):
 
     departments = relationship("Department", backref="school")
     teachers = relationship("Teacher", backref="school")
+    subjects = relationship("Subject", backref="school")
