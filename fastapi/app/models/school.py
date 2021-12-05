@@ -10,3 +10,4 @@ class School(BaseModelMixin):
     name = Column(VARCHAR(100), unique=True, nullable=False)
 
     departments = relationship("Department", backref="school")
+    teachers = relationship("Teacher", backref="school")
