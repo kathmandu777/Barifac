@@ -1,5 +1,6 @@
 from sqlalchemy import VARCHAR, Column, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
 
 from ..models import BaseModelMixin
@@ -23,3 +24,5 @@ class Evaluation(BaseModelMixin):
     )
     rate = Column(Integer, nullable=False)
     type = Column(VARCHAR(20), nullable=False)
+
+    scores = relationship("Score", backref="evaluation")

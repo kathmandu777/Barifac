@@ -1,5 +1,6 @@
 from sqlalchemy import VARCHAR, Column, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
 
 from ..models import BaseModelMixin
@@ -20,3 +21,5 @@ class AttendSubject(BaseModelMixin):
     )
     target_value = Column(VARCHAR(1), nullable=False)
     target_score = Column(Integer, nullable=False)
+
+    scores = relationship("Score", backref="attend_subject")

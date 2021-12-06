@@ -5,6 +5,7 @@ from .comment import SubjectComment, TeacherComment
 from .department import Department
 from .evaluation import Evaluation
 from .school import School
+from .score import Score
 from .subject import Subject
 from .teacher import Teacher
 from .term import Term
