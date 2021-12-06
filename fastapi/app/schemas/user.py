@@ -21,12 +21,12 @@ class BaseUserSchema(BaseModel):
 
 class CreateUserSchema(BaseUserSchema):
     uid: Optional[str]
-    password: Optional[str] = Field(..., min_length=PASSWORD_MIN_LENGTH)
+    password: Optional[str] = Field(None, min_length=PASSWORD_MIN_LENGTH)
 
 
 class UpdateUserSchema(BaseUserSchema):
     uid: Optional[str]
-    password: Optional[str] = Field(..., min_length=PASSWORD_MIN_LENGTH)
+    password: Optional[str] = Field(None, min_length=PASSWORD_MIN_LENGTH)
     is_admin: bool
 
 

@@ -27,6 +27,10 @@ class EXPIRED_TOKEN(BaseError):
     detail = "Token was expired."
 
 
+class UID_OR_PASSWORD_MUST_BE_SET(BaseError):
+    detail = "uid or password must be set."
+
+
 class ApiException(HTTPException):
     def __init__(self, *errors: Type[BaseError]) -> None:
         self.status_code = status.HTTP_400_BAD_REQUEST
