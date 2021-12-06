@@ -32,4 +32,5 @@ class Subject(BaseModelMixin):
     credits = Column(Integer, nullable=False)
 
     evaluations = relationship("Evaluation", backref="subject")
+    # TODO: fix variable name
     attend_subjects = relationship("AttendSubject", backref="subject")
