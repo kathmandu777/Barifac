@@ -18,3 +18,4 @@ class User(BaseModelMixin):
 
     attend_subjects = relationship("AttendSubject", backref="user")
     teacher_comments = relationship("TeacherComment", backref="user")
+    subject_comments = relationship("SubjectComment", backref="user")
