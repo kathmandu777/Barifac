@@ -1,5 +1,6 @@
 from sqlalchemy import VARCHAR, Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
 
 from ..models import BaseModelMixin
@@ -15,3 +16,5 @@ class Department(BaseModelMixin):
         ForeignKey("schools.uuid"),
         nullable=False,
     )
+
+    users = relationship("User", backref="department")
