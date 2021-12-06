@@ -1,5 +1,6 @@
 from sqlalchemy import VARCHAR, Column, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
 
 from ..models import BaseModelMixin
@@ -29,3 +30,5 @@ class Subject(BaseModelMixin):
         nullable=False,
     )
     credits = Column(Integer, nullable=False)
+
+    evaluations = relationship("Evaluation", backref="subject")
