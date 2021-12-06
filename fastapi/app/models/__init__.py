@@ -1,6 +1,7 @@
 from .base import BaseModelMixin  # isort:skip
 
 from .attend_subject import AttendSubject
+from .comment import TeacherComment
 from .department import Department
 from .evaluation import Evaluation
 from .school import School

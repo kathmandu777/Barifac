@@ -17,3 +17,4 @@ class User(BaseModelMixin):
     is_active = Column(BOOLEAN, nullable=False, default=True)
 
     attend_subjects = relationship("AttendSubject", backref="user")
+    teacher_comments = relationship("TeacherComment", backref="user")

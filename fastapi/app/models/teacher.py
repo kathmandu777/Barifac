@@ -19,3 +19,4 @@ class Teacher(BaseModelMixin):
     )
 
     subjects = relationship("Subject", backref="teacher")
+    comments = relationship("TeacherComment", backref="teacher")
