@@ -1,4 +1,5 @@
 from sqlalchemy import BOOLEAN, VARCHAR, Column, String
+from sqlalchemy.orm import relationship
 
 from ..core.constants import USERNAME_MAX_LENGTH
 from ..models import BaseModelMixin
@@ -14,3 +15,5 @@ class User(BaseModelMixin):
 
     is_admin = Column(BOOLEAN, nullable=False, default=False)
     is_active = Column(BOOLEAN, nullable=False, default=True)
+
+    attend_subjects = relationship("AttendSubject", backref="user")

@@ -1,4 +1,6 @@
-from .base import BaseModelMixin
+from .base import BaseModelMixin  # isort:skip
+
+from .attend_subject import AttendSubject
 from .department import Department
 from .evaluation import Evaluation
 from .school import School
