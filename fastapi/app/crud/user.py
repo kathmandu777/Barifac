@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ..core.exceptions import UID_OR_PASSWORD_MUST_BE_SET, ApiException
 from ..core.security import get_password_hash
 from ..models import User
@@ -27,5 +29,5 @@ class UserCRUD(BaseCRUD):
         else:
             raise ApiException(UID_OR_PASSWORD_MUST_BE_SET)
 
-    def get_by_email(self, email: str) -> model:
+    def get_by_email(self, email: str) -> Optional[model]:
         return self.get_query().filter_by(email=email).first()

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ..models import School, Subject, Teacher, Term
 from .base import BaseCRUD
 
@@ -7,7 +9,7 @@ class SubjectCRUD(BaseCRUD):
 
     def get_by_name_term_school_teacher(
         self, name: str, term: Term, school: School, teacher: Teacher
-    ):
+    ) -> Optional[model]:
         return (
             self.get_query()
             .filter_by(
@@ -19,7 +21,7 @@ class SubjectCRUD(BaseCRUD):
             .first()
         )
 
-    def create(self, data: dict = {}):
+    def create(self, data: dict = {}) -> model:
         term: Term = data["term"]
         school: School = data["school"]
         name: str = data["name"]
@@ -27,10 +29,10 @@ class SubjectCRUD(BaseCRUD):
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
         return subject if subject else super().create(data)
 
-    def update(self, data: dict = {}):
+    def update(self, obj: model, data: dict = {}) -> model:
         term: Term = data["term"]
         school: School = data["school"]
         name: str = data["name"]
         teacher: Teacher = data["teacher"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
-        return subject if subject else super().update(data)
+        return subject if subject else super().update(obj, data)
