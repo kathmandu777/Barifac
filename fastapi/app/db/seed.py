@@ -1,8 +1,8 @@
 from logging import getLogger
 
-from app.crud import SchoolCRUD, UserCRUD
+from app.crud import DepartmentCRUD, SchoolCRUD, UserCRUD
 from app.db.database import get_db_session
-from app.schemas import BaseSchoolSchema, CreateUserSchema
+from app.schemas import BaseDepartmentSchema, BaseSchoolSchema, CreateUserSchema
 
 logger = getLogger(__name__)
 
@@ -50,8 +50,40 @@ def seed_schools():
     db_session.commit()
 
 
+def seed_departments():
+    departments = [
+        {"school_name": "豊田工業高等専門学校", "name": "情報工学科"},
+        {"school_name": "豊田工業高等専門学校", "name": "電気電子システム工学科"},
+        {"school_name": "豊田工業高等専門学校", "name": "環境都市工学科"},
+    ]
+
+    for department in departments:
+        school = SchoolCRUD(db_session).get_by_name(department["school_name"])
+        if not school:
+            logger.info(
+                f"Skipped to create {department['name']} because that parent's school dose not exist."
+            )
+            continue
+        if not DepartmentCRUD(db_session).get_by_school_and_name(
+            school, department["name"]
+        ):
+            department_schema = BaseDepartmentSchema(
+                school=school, name=department["name"]
+            )
+            created_department = DepartmentCRUD(db_session).create(
+                department_schema.dict()
+            )
+            logger.info(f"Created {created_department.name}")
+        else:
+            logger.info(
+                f"Skipped to create {department['name']} because that department already exists."
+            )
+    db_session.commit()
+
+
 def seed_all():
     logger.info("Seeding data...")
     seed_users()
     seed_schools()
+    seed_departments()
     logger.info("done")
