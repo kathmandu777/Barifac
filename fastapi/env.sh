@@ -12,3 +12,5 @@ alias dbupgrade='poetry run alembic upgrade head'
 alias dbdowngrade='poetry run alembic downgrade -1'
 alias dbhistory='poetry run alembic history --verbose'
 alias dbcurrent='poetry run alembic current'
+
+alias runseed='poetry run python /src/app/db/seed.py'
