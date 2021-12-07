@@ -1,8 +1,8 @@
 from logging import getLogger
 
-from app.crud import UserCRUD
-from app.schemas import CreateUserSchema
-from database import get_db_session
+from app.crud import SchoolCRUD, UserCRUD
+from app.db.database import get_db_session
+from app.schemas import BaseSchoolSchema, CreateUserSchema
 
 logger = getLogger(__name__)
 
@@ -26,13 +26,32 @@ def seed_users():
             logger.info(f"Created {created_user.username}")
         else:
             logger.info(
-                f"Skipped to create {user['username']} because that user is already exists."
+                f"Skipped to create {user['username']} because that user already exists."
             )
     db_session.commit()
 
 
-if __name__ == "__main__":
+def seed_schools():
+    schools = [
+        {"name": "豊田工業高等専門学校"},
+        {"name": "鈴鹿工業高等専門学校"},
+        {"name": "岐阜工業高等専門学校"},
+    ]
+
+    for school in schools:
+        if not SchoolCRUD(db_session).get_by_name(school["name"]):
+            school_schema = BaseSchoolSchema(name=school["name"])
+            created_school = SchoolCRUD(db_session).create(school_schema.dict())
+            logger.info(f"Created {created_school.name}")
+        else:
+            logger.info(
+                f"Skipped to create {school['name']} because that school already exists."
+            )
+    db_session.commit()
+
+
+def seed_all():
     logger.info("Seeding data...")
-    # call seed function for each model
     seed_users()
+    seed_schools()
     logger.info("done")
