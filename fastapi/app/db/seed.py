@@ -1,10 +1,18 @@
 from logging import getLogger
 
-from app.crud import DepartmentCRUD, SchoolCRUD, TeacherCRUD, TermCRUD, UserCRUD
+from app.crud import (
+    DepartmentCRUD,
+    SchoolCRUD,
+    SubjectCRUD,
+    TeacherCRUD,
+    TermCRUD,
+    UserCRUD,
+)
 from app.db.database import get_db_session
 from app.schemas import (
     BaseDepartmentSchema,
     BaseSchoolSchema,
+    BaseSubjectSchema,
     BaseTeacherSchema,
     BaseTermSchema,
     CreateUserSchema,
@@ -135,6 +143,71 @@ def seed_teachers():
     db_session.commit()
 
 
+def seed_subjects():
+    subjects = [
+        {
+            "name": "国語2A",
+            "term_year": 2020,
+            "term_semester": "前期",
+            "teacher_name": "豊田太郎",
+            "school_name": "豊田工業高等専門学校",
+            "credits": 1,
+        },
+        {
+            "name": "国語2B",
+            "term_year": 2020,
+            "term_semester": "後期",
+            "teacher_name": "豊田太郎",
+            "school_name": "豊田工業高等専門学校",
+            "credits": 1,
+        },
+    ]
+
+    for subject in subjects:
+        school = SchoolCRUD(db_session).get_by_name(subject["school_name"])
+        if not school:
+            logger.info(
+                f"Skipped to create {subject['name']} because that parent's school dose not exist."
+            )
+            continue
+
+        teacher = TeacherCRUD(db_session).get_by_name_and_school(
+            subject["teacher_name"], school
+        )
+        if not teacher:
+            logger.info(
+                f"Skipped to create {subject['name']} because that parent's teacher dose not exist."
+            )
+            continue
+
+        term = TermCRUD(db_session).get_by_year_and_semester(
+            subject["term_year"], subject["term_semester"]
+        )
+        if not term:
+            logger.info(
+                f"Skipped to create {subject['name']} because that parent's term dose not exist."
+            )
+            continue
+
+        if not SubjectCRUD(db_session).get_by_name_term_school_teacher(
+            subject["name"], term, school, teacher
+        ):
+            subject_schema = BaseSubjectSchema(
+                name=subject["name"],
+                term=term,
+                teacher=teacher,
+                school=school,
+                credits=subject["credits"],
+            )
+            created_subject = SubjectCRUD(db_session).create(subject_schema.dict())
+            logger.info(f"Created {created_subject.name}")
+        else:
+            logger.info(
+                f"Skipped to create {subject['name']} because that subject already exists."
+            )
+    db_session.commit()
+
+
 def seed_all():
     logger.info("Seeding data...")
     seed_users()
@@ -142,4 +215,5 @@ def seed_all():
     seed_departments()
     seed_terms()
     seed_teachers()
+    seed_subjects()
     logger.info("done")
