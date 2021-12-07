@@ -1,8 +1,13 @@
 from logging import getLogger
 
-from app.crud import DepartmentCRUD, SchoolCRUD, UserCRUD
+from app.crud import DepartmentCRUD, SchoolCRUD, TermCRUD, UserCRUD
 from app.db.database import get_db_session
-from app.schemas import BaseDepartmentSchema, BaseSchoolSchema, CreateUserSchema
+from app.schemas import (
+    BaseDepartmentSchema,
+    BaseSchoolSchema,
+    BaseTermSchema,
+    CreateUserSchema,
+)
 
 logger = getLogger(__name__)
 
@@ -81,9 +86,33 @@ def seed_departments():
     db_session.commit()
 
 
+def seed_terms():
+    terms = [
+        {"academic_year": 2020, "semester": "前期"},
+        {"academic_year": 2020, "semester": "後期"},
+        {"academic_year": 2021, "semester": "前期"},
+    ]
+
+    for term in terms:
+        if not TermCRUD(db_session).get_by_year_and_semester(
+            term["academic_year"], term["semester"]
+        ):
+            term_schema = BaseTermSchema(
+                academic_year=term["academic_year"], semester=term["semester"]
+            )
+            created_term = TermCRUD(db_session).create(term_schema.dict())
+            logger.info(f"Created {created_term.academic_year}-{created_term.semester}")
+        else:
+            logger.info(
+                f"Skipped to create {term['academic_year']}-{term['semester']} because that term already exists."
+            )
+    db_session.commit()
+
+
 def seed_all():
     logger.info("Seeding data...")
     seed_users()
     seed_schools()
     seed_departments()
+    seed_terms()
     logger.info("done")
