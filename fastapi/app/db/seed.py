@@ -2,6 +2,7 @@ from logging import getLogger
 
 from app.crud import (
     DepartmentCRUD,
+    EvaluationCRUD,
     SchoolCRUD,
     SubjectCRUD,
     TeacherCRUD,
@@ -11,6 +12,7 @@ from app.crud import (
 from app.db.database import get_db_session
 from app.schemas import (
     BaseDepartmentSchema,
+    BaseEvaluationSchema,
     BaseSchoolSchema,
     BaseSubjectSchema,
     BaseTeacherSchema,
@@ -152,6 +154,11 @@ def seed_subjects():
             "teacher_name": "豊田太郎",
             "school_name": "豊田工業高等専門学校",
             "credits": 1,
+            "evaluations": [
+                {"name": "中間テスト", "rate": 30, "type": "中間"},
+                {"name": "定期テスト", "rate": 50, "type": "定期"},
+                {"name": "課題", "rate": 20, "type": "課題"},
+            ],
         },
         {
             "name": "国語2B",
@@ -160,6 +167,11 @@ def seed_subjects():
             "teacher_name": "豊田太郎",
             "school_name": "豊田工業高等専門学校",
             "credits": 1,
+            "evaluations": [
+                {"name": "中間試験", "rate": 30, "type": "中間"},
+                {"name": "定期試験", "rate": 50, "type": "定期"},
+                {"name": "課題", "rate": 20, "type": "課題"},
+            ],
         },
     ]
 
@@ -205,6 +217,28 @@ def seed_subjects():
             logger.info(
                 f"Skipped to create {subject['name']} because that subject already exists."
             )
+
+        for evaluation in subject["evaluations"]:
+            parent_subject = SubjectCRUD(db_session).get_by_name_term_school_teacher(
+                subject["name"], term, school, teacher
+            )
+            if not EvaluationCRUD(db_session).get_by_name_and_subject(
+                evaluation["name"], parent_subject
+            ):
+                evaluation_schema = BaseEvaluationSchema(
+                    name=evaluation["name"],
+                    rate=evaluation["rate"],
+                    type=evaluation["type"],
+                    subject=parent_subject,
+                )
+                created_evaluation = EvaluationCRUD(db_session).create(
+                    evaluation_schema.dict()
+                )
+                logger.info(f"Created {created_evaluation.name}")
+            else:
+                logger.info(
+                    f"Skipped to create {evaluation['name']} because that evaluation already exists."
+                )
     db_session.commit()
 
 
