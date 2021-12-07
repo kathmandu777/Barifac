@@ -1,10 +1,11 @@
 from logging import getLogger
 
-from app.crud import DepartmentCRUD, SchoolCRUD, TermCRUD, UserCRUD
+from app.crud import DepartmentCRUD, SchoolCRUD, TeacherCRUD, TermCRUD, UserCRUD
 from app.db.database import get_db_session
 from app.schemas import (
     BaseDepartmentSchema,
     BaseSchoolSchema,
+    BaseTeacherSchema,
     BaseTermSchema,
     CreateUserSchema,
 )
@@ -109,10 +110,36 @@ def seed_terms():
     db_session.commit()
 
 
+def seed_teachers():
+    teachers = [
+        {"name": "豊田太郎", "school_name": "豊田工業高等専門学校"},
+        {"name": "鈴鹿太郎", "school_name": "鈴鹿工業高等専門学校"},
+        {"name": "岐阜太郎", "school_name": "岐阜工業高等専門学校"},
+    ]
+
+    for teacher in teachers:
+        school = SchoolCRUD(db_session).get_by_name(teacher["school_name"])
+        if not school:
+            logger.info(
+                f"Skipped to create {teacher['name']} because that parent's school dose not exist."
+            )
+            continue
+        if not TeacherCRUD(db_session).get_by_name_and_school(teacher["name"], school):
+            teacher_schema = BaseTeacherSchema(school=school, name=teacher["name"])
+            created_teacher = TeacherCRUD(db_session).create(teacher_schema.dict())
+            logger.info(f"Created {created_teacher.name}")
+        else:
+            logger.info(
+                f"Skipped to create {teacher['name']} because that teacher already exists."
+            )
+    db_session.commit()
+
+
 def seed_all():
     logger.info("Seeding data...")
     seed_users()
     seed_schools()
     seed_departments()
     seed_terms()
+    seed_teachers()
     logger.info("done")
