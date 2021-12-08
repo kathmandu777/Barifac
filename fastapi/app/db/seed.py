@@ -1,6 +1,7 @@
 from logging import getLogger
 
 from app.crud import (
+    AttendSubjectCRUD,
     DepartmentCRUD,
     EvaluationCRUD,
     SchoolCRUD,
@@ -11,6 +12,7 @@ from app.crud import (
 )
 from app.db.database import get_db_session
 from app.schemas import (
+    BaseAttendSubjectSchema,
     BaseDepartmentSchema,
     BaseEvaluationSchema,
     BaseSchoolSchema,
@@ -25,12 +27,7 @@ logger = getLogger(__name__)
 db_session = get_db_session()
 
 
-def seed_users():
-    users = [
-        {"username": "test1", "email": "test1@example.com", "password": "password"},
-        {"username": "test2", "email": "test2@example.com", "password": "password"},
-    ]
-
+def seed_users(users):
     for user in users:
         if not UserCRUD(db_session).get_by_email(user["email"]):
             user_schema = CreateUserSchema(
@@ -47,13 +44,7 @@ def seed_users():
     db_session.commit()
 
 
-def seed_schools():
-    schools = [
-        {"name": "豊田工業高等専門学校"},
-        {"name": "鈴鹿工業高等専門学校"},
-        {"name": "岐阜工業高等専門学校"},
-    ]
-
+def seed_schools(schools):
     for school in schools:
         if not SchoolCRUD(db_session).get_by_name(school["name"]):
             school_schema = BaseSchoolSchema(name=school["name"])
@@ -66,13 +57,7 @@ def seed_schools():
     db_session.commit()
 
 
-def seed_departments():
-    departments = [
-        {"school_name": "豊田工業高等専門学校", "name": "情報工学科"},
-        {"school_name": "豊田工業高等専門学校", "name": "電気電子システム工学科"},
-        {"school_name": "豊田工業高等専門学校", "name": "環境都市工学科"},
-    ]
-
+def seed_departments(departments):
     for department in departments:
         school = SchoolCRUD(db_session).get_by_name(department["school_name"])
         if not school:
@@ -97,13 +82,7 @@ def seed_departments():
     db_session.commit()
 
 
-def seed_terms():
-    terms = [
-        {"academic_year": 2020, "semester": "前期"},
-        {"academic_year": 2020, "semester": "後期"},
-        {"academic_year": 2021, "semester": "前期"},
-    ]
-
+def seed_terms(terms):
     for term in terms:
         if not TermCRUD(db_session).get_by_year_and_semester(
             term["academic_year"], term["semester"]
@@ -120,13 +99,7 @@ def seed_terms():
     db_session.commit()
 
 
-def seed_teachers():
-    teachers = [
-        {"name": "豊田太郎", "school_name": "豊田工業高等専門学校"},
-        {"name": "鈴鹿太郎", "school_name": "鈴鹿工業高等専門学校"},
-        {"name": "岐阜太郎", "school_name": "岐阜工業高等専門学校"},
-    ]
-
+def seed_teachers(teachers):
     for teacher in teachers:
         school = SchoolCRUD(db_session).get_by_name(teacher["school_name"])
         if not school:
@@ -145,36 +118,7 @@ def seed_teachers():
     db_session.commit()
 
 
-def seed_subjects():
-    subjects = [
-        {
-            "name": "国語2A",
-            "term_year": 2020,
-            "term_semester": "前期",
-            "teacher_name": "豊田太郎",
-            "school_name": "豊田工業高等専門学校",
-            "credits": 1,
-            "evaluations": [
-                {"name": "中間テスト", "rate": 30, "type": "中間"},
-                {"name": "定期テスト", "rate": 50, "type": "定期"},
-                {"name": "課題", "rate": 20, "type": "課題"},
-            ],
-        },
-        {
-            "name": "国語2B",
-            "term_year": 2020,
-            "term_semester": "後期",
-            "teacher_name": "豊田太郎",
-            "school_name": "豊田工業高等専門学校",
-            "credits": 1,
-            "evaluations": [
-                {"name": "中間試験", "rate": 30, "type": "中間"},
-                {"name": "定期試験", "rate": 50, "type": "定期"},
-                {"name": "課題", "rate": 20, "type": "課題"},
-            ],
-        },
-    ]
-
+def seed_subjects(subjects):
     for subject in subjects:
         school = SchoolCRUD(db_session).get_by_name(subject["school_name"])
         if not school:
@@ -242,12 +186,94 @@ def seed_subjects():
     db_session.commit()
 
 
+def seed_attend_subjects(attend_subjects):
+    for attend_subject in attend_subjects:
+        user = UserCRUD(db_session).get_by_email(attend_subject["user"]["email"])
+        if not user:
+            logger.info(
+                f"Skipped to create {attend_subject['subject']['name']}-{attend_subject['user']['username']}"
+                " because that parent's user dose not exist."
+            )
+            continue
+
+        school = SchoolCRUD(db_session).get_by_name(
+            attend_subject["subject"]["school_name"]
+        )
+        if not school:
+            logger.info(
+                f"Skipped to create {attend_subject['subject']['name']}-{attend_subject['user']['username']}"
+                "because that parent's school dose not exist."
+            )
+            continue
+
+        teacher = TeacherCRUD(db_session).get_by_name_and_school(
+            attend_subject["subject"]["teacher_name"], school
+        )
+        if not teacher:
+            logger.info(
+                f"Skipped to create {attend_subject['subject']['name']}-{attend_subject['user']['username']}"
+                "because that parent's teacher dose not exist."
+            )
+            continue
+
+        term = TermCRUD(db_session).get_by_year_and_semester(
+            attend_subject["subject"]["term_year"],
+            attend_subject["subject"]["term_semester"],
+        )
+        if not term:
+            logger.info(
+                f"Skipped to create {attend_subject['subject']['name']}-{attend_subject['user']['username']}"
+                "because that parent's term dose not exist."
+            )
+            continue
+
+        subject = SubjectCRUD(db_session).get_by_name_term_school_teacher(
+            attend_subject["subject"]["name"], term, school, teacher
+        )
+        if not subject:
+            logger.info(
+                f"Skipped to create {attend_subject['name']} because that parent's subject dose not exist."
+            )
+            continue
+
+        if not AttendSubjectCRUD(db_session).get_by_user_and_subject(user, subject):
+            attend_subject_schema = BaseAttendSubjectSchema(
+                user=user,
+                subject=subject,
+                target_value=attend_subject["target_value"],
+                target_score=attend_subject["target_score"],
+            )
+            created_attend_subject = AttendSubjectCRUD(db_session).create(
+                attend_subject_schema.dict()
+            )
+            logger.info(
+                f"Created {created_attend_subject.subject.name}-{created_attend_subject.user.username}"
+            )
+        else:
+            logger.info(
+                f"Skipped to create {attend_subject['subject']['name']}-{attend_subject['user']['username']}"
+                "because that attend_subject already exists."
+            )
+    db_session.commit()
+
+
 def seed_all():
+    from .data import (
+        ATTEND_SUBJECTS,
+        DEPARTMENTS,
+        SCHOOLS,
+        SUBJECTS,
+        TEACHERS,
+        TERMS,
+        USERS,
+    )
+
     logger.info("Seeding data...")
-    seed_users()
-    seed_schools()
-    seed_departments()
-    seed_terms()
-    seed_teachers()
-    seed_subjects()
+    seed_users(USERS)
+    seed_schools(SCHOOLS)
+    seed_departments(DEPARTMENTS)
+    seed_terms(TERMS)
+    seed_teachers(TEACHERS)
+    seed_subjects(SUBJECTS)
+    seed_attend_subjects(ATTEND_SUBJECTS)
     logger.info("done")

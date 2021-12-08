@@ -1,3 +1,4 @@
+from .attend_subject import *
 from .department import *
 from .evaluation import *
 from .school import *

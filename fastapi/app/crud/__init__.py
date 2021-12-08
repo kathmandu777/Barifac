@@ -1,3 +1,4 @@
+from .attend_subject import AttendSubjectCRUD
 from .base import BaseCRUD
 from .department import DepartmentCRUD
 from .evaluation import EvaluationCRUD
