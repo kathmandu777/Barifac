@@ -61,3 +61,24 @@ TEACHERS = [
     {"name": "鈴鹿太郎", "school_name": "鈴鹿工業高等専門学校"},
     {"name": "岐阜太郎", "school_name": "岐阜工業高等専門学校"},
 ]
+
+SCORES = [
+    {
+        "attend_subject": ATTEND_SUBJECTS[0],
+        "evaluation": ATTEND_SUBJECTS[0]["subject"]["evaluations"][0],
+        "got_score": 80,
+        "max_score": 100,
+    },
+    {
+        "attend_subject": ATTEND_SUBJECTS[0],
+        "evaluation": ATTEND_SUBJECTS[0]["subject"]["evaluations"][2],
+        "got_score": 70,
+        "max_score": 100,
+    },
+    {
+        "attend_subject": ATTEND_SUBJECTS[0],
+        "evaluation": ATTEND_SUBJECTS[0]["subject"]["evaluations"][2],
+        "got_score": 45,
+        "max_score": 50,
+    },
+]

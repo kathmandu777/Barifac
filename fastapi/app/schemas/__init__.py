@@ -2,6 +2,7 @@ from .attend_subject import *
 from .department import *
 from .evaluation import *
 from .school import *
+from .score import *
 from .subject import *
 from .teacher import *
 from .term import *

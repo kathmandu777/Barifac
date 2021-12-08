@@ -5,6 +5,7 @@ from app.crud import (
     DepartmentCRUD,
     EvaluationCRUD,
     SchoolCRUD,
+    ScoreCRUD,
     SubjectCRUD,
     TeacherCRUD,
     TermCRUD,
@@ -16,6 +17,7 @@ from app.schemas import (
     BaseDepartmentSchema,
     BaseEvaluationSchema,
     BaseSchoolSchema,
+    BaseScoreSchema,
     BaseSubjectSchema,
     BaseTeacherSchema,
     BaseTermSchema,
@@ -257,11 +259,110 @@ def seed_attend_subjects(attend_subjects):
     db_session.commit()
 
 
+# TODO: ユニーク制約ないので実行するたびに同じレコードが生成される
+def seed_scores(scores):
+    for score in scores:
+        subject_name = score["attend_subject"]["subject"]["name"]
+        username = score["attend_subject"]["user"]["username"]
+
+        user = UserCRUD(db_session).get_by_email(
+            score["attend_subject"]["user"]["email"]
+        )
+        if not user:
+            logger.info(
+                f"Skipped to create {subject_name}-{username}"
+                f"-{score['got_score']}/{score['max_score']}"
+                " because that parent's user dose not exist."
+            )
+            continue
+
+        school = SchoolCRUD(db_session).get_by_name(
+            score["attend_subject"]["subject"]["school_name"]
+        )
+        if not school:
+            logger.info(
+                f"Skipped to create {subject_name}-{username}"
+                f"-{score['got_score']}/{score['max_score']}"
+                "because that parent's school dose not exist."
+            )
+            continue
+
+        teacher = TeacherCRUD(db_session).get_by_name_and_school(
+            score["attend_subject"]["subject"]["teacher_name"], school
+        )
+        if not teacher:
+            logger.info(
+                f"Skipped to create {subject_name}-{username}"
+                f"-{score['got_score']}/{score['max_score']}"
+                "because that parent's teacher dose not exist."
+            )
+            continue
+
+        term = TermCRUD(db_session).get_by_year_and_semester(
+            score["attend_subject"]["subject"]["term_year"],
+            score["attend_subject"]["subject"]["term_semester"],
+        )
+        if not term:
+            logger.info(
+                f"Skipped to create {subject_name}-{username}"
+                f"-{score['got_score']}/{score['max_score']}"
+                "because that parent's term dose not exist."
+            )
+            continue
+
+        subject = SubjectCRUD(db_session).get_by_name_term_school_teacher(
+            score["attend_subject"]["subject"]["name"], term, school, teacher
+        )
+        if not subject:
+            logger.info(
+                f"Skipped to create {subject_name}-{username}"
+                f"-{score['got_score']}/{score['max_score']}"
+                "because that parent's subject dose not exist."
+            )
+            continue
+
+        attend_subject = AttendSubjectCRUD(db_session).get_by_user_and_subject(
+            user, subject
+        )
+        if not attend_subject:
+            logger.info(
+                f"Skipped to create {subject_name}-{username}"
+                f"-{score['got_score']}/{score['max_score']}"
+                "because that attend_subject dose not exist."
+            )
+            continue
+
+        evaluation = EvaluationCRUD(db_session).get_by_name_and_subject(
+            score["evaluation"]["name"], subject
+        )
+        if not evaluation:
+            logger.info(
+                f"Skipped to create {subject_name}-{username}"
+                f"-{score['got_score']}/{score['max_score']}"
+                "because that evaluation dose not exist."
+            )
+            continue
+
+        score_schema = BaseScoreSchema(
+            attend_subject=attend_subject,
+            evaluation=evaluation,
+            got_score=score["got_score"],
+            max_score=score["max_score"],
+        )
+        created_score = ScoreCRUD(db_session).create(score_schema.dict())
+        logger.info(
+            f"Created {created_score.attend_subject.subject.name}-{created_score.attend_subject.user.username}"
+            f"{created_score.got_score}/{created_score.max_score}"
+        )
+    db_session.commit()
+
+
 def seed_all():
     from .data import (
         ATTEND_SUBJECTS,
         DEPARTMENTS,
         SCHOOLS,
+        SCORES,
         SUBJECTS,
         TEACHERS,
         TERMS,
@@ -276,4 +377,5 @@ def seed_all():
     seed_teachers(TEACHERS)
     seed_subjects(SUBJECTS)
     seed_attend_subjects(ATTEND_SUBJECTS)
+    seed_scores(SCORES)
     logger.info("done")

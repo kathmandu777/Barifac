@@ -3,6 +3,7 @@ from .base import BaseCRUD
 from .department import DepartmentCRUD
 from .evaluation import EvaluationCRUD
 from .school import SchoolCRUD
+from .score import ScoreCRUD
 from .subject import SubjectCRUD
 from .teacher import TeacherCRUD
 from .term import TermCRUD
