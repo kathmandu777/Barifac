@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 from app.api.v1 import UserAPI
@@ -20,7 +20,7 @@ async def gets(request: Request) -> List[ReadUserSchema]:
 @user_router.get(
     "/{uuid}", response_model=ReadUserSchema, dependencies=[Depends(login_required)]
 )
-async def get(request: Request, uuid: UUID) -> ReadUserSchema:
+async def get(request: Request, uuid: UUID) -> Optional[ReadUserSchema]:
     return UserAPI.get(request, uuid)
 
 

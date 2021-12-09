@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
+from app.core.exceptions import ApiException, create_error
 from app.crud import UserCRUD
 from app.schemas import CreateUserSchema, ReadUserSchema, UpdateUserSchema
 
@@ -13,7 +14,7 @@ class UserAPI:
         return UserCRUD(request.state.db_session).gets()
 
     @classmethod
-    def get(cls, request: Request, user_id: UUID) -> ReadUserSchema:
+    def get(cls, request: Request, user_id: UUID) -> Optional[ReadUserSchema]:
         return UserCRUD(request.state.db_session).get_by_uuid(user_id)
 
     @classmethod
@@ -24,8 +25,11 @@ class UserAPI:
     def update(
         cls, request: Request, uuid: UUID, schema: UpdateUserSchema
     ) -> UpdateUserSchema:
-        crud = UserCRUD(request.state.db_session)
-        obj = crud.get_by_uuid(uuid)
+        obj = UserCRUD(request.state.db_session).get_by_uuid(uuid)
+        if not obj:
+            raise ApiException(
+                create_error("User matching the given UUID was not found")
+            )
         return UserCRUD(request.state.db_session).update(obj, schema.dict())
 
     @classmethod
