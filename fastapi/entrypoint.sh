@@ -23,7 +23,8 @@ groupadd -g $GROUP_ID $USER_NAME
 # migration & seed
 cd /src/app/db
 poetry run alembic upgrade head
-poetry run python seed.py
+cd /src/app
+poetry run python main.py seed
 
 # fastapiサーバーの起動
 cd /src

@@ -1,4 +1,4 @@
-from typing import List, TypeVar
+from typing import List, Optional, TypeVar
 from uuid import UUID
 
 from sqlalchemy.orm import query, scoped_session
@@ -21,7 +21,7 @@ class BaseCRUD:
     def gets(self) -> List[ModelType]:
         return self.get_query().all()
 
-    def get_by_uuid(self, uuid: UUID) -> ModelType:
+    def get_by_uuid(self, uuid: UUID) -> Optional[ModelType]:
         return self.get_query().filter_by(uuid=uuid).first()
 
     def create(self, data: dict = {}) -> ModelType:

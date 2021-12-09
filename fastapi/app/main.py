@@ -1,23 +1,23 @@
+import argparse
 import logging
 import logging.config
 from datetime import datetime
 
-from pytz import timezone
-from starlette.middleware.authentication import AuthenticationMiddleware
-
-from fastapi import APIRouter, FastAPI
-
-from .core.exceptions import ApiException
-from .core.handlers import api_exception_handler
-from .core.log import LogConfig
-from .middlwares import (
+from app.core.exceptions import ApiException
+from app.core.handlers import api_exception_handler
+from app.core.log import LogConfig
+from app.middlwares import (
     BackendAuth,
     CORSMiddleware,
     DBSessionMiddleware,
     HttpRequestMiddleware,
 )
-from .routers.monitoring import monitoring_router
-from .routers.v1 import api_v1_router
+from app.routers.monitoring import monitoring_router
+from app.routers.v1 import api_v1_router
+from pytz import timezone
+from starlette.middleware.authentication import AuthenticationMiddleware
+
+from fastapi import APIRouter, FastAPI
 
 
 def tokyoTime(*args):
@@ -48,3 +48,13 @@ router = APIRouter()
 router.include_router(monitoring_router, tags=["monitoring"])
 router.include_router(api_v1_router, prefix="/api/v1", tags=["api/v1"])
 app.include_router(router)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Barifac API Server")
+    parser.add_argument("command", help="command", choices=["seed"])
+
+    args = parser.parse_args()
+    if args.command == "seed":
+        from app.db.seed import seed_all
+
+        seed_all()
