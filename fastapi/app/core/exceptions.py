@@ -31,6 +31,16 @@ class UID_OR_PASSWORD_MUST_BE_SET(BaseError):
     detail = "uid or password must be set."
 
 
+def create_error(
+    error_msg: str, error_code: int = status.HTTP_400_BAD_REQUEST
+) -> Type[BaseError]:
+    class Error(BaseError):
+        detail = error_msg
+        code = error_code
+
+    return Error
+
+
 class ApiException(HTTPException):
     def __init__(self, *errors: Type[BaseError]) -> None:
         self.status_code = status.HTTP_400_BAD_REQUEST

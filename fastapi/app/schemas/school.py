@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel
 
 
@@ -6,3 +8,15 @@ class BaseSchoolSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ReadSchoolSchema(BaseSchoolSchema):
+    uuid: UUID
+
+
+class CreateSchoolSchema(BaseSchoolSchema):
+    pass
+
+
+class UpdateSchoolSchema(BaseSchoolSchema):
+    pass
