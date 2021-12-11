@@ -1,15 +1,18 @@
 from typing import Optional
 
+from app.models import User
+from sqlalchemy.orm import scoped_session
+
 from ..core.exceptions import UID_OR_PASSWORD_MUST_BE_SET, ApiException
 from ..core.security import get_password_hash
-from ..models import User
 from .base import BaseCRUD
 
 
 class UserCRUD(BaseCRUD):
-    model = User
+    def __init__(self, db_session: scoped_session):
+        super().__init__(db_session, User)
 
-    def create(self, data: dict = {}) -> model:
+    def create(self, data: dict = {}) -> User:
         if data["password"] is not None:
             password = data.pop("password")
             data["hashed_password"] = get_password_hash(password)
@@ -19,7 +22,7 @@ class UserCRUD(BaseCRUD):
         else:
             raise ApiException(UID_OR_PASSWORD_MUST_BE_SET)
 
-    def update(self, obj: model, data: dict = {}) -> model:
+    def update(self, obj: User, data: dict = {}) -> User:
         if data["password"] is not None:
             password = data.pop("password")
             data["hashed_password"] = get_password_hash(password)
@@ -29,5 +32,5 @@ class UserCRUD(BaseCRUD):
         else:
             raise ApiException(UID_OR_PASSWORD_MUST_BE_SET)
 
-    def get_by_email(self, email: str) -> Optional[model]:
+    def get_by_email(self, email: str) -> Optional[User]:
         return self.get_query().filter_by(email=email).first()
