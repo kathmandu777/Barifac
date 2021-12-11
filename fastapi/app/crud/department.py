@@ -23,7 +23,7 @@ class DepartmentCRUD(BaseCRUD):
 
     def create(self, data: dict = {}) -> Department:
         name: str = data["name"]
-        school: Optional[School] = SchoolCRUD(db_session, School).get_by_uuid(
+        school: Optional[School] = SchoolCRUD(db_session).get_by_uuid(
             data["school_uuid"]
         )
         if not school:
@@ -33,7 +33,7 @@ class DepartmentCRUD(BaseCRUD):
 
     def update(self, obj: Department, data: dict = {}) -> Department:
         name: str = data["name"]
-        school: Optional[School] = SchoolCRUD(db_session, School).get_by_uuid(
+        school: Optional[School] = SchoolCRUD(db_session).get_by_uuid(
             data["school_uuid"]
         )
         if not school:
