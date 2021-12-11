@@ -1,6 +1,7 @@
 from typing import List, Optional, TypeVar
 from uuid import UUID
 
+from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
 from sqlalchemy.orm import query, scoped_session
 
 from ..db.database import Base
@@ -9,10 +10,9 @@ ModelType = TypeVar("ModelType", bound=Base)
 
 
 class BaseCRUD:
-    model: ModelType = None
-
-    def __init__(self, db_session: scoped_session) -> None:
+    def __init__(self, db_session: scoped_session, model: ModelType) -> None:
         self.db_session = db_session
+        self.model: ModelType = model
         self.model.query = self.db_session.query_property()
 
     def get_query(self) -> query.Query:
@@ -44,7 +44,8 @@ class BaseCRUD:
 
     def delete_by_uuid(self, uuid: UUID) -> None:
         obj = self.get_by_uuid(uuid)
-        if obj:
-            self.db_session.delete(obj)
-            self.db_session.flush()
+        if not obj:
+            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(self.model))
+        self.db_session.delete(obj)
+        self.db_session.flush()
         return None
