@@ -39,6 +39,10 @@ class NOT_FOUND_OBJ_MATCHING_UUID(BaseError):
         self.detail = f"{cls.__name__} matching the given uuid was not found."
 
 
+class SAME_OBJECT_ALREADY_EXISTS(BaseError):
+    detail = "Same object already exists."
+
+
 def create_error(
     error_msg: str, error_code: int = status.HTTP_400_BAD_REQUEST
 ) -> Type[BaseError]:
