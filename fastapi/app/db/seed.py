@@ -6,6 +6,7 @@ from app.crud import (
     EvaluationCRUD,
     SchoolCRUD,
     ScoreCRUD,
+    SubjectCommentCRUD,
     SubjectCRUD,
     TeacherCRUD,
     TermCRUD,
@@ -18,6 +19,7 @@ from app.schemas import (
     BaseEvaluationSchema,
     BaseSchoolSchema,
     BaseScoreSchema,
+    BaseSubjectCommentSchema,
     BaseSubjectSchema,
     BaseTeacherSchema,
     BaseTermSchema,
@@ -259,6 +261,79 @@ def seed_attend_subjects(attend_subjects):
     db_session.commit()
 
 
+def seed_subject_comments(subject_comments):
+    for subject_comment in subject_comments:
+        subject_name = subject_comment["subject"]["name"]
+        username = subject_comment["user"]["username"]
+
+        term = TermCRUD(db_session).get_by_year_and_semester(
+            subject_comment["subject"]["term_year"],
+            subject_comment["subject"]["term_semester"],
+        )
+        if not term:
+            logger.info(
+                f"Skipped to create subject_comment of {subject_name}-{username}"
+                " because that parent's term dose not exist."
+            )
+            continue
+
+        user = UserCRUD(db_session).get_by_email(subject_comment["user"]["email"])
+        if not user:
+            logger.info(
+                f"Skipped to create subject_comment of {subject_name}-{username}"
+                " because that parent's user dose not exist."
+            )
+            continue
+
+        school = SchoolCRUD(db_session).get_by_name(
+            subject_comment["subject"]["school_name"],
+        )
+        if not school:
+            logger.info(
+                f"Skipped to create subject_comment of {subject_name}-{username}"
+                " because that parent's school dose not exist."
+            )
+            continue
+
+        teacher = TeacherCRUD(db_session).get_by_name_and_school(
+            subject_comment["subject"]["teacher_name"],
+            school,
+        )
+        if not teacher:
+            logger.info(
+                f"Skipped to create subject_comment of {subject_name}-{username}"
+                " because that parent's teacher dose not exist."
+            )
+            continue
+
+        subject = SubjectCRUD(db_session).get_by_name_term_school_teacher(
+            subject_comment["subject"]["name"],
+            term,
+            school,
+            teacher,
+        )
+        if not subject:
+            logger.info(
+                f"Skipped to create subject_comment of {subject_name}-{username}"
+                " because that parent's subject dose not exist."
+            )
+            continue
+
+        subject_comment_schema = BaseSubjectCommentSchema(
+            subject=subject,
+            user=user,
+            comment=subject_comment["comment"],
+        )
+        created_subject_comment = SubjectCommentCRUD(db_session).create(
+            subject_comment_schema.dict()
+        )
+        logger.info(
+            f"Created subject_comment of {created_subject_comment.subject.name}-"
+            f"{created_subject_comment.user.username}-{created_subject_comment.comment}"
+        )
+    db_session.commit()
+
+
 # TODO: ユニーク制約ないので実行するたびに同じレコードが生成される
 def seed_scores(scores):
     for score in scores:
@@ -363,6 +438,7 @@ def seed_all():
         DEPARTMENTS,
         SCHOOLS,
         SCORES,
+        SUBJECT_COMMENTS,
         SUBJECTS,
         TEACHERS,
         TERMS,
@@ -378,4 +454,5 @@ def seed_all():
     seed_subjects(SUBJECTS)
     seed_attend_subjects(ATTEND_SUBJECTS)
     seed_scores(SCORES)
+    seed_subject_comments(SUBJECT_COMMENTS)
     logger.info("done")
