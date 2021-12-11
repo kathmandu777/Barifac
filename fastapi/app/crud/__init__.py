@@ -6,5 +6,6 @@ from .school import SchoolCRUD
 from .score import ScoreCRUD
 from .subject import SubjectCRUD
 from .teacher import TeacherCRUD
+from .teacher_comment import TeacherCommentCRUD
 from .term import TermCRUD
 from .user import UserCRUD

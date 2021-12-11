@@ -7,6 +7,7 @@ from app.crud import (
     SchoolCRUD,
     ScoreCRUD,
     SubjectCRUD,
+    TeacherCommentCRUD,
     TeacherCRUD,
     TermCRUD,
     UserCRUD,
@@ -19,6 +20,7 @@ from app.schemas import (
     BaseSchoolSchema,
     BaseScoreSchema,
     BaseSubjectSchema,
+    BaseTeacherCommentSchema,
     BaseTeacherSchema,
     BaseTermSchema,
     CreateUserSchema,
@@ -117,6 +119,46 @@ def seed_teachers(teachers):
             logger.info(
                 f"Skipped to create {teacher['name']} because that teacher already exists."
             )
+    db_session.commit()
+
+
+def seed_teacher_comments(teacher_comments):
+    for teacher_comment in teacher_comments:
+        user = UserCRUD(db_session).get_by_email(teacher_comment["user"]["email"])
+        if not user:
+            logger.info(
+                f"Skipped to create {teacher_comment['teacher']['name']}-{teacher_comment['user']['username']}"
+                f"-{teacher_comment['comment']} because that parent's user dose not exist."
+            )
+            continue
+        school = SchoolCRUD(db_session).get_by_name(
+            teacher_comment["teacher"]["school_name"]
+        )
+        if not school:
+            continue
+
+        teacher = TeacherCRUD(db_session).get_by_name_and_school(
+            teacher_comment["teacher"]["name"], school
+        )
+        if not teacher:
+            logger.info(
+                f"Skipped to create {teacher_comment['teacher']['name']}-{teacher_comment['user']['username']}"
+                f"-{teacher_comment['comment']} because that parent's teacher dose not exist."
+            )
+            continue
+
+        teacher_comment_scheme = BaseTeacherCommentSchema(
+            teacher=teacher,
+            user=user,
+            comment=teacher_comment["comment"],
+        )
+        created_teacher_comment = TeacherCommentCRUD(db_session).create(
+            teacher_comment_scheme.dict()
+        )
+        logger.info(
+            f"Created {created_teacher_comment.teacher.name}-{created_teacher_comment.user.username}"
+            f"-{created_teacher_comment.comment}"
+        )
     db_session.commit()
 
 
@@ -364,6 +406,7 @@ def seed_all():
         SCHOOLS,
         SCORES,
         SUBJECTS,
+        TEACHER_COMMENTS,
         TEACHERS,
         TERMS,
         USERS,
@@ -378,4 +421,5 @@ def seed_all():
     seed_subjects(SUBJECTS)
     seed_attend_subjects(ATTEND_SUBJECTS)
     seed_scores(SCORES)
+    seed_teacher_comments(TEACHER_COMMENTS)
     logger.info("done")

@@ -5,5 +5,6 @@ from .school import *
 from .score import *
 from .subject import *
 from .teacher import *
+from .teacher_comment import *
 from .term import *
 from .user import *
