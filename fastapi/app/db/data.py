@@ -105,5 +105,5 @@ SUBJECT_COMMENTS = [
 TEACHER_COMMENTS = [
     {"teacher": TEACHERS[0], "user": USERS[0], "comment": "簡単でした"},
     {"teacher": TEACHERS[1], "user": USERS[1], "comment": "簡単でした"},
-    {"teacher": TEACHERS[2], "user": USERS[2], "comment": "簡単でした"},
+    {"teacher": TEACHERS[2], "user": USERS[0], "comment": "難解でした"},
 ]

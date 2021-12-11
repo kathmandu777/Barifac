@@ -15,16 +15,16 @@ from app.crud import (
 )
 from app.db.database import get_db_session
 from app.schemas import (
-    BaseAttendSubjectSchema,
-    BaseDepartmentSchema,
-    BaseEvaluationSchema,
-    BaseSchoolSchema,
-    BaseScoreSchema,
-    BaseSubjectCommentSchema,
-    BaseSubjectSchema,
-    BaseTeacherCommentSchema,
-    BaseTeacherSchema,
-    BaseTermSchema,
+    CreateAttendSubjectSchema,
+    CreateDepartmentSchema,
+    CreateEvaluationSchema,
+    CreateSchoolSchema,
+    CreateScoreSchema,
+    CreateSubjectCommentSchema,
+    CreateSubjectSchema,
+    CreateTeacherCommentSchema,
+    CreateTeacherSchema,
+    CreateTermSchema,
     CreateUserSchema,
 )
 
@@ -53,7 +53,7 @@ def seed_users(users):
 def seed_schools(schools):
     for school in schools:
         if not SchoolCRUD(db_session).get_by_name(school["name"]):
-            school_schema = BaseSchoolSchema(name=school["name"])
+            school_schema = CreateSchoolSchema(name=school["name"])
             created_school = SchoolCRUD(db_session).create(school_schema.dict())
             logger.info(f"Created {created_school.name}")
         else:
@@ -71,11 +71,12 @@ def seed_departments(departments):
                 f"Skipped to create {department['name']} because that parent's school dose not exist."
             )
             continue
+
         if not DepartmentCRUD(db_session).get_by_school_and_name(
             school, department["name"]
         ):
-            department_schema = BaseDepartmentSchema(
-                school=school, name=department["name"]
+            department_schema = CreateDepartmentSchema(
+                school_uuid=school.uuid, name=department["name"]
             )
             created_department = DepartmentCRUD(db_session).create(
                 department_schema.dict()
@@ -93,7 +94,7 @@ def seed_terms(terms):
         if not TermCRUD(db_session).get_by_year_and_semester(
             term["academic_year"], term["semester"]
         ):
-            term_schema = BaseTermSchema(
+            term_schema = CreateTermSchema(
                 academic_year=term["academic_year"], semester=term["semester"]
             )
             created_term = TermCRUD(db_session).create(term_schema.dict())
@@ -113,8 +114,11 @@ def seed_teachers(teachers):
                 f"Skipped to create {teacher['name']} because that parent's school dose not exist."
             )
             continue
+
         if not TeacherCRUD(db_session).get_by_name_and_school(teacher["name"], school):
-            teacher_schema = BaseTeacherSchema(school=school, name=teacher["name"])
+            teacher_schema = CreateTeacherSchema(
+                school_uuid=school.uuid, name=teacher["name"]
+            )
             created_teacher = TeacherCRUD(db_session).create(teacher_schema.dict())
             logger.info(f"Created {created_teacher.name}")
         else:
@@ -133,10 +137,15 @@ def seed_teacher_comments(teacher_comments):
                 f"-{teacher_comment['comment']} because that parent's user dose not exist."
             )
             continue
+
         school = SchoolCRUD(db_session).get_by_name(
             teacher_comment["teacher"]["school_name"]
         )
         if not school:
+            logger.info(
+                f"Skipped to create {teacher_comment['teacher']['name']}-{teacher_comment['user']['username']}"
+                f"-{teacher_comment['comment']} because that parent's school dose not exist."
+            )
             continue
 
         teacher = TeacherCRUD(db_session).get_by_name_and_school(
@@ -149,9 +158,9 @@ def seed_teacher_comments(teacher_comments):
             )
             continue
 
-        teacher_comment_scheme = BaseTeacherCommentSchema(
-            teacher=teacher,
-            user=user,
+        teacher_comment_scheme = CreateTeacherCommentSchema(
+            teacher_uuid=teacher.uuid,
+            user_uuid=user.uuid,
             comment=teacher_comment["comment"],
         )
         created_teacher_comment = TeacherCommentCRUD(db_session).create(
@@ -194,11 +203,11 @@ def seed_subjects(subjects):
         if not SubjectCRUD(db_session).get_by_name_term_school_teacher(
             subject["name"], term, school, teacher
         ):
-            subject_schema = BaseSubjectSchema(
+            subject_schema = CreateSubjectSchema(
                 name=subject["name"],
-                term=term,
-                teacher=teacher,
-                school=school,
+                term_uuid=term.uuid,
+                teacher_uuid=teacher.uuid,
+                school_uuid=school.uuid,
                 credits=subject["credits"],
             )
             created_subject = SubjectCRUD(db_session).create(subject_schema.dict())
@@ -208,6 +217,7 @@ def seed_subjects(subjects):
                 f"Skipped to create {subject['name']} because that subject already exists."
             )
 
+        # TODO: fix data structure and separete evaluation seed
         for evaluation in subject["evaluations"]:
             parent_subject = SubjectCRUD(db_session).get_by_name_term_school_teacher(
                 subject["name"], term, school, teacher
@@ -215,11 +225,11 @@ def seed_subjects(subjects):
             if not EvaluationCRUD(db_session).get_by_name_and_subject(
                 evaluation["name"], parent_subject
             ):
-                evaluation_schema = BaseEvaluationSchema(
+                evaluation_schema = CreateEvaluationSchema(
                     name=evaluation["name"],
                     rate=evaluation["rate"],
                     type=evaluation["type"],
-                    subject=parent_subject,
+                    subject_uuid=parent_subject.uuid,
                 )
                 created_evaluation = EvaluationCRUD(db_session).create(
                     evaluation_schema.dict()
@@ -283,9 +293,9 @@ def seed_attend_subjects(attend_subjects):
             continue
 
         if not AttendSubjectCRUD(db_session).get_by_user_and_subject(user, subject):
-            attend_subject_schema = BaseAttendSubjectSchema(
-                user=user,
-                subject=subject,
+            attend_subject_schema = CreateAttendSubjectSchema(
+                user_uuid=user.uuid,
+                subject_uuid=subject.uuid,
                 target_value=attend_subject["target_value"],
                 target_score=attend_subject["target_score"],
             )
@@ -361,9 +371,9 @@ def seed_subject_comments(subject_comments):
             )
             continue
 
-        subject_comment_schema = BaseSubjectCommentSchema(
-            subject=subject,
-            user=user,
+        subject_comment_schema = CreateSubjectCommentSchema(
+            subject_uuid=subject.uuid,
+            user_uuid=user.uuid,
             comment=subject_comment["comment"],
         )
         created_subject_comment = SubjectCommentCRUD(db_session).create(
@@ -460,9 +470,9 @@ def seed_scores(scores):
             )
             continue
 
-        score_schema = BaseScoreSchema(
-            attend_subject=attend_subject,
-            evaluation=evaluation,
+        score_schema = CreateScoreSchema(
+            attend_subject_uuid=attend_subject.uuid,
+            evaluation_uuid=evaluation.uuid,
             got_score=score["got_score"],
             max_score=score["max_score"],
         )
@@ -497,9 +507,6 @@ def seed_all():
     seed_subjects(SUBJECTS)
     seed_attend_subjects(ATTEND_SUBJECTS)
     seed_scores(SCORES)
-<<<<<<< HEAD
     seed_subject_comments(SUBJECT_COMMENTS)
-=======
     seed_teacher_comments(TEACHER_COMMENTS)
->>>>>>> f82e508 (feat: add teacher_comment scheme, crud, seed #52)
     logger.info("done")
