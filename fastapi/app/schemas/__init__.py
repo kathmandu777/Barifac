@@ -4,6 +4,7 @@ from .evaluation import *
 from .school import *
 from .score import *
 from .subject import *
+from .subject_comment import *
 from .teacher import *
 from .term import *
 from .user import *

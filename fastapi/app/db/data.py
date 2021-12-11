@@ -45,6 +45,7 @@ SUBJECTS = [
     },
 ]
 
+
 USERS = [
     {"username": "test1", "email": "test1@example.com", "password": "password"},
     {"username": "test2", "email": "test2@example.com", "password": "password"},
@@ -80,5 +81,23 @@ SCORES = [
         "evaluation": ATTEND_SUBJECTS[0]["subject"]["evaluations"][2],
         "got_score": 45,
         "max_score": 50,
+    },
+]
+
+SUBJECT_COMMENTS = [
+    {
+        "subject": SUBJECTS[0],
+        "user": USERS[0],
+        "comment": "簡単でした。",
+    },
+    {
+        "subject": SUBJECTS[1],
+        "user": USERS[0],
+        "comment": "普通でした。",
+    },
+    {
+        "subject": SUBJECTS[0],
+        "user": USERS[1],
+        "comment": "難解でした。",
     },
 ]

@@ -5,6 +5,7 @@ from .evaluation import EvaluationCRUD
 from .school import SchoolCRUD
 from .score import ScoreCRUD
 from .subject import SubjectCRUD
+from .subject_comment import SubjectCommentCRUD
 from .teacher import TeacherCRUD
 from .term import TermCRUD
 from .user import UserCRUD
