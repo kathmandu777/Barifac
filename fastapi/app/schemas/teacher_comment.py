@@ -1,15 +1,30 @@
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from ..models import Teacher, User
+from .teacher import ReadTeacherSchema
+from .user import ReadUserSchema
 
 
 class BaseTeacherCommentSchema(BaseModel):
-    teacher: Teacher
-    user: User
     comment: Optional[str] = Field(None, max_length=2000)
 
     class Config:
         orm_mode = True
-        arbitrary_types_allowed = True
+
+
+class ReadTeacherCommentSchema(BaseTeacherCommentSchema):
+    uuid: UUID
+    teacher: ReadTeacherSchema
+    user: ReadUserSchema
+
+
+class CreateTeacherCommentSchema(BaseTeacherCommentSchema):
+    teacher_uuid: UUID
+    user_uuid: UUID
+
+
+class UpdateTeacherCommentSchema(BaseTeacherCommentSchema):
+    teacher_uuid: UUID
+    user_uuid: UUID
