@@ -1,5 +1,5 @@
 import sys
-from typing import Type
+from typing import Type, TypeVar, Union
 
 from fastapi import HTTPException, status
 
@@ -31,6 +31,14 @@ class UID_OR_PASSWORD_MUST_BE_SET(BaseError):
     detail = "uid or password must be set."
 
 
+BaseErrorInstanceType = TypeVar("BaseErrorInstanceType", bound=BaseError)
+
+
+class NOT_FOUND_OBJ_MATCHING_UUID(BaseError):
+    def __init__(self, cls):
+        self.detail = f"{cls.__name__} matching the given uuid was not found."
+
+
 def create_error(
     error_msg: str, error_code: int = status.HTTP_400_BAD_REQUEST
 ) -> Type[BaseError]:
@@ -42,7 +50,7 @@ def create_error(
 
 
 class ApiException(HTTPException):
-    def __init__(self, *errors: Type[BaseError]) -> None:
+    def __init__(self, *errors: Union[Type[BaseError], BaseErrorInstanceType]) -> None:
         self.status_code = status.HTTP_400_BAD_REQUEST
         self.detail = [
             {
