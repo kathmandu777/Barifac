@@ -1,6 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
+from app.models import Score
 from pydantic import BaseModel, Field
 
 from .attend_subject import ReadAttendSubjectSchema
@@ -11,7 +12,7 @@ class BaseScoreSchema(BaseModel):
 
     got_score: int
     max_score: int
-    memo: Optional[str] = Field(None, max_length=2000)
+    memo: Optional[str] = Field(None, max_length=Score.MAX_LENGTH_MEMO)
 
     class Config:
         orm_mode = True

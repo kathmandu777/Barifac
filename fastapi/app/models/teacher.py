@@ -11,7 +11,8 @@ class Teacher(BaseModelMixin):
     # TODO:  同姓同名同学校の教師がいた場合
     __table_args__ = UniqueConstraint("name", "school_uuid"), {}
 
-    name = Column(VARCHAR(100), nullable=False)
+    MAX_LENGTH_NAME = 100
+    name = Column(VARCHAR(MAX_LENGTH_NAME), nullable=False)
     school_uuid = Column(
         UUID(as_uuid=True),
         ForeignKey("schools.uuid"),

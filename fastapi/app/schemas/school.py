@@ -1,10 +1,11 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from app.models import School
+from pydantic import BaseModel, Field
 
 
 class BaseSchoolSchema(BaseModel):
-    name: str
+    name: str = Field(..., max_length=School.MAX_LENGTH_NAME)
 
     class Config:
         orm_mode = True

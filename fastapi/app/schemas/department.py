@@ -1,12 +1,13 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from app.models import Department
+from pydantic import BaseModel, Field
 
 from .school import ReadSchoolSchema
 
 
 class BaseDepartmentSchema(BaseModel):
-    name: str
+    name: str = Field(..., max_length=Department.MAX_LENGTH_NAME)
 
     class Config:
         orm_mode = True

@@ -16,13 +16,14 @@ class Evaluation(BaseModelMixin):
         {},
     )
 
-    name = Column(VARCHAR(100), nullable=False)
+    MAX_LENGTH_NAME = 100
+    name = Column(VARCHAR(MAX_LENGTH_NAME), nullable=False)
     subject_uuid = Column(
         UUID(as_uuid=True),
         ForeignKey("subjects.uuid"),
         nullable=False,
     )
     rate = Column(Integer, nullable=False)
-    type = Column(VARCHAR(20), nullable=False)
+    type = Column(VARCHAR(20), nullable=False)  # TODO: enum
 
     scores = relationship("Score", backref="evaluation")
