@@ -23,4 +23,4 @@ class AttendSubject(BaseModelMixin):
     target_value = Column(VARCHAR(MAX_LENGTH_TARGET_NAME), nullable=False)
     target_score = Column(Integer, nullable=False)
 
-    scores = relationship("Score", backref="attend_subject")
+    scores = relationship("Score", backref="attend_subject", cascade="all")

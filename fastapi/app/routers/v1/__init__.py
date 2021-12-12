@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from .attend_subject import attend_subject_router
 from .auth import auth_router
 from .department import department_router
 from .school import school_router
@@ -16,3 +17,6 @@ api_v1_router.include_router(
 )
 api_v1_router.include_router(teacher_router, prefix="/teachers", tags=["teachers"])
 api_v1_router.include_router(term_router, prefix="/terms", tags=["terms"])
+api_v1_router.include_router(
+    attend_subject_router, prefix="/attend_subjects", tags=["attend_subjects"]
+)

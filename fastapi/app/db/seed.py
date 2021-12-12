@@ -15,7 +15,7 @@ from app.crud import (
 )
 from app.db.database import get_db_session
 from app.schemas import (
-    CreateAttendSubjectSchema,
+    CreateAttendSubjectSchemaForSeed,
     CreateDepartmentSchema,
     CreateEvaluationSchema,
     CreateSchoolSchema,
@@ -294,7 +294,7 @@ def seed_attend_subjects(attend_subjects):
             continue
 
         if not AttendSubjectCRUD(db_session).get_by_user_and_subject(user, subject):
-            attend_subject_schema = CreateAttendSubjectSchema(
+            attend_subject_schema = CreateAttendSubjectSchemaForSeed(
                 user_uuid=user.uuid,
                 subject_uuid=subject.uuid,
                 target_value=attend_subject["target_value"],
