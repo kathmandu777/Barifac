@@ -1,8 +1,9 @@
 import React from 'react';
 import { Divider, VStack } from '@chakra-ui/layout';
 import SubjectList, { SubjectListProps } from '../components/SubjectList';
+import EditButton from '../components/editButton';
 
-const SUBJECTS: SubjectListProps[] = [
+export let SUBJECTS: SubjectListProps[] = [
   {
     subjectID: 101001,
     subjectName: '微分方程式',
@@ -37,26 +38,30 @@ const SUBJECTS: SubjectListProps[] = [
 
 const Home = () => {
   return (
-    <VStack
-      spacing={3}
-      mt={224}
-      mb={100}
-      ml='auto'
-      mr='auto'
-      width='70%'
-      alignItems='flex-start'
-    >
-      {SUBJECTS.map(sub => {
-        return (
-          <SubjectList
-            subjectID={sub.subjectID}
-            subjectName={sub.subjectName}
-            score={sub.score}
-          />
-        );
-      })}
-      <Divider borderColor='gray.700' />
-    </VStack>
+    <>
+      <VStack
+        spacing={3}
+        mt={224}
+        mb={100}
+        ml='auto'
+        mr='auto'
+        width='70%'
+        alignItems='flex-start'
+      >
+        {SUBJECTS.map((sub, index) => {
+          return (
+            <SubjectList
+              subjectID={sub.subjectID}
+              subjectName={sub.subjectName}
+              score={sub.score}
+              key={index}
+            />
+          );
+        })}
+        <Divider borderColor='gray.700' />
+      </VStack>
+      <EditButton />
+    </>
   );
 };
 

@@ -9,7 +9,13 @@ import {
   VStack,
   Spacer,
 } from '@chakra-ui/layout';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import {
+  ArrowForwardIcon,
+  AddIcon,
+  DeleteIcon,
+  CloseIcon,
+} from '@chakra-ui/icons';
+import DeleteSubject from './DeleteSubject';
 
 export type SubjectListProps = {
   subjectID: number;
