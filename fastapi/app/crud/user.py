@@ -3,7 +3,7 @@ from typing import Optional
 from app.models import User
 from sqlalchemy.orm import scoped_session
 
-from ..core.exceptions import UID_OR_PASSWORD_MUST_BE_SET, ApiException
+from ..core.exceptions import ApiException, UidOrPasswordMustBeSet
 from ..core.security import get_password_hash
 from .base import BaseCRUD
 
@@ -20,7 +20,7 @@ class UserCRUD(BaseCRUD):
         elif data["uid"] is not None:
             return super().create(data)
         else:
-            raise ApiException(UID_OR_PASSWORD_MUST_BE_SET)
+            raise ApiException(UidOrPasswordMustBeSet)
 
     def update(self, obj: User, data: dict = {}) -> User:
         if data["password"] is not None:
@@ -30,7 +30,7 @@ class UserCRUD(BaseCRUD):
         elif data["uid"] is not None:
             return super().update(obj, data)
         else:
-            raise ApiException(UID_OR_PASSWORD_MUST_BE_SET)
+            raise ApiException(UidOrPasswordMustBeSet)
 
     def get_by_email(self, email: str) -> Optional[User]:
         return self.get_query().filter_by(email=email).first()

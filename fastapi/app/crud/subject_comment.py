@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
+from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
 
@@ -20,7 +20,7 @@ class SubjectCommentCRUD(BaseCRUD):
             data["subject_uuid"]
         )
         if not subject:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Subject))
+            raise ApiException(NotFoundObjectMatchingUuid(Subject))
         return super().create(data)
 
     def update(self, obj: SubjectComment, data: dict = {}) -> SubjectComment:
@@ -28,5 +28,5 @@ class SubjectCommentCRUD(BaseCRUD):
             data["subject_uuid"]
         )
         if not subject:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Subject))
+            raise ApiException(NotFoundObjectMatchingUuid(Subject))
         return super().update(obj, data)

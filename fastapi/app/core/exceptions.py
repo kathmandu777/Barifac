@@ -9,37 +9,37 @@ class BaseError:
     detail: str = "Bad Request"
 
 
-class FAILURE_LOGIN(BaseError):
+class FailureLogin(BaseError):
     detail = "Failure login"
 
 
-class INVALID_EMAIL_OR_PASSWORD(BaseError):
+class InvalidEmailOrPassword(BaseError):
     detail = "email or password was incorrect."
 
 
-class INVALID_TOKEN(BaseError):
+class InvalidToken(BaseError):
     code = status.HTTP_401_UNAUTHORIZED
     detail = "Invalid token"
 
 
-class EXPIRED_TOKEN(BaseError):
+class ExpiredToken(BaseError):
     code = status.HTTP_401_UNAUTHORIZED
     detail = "Token was expired."
 
 
-class UID_OR_PASSWORD_MUST_BE_SET(BaseError):
+class UidOrPasswordMustBeSet(BaseError):
     detail = "uid or password must be set."
 
 
 BaseErrorInstanceType = TypeVar("BaseErrorInstanceType", bound=BaseError)
 
 
-class NOT_FOUND_OBJ_MATCHING_UUID(BaseError):
+class NotFoundObjectMatchingUuid(BaseError):
     def __init__(self, cls):
         self.detail = f"{cls.__name__} matching the given uuid was not found."
 
 
-class SAME_OBJECT_ALREADY_EXISTS(BaseError):
+class SameObjectAlreadyExists(BaseError):
     detail = "Same object already exists."
 
 

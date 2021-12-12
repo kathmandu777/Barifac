@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.core.exceptions import INVALID_TOKEN, ApiException
+from app.core.exceptions import ApiException, InvalidToken
 from app.models import User
 from starlette import authentication
 
@@ -15,7 +15,7 @@ class OAuth2PasswordBearer(security.OAuth2PasswordBearer):
         scheme, param = security.utils.get_authorization_scheme_param(authorization)
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
-                raise ApiException(INVALID_TOKEN)
+                raise ApiException(InvalidToken)
             else:
                 return None
         return param

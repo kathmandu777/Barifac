@@ -1,7 +1,7 @@
 from typing import List, Optional, TypeVar
 from uuid import UUID
 
-from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
+from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from sqlalchemy.orm import query, scoped_session
 
 from ..db.database import Base
@@ -45,7 +45,7 @@ class BaseCRUD:
     def delete_by_uuid(self, uuid: UUID) -> None:
         obj = self.get_by_uuid(uuid)
         if not obj:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(self.model))
+            raise ApiException(NotFoundObjectMatchingUuid(self.model))
         self.db_session.delete(obj)
         self.db_session.flush()
         return None

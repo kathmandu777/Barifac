@@ -1,9 +1,9 @@
 from typing import Optional
 
 from app.core.exceptions import (
-    NOT_FOUND_OBJ_MATCHING_UUID,
-    SAME_OBJECT_ALREADY_EXISTS,
     ApiException,
+    NotFoundObjectMatchingUuid,
+    SameObjectAlreadyExists,
 )
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
@@ -28,7 +28,7 @@ class TeacherCRUD(BaseCRUD):
             data["school_uuid"]
         )
         if not school:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
+            raise ApiException(NotFoundObjectMatchingUuid(School))
         teacher = self.get_by_name_and_school(name, school)
         return teacher if teacher else super().create(data)
 
@@ -38,8 +38,8 @@ class TeacherCRUD(BaseCRUD):
             data["school_uuid"]
         )
         if not school:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
+            raise ApiException(NotFoundObjectMatchingUuid(School))
         teacher = self.get_by_name_and_school(name, school)
         if teacher and teacher.uuid != obj.uuid:
-            raise ApiException(SAME_OBJECT_ALREADY_EXISTS)
+            raise ApiException(SameObjectAlreadyExists)
         return super().update(obj, data)
