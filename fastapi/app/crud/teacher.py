@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from app.core.exceptions import (
     NOT_FOUND_OBJ_MATCHING_UUID,
@@ -6,9 +6,9 @@ from app.core.exceptions import (
     ApiException,
 )
 from app.db.database import get_db_session
+from app.models import School, Teacher
 from sqlalchemy.orm import scoped_session
 
-from ..models import School, Teacher
 from .base import BaseCRUD
 from .school import SchoolCRUD
 
@@ -21,6 +21,9 @@ class TeacherCRUD(BaseCRUD):
 
     def get_by_name_and_school(self, name: str, school: School) -> Optional[Teacher]:
         return self.get_query().filter_by(name=name, school_uuid=school.uuid).first()
+
+    def gets_by_school_uuid(self, school_uuid) -> List[Teacher]:
+        return self.get_query().filter_by(school_uuid=school_uuid).all()
 
     def create(self, data: dict = {}) -> Teacher:
         name: str = data["name"]
