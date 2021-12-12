@@ -30,7 +30,7 @@ const Welcome = () => {
         </Stack>
       </Stack>
       <HStack>
-        <Link href='/'>
+        <Link href='/login'>
           <Button
             bg='blue.400'
             color='gray.800'
@@ -41,7 +41,7 @@ const Welcome = () => {
             サインアップ
           </Button>
         </Link>
-        <Link href='/'>
+        <Link href='/login'>
           <Button
             bg='whiteAlpha.200'
             color='whiteAlpha.800'
