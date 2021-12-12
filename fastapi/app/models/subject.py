@@ -17,22 +17,22 @@ class Subject(BaseModelMixin):
     name = Column(VARCHAR(MAX_LENGTH_NAME), nullable=False)
     school_uuid = Column(
         UUID(as_uuid=True),
-        ForeignKey("schools.uuid"),
+        ForeignKey("schools.uuid", ondelete="CASCADE"),
         nullable=False,
     )
     term_uuid = Column(
         UUID(as_uuid=True),
-        ForeignKey("terms.uuid"),
+        ForeignKey("terms.uuid", ondelete="CASCADE"),
         nullable=False,
     )
     teacher_uuid = Column(
         UUID(as_uuid=True),
-        ForeignKey("teachers.uuid"),
+        ForeignKey("teachers.uuid", ondelete="CASCADE"),
         nullable=False,
     )
     credits = Column(Integer, nullable=False)
 
-    evaluations = relationship("Evaluation", backref="subject")
+    evaluations = relationship("Evaluation", backref="subject", cascade="all")
     # TODO: fix variable name
-    attend_subjects = relationship("AttendSubject", backref="subject")
-    comments = relationship("SubjectComment", backref="subject")
+    attend_subjects = relationship("AttendSubject", backref="subject", cascade="all")
+    comments = relationship("SubjectComment", backref="subject", cascade="all")

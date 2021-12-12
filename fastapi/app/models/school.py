@@ -10,7 +10,7 @@ class School(BaseModelMixin):
     MAX_LENGTH_NAME = 100
     name = Column(VARCHAR(MAX_LENGTH_NAME), unique=True, nullable=False)
 
-    departments = relationship("Department", backref="school")
-    teachers = relationship("Teacher", backref="school")
-    subjects = relationship("Subject", backref="school")
-    users = relationship("User", backref="school")
+    departments = relationship("Department", backref="school", cascade="all")
+    teachers = relationship("Teacher", backref="school", cascade="all")
+    subjects = relationship("Subject", backref="school", cascade="all")
+    users = relationship("User", backref="school", cascade="all")

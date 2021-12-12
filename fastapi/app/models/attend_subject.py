@@ -13,10 +13,12 @@ class AttendSubject(BaseModelMixin):
         {},
     )
 
-    user_uuid = Column(UUID(as_uuid=True), ForeignKey("users.uuid"), nullable=False)
+    user_uuid = Column(
+        UUID(as_uuid=True), ForeignKey("users.uuid", ondelete="CASCADE"), nullable=False
+    )
     subject_uuid = Column(
         UUID(as_uuid=True),
-        ForeignKey("subjects.uuid"),
+        ForeignKey("subjects.uuid", ondelete="CASCADE"),
         nullable=False,
     )
     MAX_LENGTH_TARGET_NAME = 1
