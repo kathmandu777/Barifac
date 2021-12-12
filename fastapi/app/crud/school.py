@@ -17,7 +17,9 @@ class SchoolCRUD(BaseCRUD):
     def create(self, data: dict = {}) -> School:
         name: str = data["name"]
         school = self.get_by_name(name)
-        return school if school else super().create(data)
+        if school:
+            raise ApiException(SameObjectAlreadyExists)
+        return super().create(data)
 
     def update(self, obj: School, data: dict = {}) -> School:
         name: str = data["name"]
