@@ -1,6 +1,10 @@
 from typing import List, Optional
 
-from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
+from app.core.exceptions import (
+    NOT_FOUND_OBJ_MATCHING_UUID,
+    SAME_OBJECT_ALREADY_EXISTS,
+    ApiException,
+)
 from app.db.database import get_db_session
 from app.models import Department, School
 from sqlalchemy.orm import scoped_session
@@ -39,4 +43,6 @@ class DepartmentCRUD(BaseCRUD):
         if not school:
             raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
         department = self.get_by_school_and_name(school, name)
-        return department if department else super().update(obj, data)
+        if department and department.uuid != obj.uuid:
+            raise ApiException(SAME_OBJECT_ALREADY_EXISTS)
+        return super().update(obj, data)
