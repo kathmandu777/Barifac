@@ -1,4 +1,4 @@
-from sqlalchemy import BOOLEAN, VARCHAR, Column, ForeignKey, String
+from sqlalchemy import BOOLEAN, VARCHAR, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -17,6 +17,7 @@ class User(BaseModelMixin):
     department_uuid = Column(
         UUID(as_uuid=True), ForeignKey("departments.uuid"), nullable=True
     )
+    grade = Column(Integer, nullable=False)
 
     is_admin = Column(BOOLEAN, nullable=False, default=False)
     is_active = Column(BOOLEAN, nullable=False, default=True)

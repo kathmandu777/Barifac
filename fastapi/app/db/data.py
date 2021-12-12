@@ -47,8 +47,18 @@ SUBJECTS = [
 
 
 USERS = [
-    {"username": "test1", "email": "test1@example.com", "password": "password"},
-    {"username": "test2", "email": "test2@example.com", "password": "password"},
+    {
+        "username": "test1",
+        "email": "test1@example.com",
+        "password": "password",
+        "grade": 3,
+    },
+    {
+        "username": "test2",
+        "email": "test2@example.com",
+        "password": "password",
+        "grade": 1,
+    },
 ]
 
 ATTEND_SUBJECTS = [

@@ -40,6 +40,7 @@ def seed_users(users):
                 username=user["username"],
                 email=user["email"],
                 password=user["password"],
+                grade=user["grade"],
             )
             created_user = UserCRUD(db_session).create(user_schema.dict())
             logger.info(f"Created {created_user.username}")
