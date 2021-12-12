@@ -1,3 +1,4 @@
+from .attend_subject import AttendSubjectAPI
 from .department import DepartmentAPI
 from .school import SchoolAPI
 from .teacher import TeacherAPI
