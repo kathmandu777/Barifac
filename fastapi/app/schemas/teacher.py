@@ -7,7 +7,7 @@ from .school import ReadSchoolSchema
 
 
 class BaseTeacherSchema(BaseModel):
-    name: str = Field(..., max_length=Teacher.MAX_NAME_LENGTH)
+    name: str = Field(..., max_length=Teacher.MAX_LENGTH_NAME)
 
     class Config:
         orm_mode = True
