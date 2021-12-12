@@ -25,6 +25,8 @@ class AuthenticatedUser(authentication.SimpleUser):
     def __init__(self, user: User) -> None:
         self.uuid = user.uuid
         self.username = user.username
+        self.is_admin = user.is_admin
+        self.is_active = user.is_active
 
 
 class UnauthenticatedUser(authentication.UnauthenticatedUser):

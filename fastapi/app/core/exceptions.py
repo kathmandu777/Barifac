@@ -43,6 +43,11 @@ class SAME_OBJECT_ALREADY_EXISTS(BaseError):
     detail = "Same object already exists."
 
 
+class PermissionDenied(BaseError):
+    detail = "Permission denied."
+    code = status.HTTP_403_FORBIDDEN
+
+
 def create_error(
     error_msg: str, error_code: int = status.HTTP_400_BAD_REQUEST
 ) -> Type[BaseError]:
