@@ -11,8 +11,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import EvaluationTable from './EvaluationTable';
-import ScoreSlider from './ScoreSlider';
+import EvaluationTable from '../../components/EvaluationTable';
+import ScoreSlider from '../../components/ScoreSlider';
 
 const SCORES = [
   {
