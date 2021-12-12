@@ -3,28 +3,27 @@ from uuid import UUID
 
 from app.core.exceptions import ApiException, create_error
 from app.crud import SchoolCRUD
-from app.schemas import BaseSchoolSchema, ReadSchoolSchema
+from app.models import School
+from app.schemas import CreateSchoolSchema, UpdateSchoolSchema
 
 from fastapi import Request
 
 
 class SchoolAPI:
     @classmethod
-    def gets(cls, request: Request) -> List[ReadSchoolSchema]:
+    def gets(cls, request: Request) -> List[School]:
         return SchoolCRUD(request.state.db_session).gets()
 
     @classmethod
-    def get(cls, request: Request, uuid: UUID) -> Optional[ReadSchoolSchema]:
+    def get(cls, request: Request, uuid: UUID) -> Optional[School]:
         return SchoolCRUD(request.state.db_session).get_by_uuid(uuid)
 
     @classmethod
-    def create(cls, request: Request, schema: BaseSchoolSchema) -> ReadSchoolSchema:
+    def create(cls, request: Request, schema: CreateSchoolSchema) -> School:
         return SchoolCRUD(request.state.db_session).create(schema.dict())
 
     @classmethod
-    def update(
-        cls, request: Request, uuid: UUID, schema: BaseSchoolSchema
-    ) -> ReadSchoolSchema:
+    def update(cls, request: Request, uuid: UUID, schema: UpdateSchoolSchema) -> School:
         obj = SchoolCRUD(request.state.db_session).get_by_uuid(uuid)
         if not obj:
             raise ApiException(
