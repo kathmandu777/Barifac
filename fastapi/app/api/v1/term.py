@@ -1,7 +1,7 @@
 from typing import List, Optional
 from uuid import UUID
 
-from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
+from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.crud import TermCRUD
 from app.models import Term
 from app.schemas import CreateTermSchema, UpdateTermSchema
@@ -26,7 +26,7 @@ class TermAPI:
     def update(cls, request: Request, uuid: UUID, schema: UpdateTermSchema) -> Term:
         obj = TermCRUD(request.state.db_session).get_by_uuid(uuid)
         if not obj:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Term))
+            raise ApiException(NotFoundObjectMatchingUuid(Term))
         return TermCRUD(request.state.db_session).update(obj, schema.dict())
 
     @classmethod

@@ -1,9 +1,9 @@
 from typing import Optional
 
 from app.core.exceptions import (
-    NOT_FOUND_OBJ_MATCHING_UUID,
-    SAME_OBJECT_ALREADY_EXISTS,
     ApiException,
+    NotFoundObjectMatchingUuid,
+    SameObjectAlreadyExists,
 )
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
@@ -36,7 +36,7 @@ class EvaluationCRUD(BaseCRUD):
             data["subject_uuid"]
         )
         if not subject:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Subject))
+            raise ApiException(NotFoundObjectMatchingUuid(Subject))
         evaluation = self.get_by_name_and_subject(data["name"], subject)
         return evaluation if evaluation else super().create(data)
 
@@ -45,8 +45,8 @@ class EvaluationCRUD(BaseCRUD):
             data["subject_uuid"]
         )
         if not subject:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Subject))
+            raise ApiException(NotFoundObjectMatchingUuid(Subject))
         evaluation = self.get_by_name_and_subject(data["name"], subject)
         if evaluation and evaluation.uuid != obj.uuid:
-            raise ApiException(SAME_OBJECT_ALREADY_EXISTS)
+            raise ApiException(SameObjectAlreadyExists)
         return super().update(obj, data)

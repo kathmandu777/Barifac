@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
+from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
 
@@ -21,12 +21,12 @@ class ScoreCRUD(BaseCRUD):
             self.db_session
         ).get_by_uuid(data["attend_subject_uuid"])
         if not attend_subject:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(AttendSubject))
+            raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
         evaluation: Optional[Evaluation] = EvaluationCRUD(db_session).get_by_uuid(
             data["evaluation_uuid"]
         )
         if not evaluation:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Evaluation))
+            raise ApiException(NotFoundObjectMatchingUuid(Evaluation))
         return super().create(data)
 
     def update(self, obj: Score, data: dict = {}) -> Score:
@@ -34,10 +34,10 @@ class ScoreCRUD(BaseCRUD):
             self.db_session
         ).get_by_uuid(data["attend_subject_uuid"])
         if not attend_subject:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(AttendSubject))
+            raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
         evaluation: Optional[Evaluation] = EvaluationCRUD(db_session).get_by_uuid(
             data["evaluation_uuid"]
         )
         if not evaluation:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Evaluation))
+            raise ApiException(NotFoundObjectMatchingUuid(Evaluation))
         return super().update(obj, data)

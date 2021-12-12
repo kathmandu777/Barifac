@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.core.exceptions import SAME_OBJECT_ALREADY_EXISTS, ApiException
+from app.core.exceptions import ApiException, SameObjectAlreadyExists
 from sqlalchemy.orm import scoped_session
 
 from ..models import Term
@@ -31,5 +31,5 @@ class TermCRUD(BaseCRUD):
         semester: str = data["semester"]
         term = self.get_by_year_and_semester(academic_year, semester)
         if term and term.uuid != obj.uuid:
-            raise ApiException(SAME_OBJECT_ALREADY_EXISTS)
+            raise ApiException(SameObjectAlreadyExists)
         return super().update(obj, data)

@@ -1,9 +1,9 @@
 from typing import Optional
 
 from app.core.exceptions import (
-    NOT_FOUND_OBJ_MATCHING_UUID,
-    SAME_OBJECT_ALREADY_EXISTS,
     ApiException,
+    NotFoundObjectMatchingUuid,
+    SameObjectAlreadyExists,
 )
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
@@ -38,17 +38,17 @@ class SubjectCRUD(BaseCRUD):
     def create(self, data: dict = {}) -> Subject:
         term: Optional[Term] = TermCRUD(db_session).get_by_uuid(data["term_uuid"])
         if not term:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Term))
+            raise ApiException(NotFoundObjectMatchingUuid(Term))
         school: Optional[School] = SchoolCRUD(db_session).get_by_uuid(
             data["school_uuid"]
         )
         if not school:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
+            raise ApiException(NotFoundObjectMatchingUuid(School))
         teacher: Optional[Teacher] = TeacherCRUD(db_session).get_by_uuid(
             data["teacher_uuid"]
         )
         if not teacher:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Teacher))
+            raise ApiException(NotFoundObjectMatchingUuid(Teacher))
         name: str = data["name"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
         return subject if subject else super().create(data)
@@ -56,19 +56,19 @@ class SubjectCRUD(BaseCRUD):
     def update(self, obj: Subject, data: dict = {}) -> Subject:
         term: Optional[Term] = TermCRUD(db_session).get_by_uuid(data["term_uuid"])
         if not term:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Term))
+            raise ApiException(NotFoundObjectMatchingUuid(Term))
         school: Optional[School] = SchoolCRUD(db_session).get_by_uuid(
             data["school_uuid"]
         )
         if not school:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
+            raise ApiException(NotFoundObjectMatchingUuid(School))
         teacher: Optional[Teacher] = TeacherCRUD(db_session).get_by_uuid(
             data["teacher_uuid"]
         )
         if not teacher:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Teacher))
+            raise ApiException(NotFoundObjectMatchingUuid(Teacher))
         name: str = data["name"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
         if subject and subject.uuid != obj.uuid:
-            raise ApiException(SAME_OBJECT_ALREADY_EXISTS)
+            raise ApiException(SameObjectAlreadyExists)
         return super().update(obj, data)

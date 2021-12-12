@@ -1,9 +1,9 @@
 from typing import List, Optional
 
 from app.core.exceptions import (
-    NOT_FOUND_OBJ_MATCHING_UUID,
-    SAME_OBJECT_ALREADY_EXISTS,
     ApiException,
+    NotFoundObjectMatchingUuid,
+    SameObjectAlreadyExists,
 )
 from app.db.database import get_db_session
 from app.models import Department, School
@@ -31,7 +31,7 @@ class DepartmentCRUD(BaseCRUD):
             data["school_uuid"]
         )
         if not school:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
+            raise ApiException(NotFoundObjectMatchingUuid(School))
         department = self.get_by_school_and_name(school, name)
         return department if department else super().create(data)
 
@@ -41,8 +41,8 @@ class DepartmentCRUD(BaseCRUD):
             data["school_uuid"]
         )
         if not school:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
+            raise ApiException(NotFoundObjectMatchingUuid(School))
         department = self.get_by_school_and_name(school, name)
         if department and department.uuid != obj.uuid:
-            raise ApiException(SAME_OBJECT_ALREADY_EXISTS)
+            raise ApiException(SameObjectAlreadyExists)
         return super().update(obj, data)

@@ -1,7 +1,7 @@
 from typing import List, Optional
 from uuid import UUID
 
-from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
+from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.crud import DepartmentCRUD
 from app.models import Department
 from app.schemas import CreateDepartmentSchema, UpdateDepartmentSchema
@@ -32,7 +32,7 @@ class DepartmentAPI:
     ) -> Department:
         obj = DepartmentCRUD(request.state.db_session).get_by_uuid(uuid)
         if not obj:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Department))
+            raise ApiException(NotFoundObjectMatchingUuid(Department))
         return DepartmentCRUD(request.state.db_session).update(obj, schema.dict())
 
     @classmethod

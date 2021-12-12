@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
+from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
 
@@ -20,7 +20,7 @@ class TeacherCommentCRUD(BaseCRUD):
             data["teacher_uuid"]
         )
         if not teacher:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Teacher))
+            raise ApiException(NotFoundObjectMatchingUuid(Teacher))
         return super().create(data)
 
     def update(self, obj: TeacherComment, data: dict = {}) -> TeacherComment:
@@ -28,5 +28,5 @@ class TeacherCommentCRUD(BaseCRUD):
             data["teacher_uuid"]
         )
         if not teacher:
-            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(Teacher))
+            raise ApiException(NotFoundObjectMatchingUuid(Teacher))
         return super().update(obj, data)

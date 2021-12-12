@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.core.exceptions import SAME_OBJECT_ALREADY_EXISTS, ApiException
+from app.core.exceptions import ApiException, SameObjectAlreadyExists
 from sqlalchemy.orm import scoped_session
 
 from ..models import School
@@ -23,5 +23,5 @@ class SchoolCRUD(BaseCRUD):
         name: str = data["name"]
         school = self.get_by_name(name)
         if school and school.uuid != obj.uuid:
-            raise ApiException(SAME_OBJECT_ALREADY_EXISTS)
+            raise ApiException(SameObjectAlreadyExists)
         return super().update(obj, data)

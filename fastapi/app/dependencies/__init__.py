@@ -1,1 +1,1 @@
-from .auth import login_required
+from .auth import admin_required, login_required
