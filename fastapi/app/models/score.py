@@ -14,7 +14,7 @@ class Score(BaseModelMixin):
     )
     evaluation_uuid = Column(
         UUID(as_uuid=True),
-        ForeignKey("evaluations.uuid"),
+        ForeignKey("evaluations.uuid", ondelete="CASCADE"),
         nullable=False,
     )
     got_score = Column(Integer, nullable=False)

@@ -17,15 +17,21 @@ class User(BaseModelMixin):
     uid = Column(VARCHAR(MAX_LENGTH_UID), nullable=True)
     MIN_LENGTH_PASSWORD = 8
     hashed_password = Column(String, nullable=True)
-    school_uuid = Column(UUID(as_uuid=True), ForeignKey("schools.uuid"), nullable=True)
+    school_uuid = Column(
+        UUID(as_uuid=True),
+        ForeignKey("schools.uuid", ondelete="CASCADE"),
+        nullable=True,
+    )
     department_uuid = Column(
-        UUID(as_uuid=True), ForeignKey("departments.uuid"), nullable=True
+        UUID(as_uuid=True),
+        ForeignKey("departments.uuid", ondelete="CASCADE"),
+        nullable=True,
     )
     grade = Column(Integer, nullable=False)
 
     is_admin = Column(BOOLEAN, nullable=False, default=False)
     is_active = Column(BOOLEAN, nullable=False, default=True)
 
-    attend_subjects = relationship("AttendSubject", backref="user")
-    teacher_comments = relationship("TeacherComment", backref="user")
-    subject_comments = relationship("SubjectComment", backref="user")
+    attend_subjects = relationship("AttendSubject", backref="user", cascade="all")
+    teacher_comments = relationship("TeacherComment", backref="user", cascade="all")
+    subject_comments = relationship("SubjectComment", backref="user", cascade="all")

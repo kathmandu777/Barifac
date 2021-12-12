@@ -14,8 +14,8 @@ class Department(BaseModelMixin):
     name = Column(VARCHAR(MAX_LENGTH_NAME), nullable=False)
     school_uuid = Column(
         UUID(as_uuid=True),
-        ForeignKey("schools.uuid"),
+        ForeignKey("schools.uuid", ondelete="CASCADE"),
         nullable=False,
     )
 
-    users = relationship("User", backref="department")
+    users = relationship("User", backref="department", cascade="all")

@@ -15,9 +15,9 @@ class Teacher(BaseModelMixin):
     name = Column(VARCHAR(MAX_LENGTH_NAME), nullable=False)
     school_uuid = Column(
         UUID(as_uuid=True),
-        ForeignKey("schools.uuid"),
+        ForeignKey("schools.uuid", ondelete="CASCADE"),
         nullable=False,
     )
 
-    subjects = relationship("Subject", backref="teacher")
-    comments = relationship("TeacherComment", backref="teacher")
+    subjects = relationship("Subject", backref="teacher", cascade="all")
+    comments = relationship("TeacherComment", backref="teacher", cascade="all")
