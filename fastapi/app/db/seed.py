@@ -40,6 +40,7 @@ def seed_users(users):
                 username=user["username"],
                 email=user["email"],
                 password=user["password"],
+                grade=user["grade"],
             )
             created_user = UserCRUD(db_session).create(user_schema.dict())
             logger.info(f"Created {created_user.username}")
@@ -324,7 +325,7 @@ def seed_subject_comments(subject_comments):
         )
         if not term:
             logger.info(
-                f"Skipped to create subject_comment of {subject_name}-{username}"
+                f"Skipped to create {subject_name}-{username}"
                 " because that parent's term dose not exist."
             )
             continue
@@ -332,7 +333,7 @@ def seed_subject_comments(subject_comments):
         user = UserCRUD(db_session).get_by_email(subject_comment["user"]["email"])
         if not user:
             logger.info(
-                f"Skipped to create subject_comment of {subject_name}-{username}"
+                f"Skipped to create {subject_name}-{username}"
                 " because that parent's user dose not exist."
             )
             continue
@@ -342,7 +343,7 @@ def seed_subject_comments(subject_comments):
         )
         if not school:
             logger.info(
-                f"Skipped to create subject_comment of {subject_name}-{username}"
+                f"Skipped to create {subject_name}-{username}"
                 " because that parent's school dose not exist."
             )
             continue
@@ -353,7 +354,7 @@ def seed_subject_comments(subject_comments):
         )
         if not teacher:
             logger.info(
-                f"Skipped to create subject_comment of {subject_name}-{username}"
+                f"Skipped to create {subject_name}-{username}"
                 " because that parent's teacher dose not exist."
             )
             continue
@@ -366,7 +367,7 @@ def seed_subject_comments(subject_comments):
         )
         if not subject:
             logger.info(
-                f"Skipped to create subject_comment of {subject_name}-{username}"
+                f"Skipped to create {subject_name}-{username}"
                 " because that parent's subject dose not exist."
             )
             continue
@@ -380,7 +381,7 @@ def seed_subject_comments(subject_comments):
             subject_comment_schema.dict()
         )
         logger.info(
-            f"Created subject_comment of {created_subject_comment.subject.name}-"
+            f"Created {created_subject_comment.subject.name}-"
             f"{created_subject_comment.user.username}-{created_subject_comment.comment}"
         )
     db_session.commit()
