@@ -1,7 +1,7 @@
 from typing import List, Optional
 from uuid import UUID
 
-from app.core.exceptions import ApiException, create_error
+from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
 from app.crud import SchoolCRUD
 from app.models import School
 from app.schemas import CreateSchoolSchema, UpdateSchoolSchema
@@ -26,9 +26,7 @@ class SchoolAPI:
     def update(cls, request: Request, uuid: UUID, schema: UpdateSchoolSchema) -> School:
         obj = SchoolCRUD(request.state.db_session).get_by_uuid(uuid)
         if not obj:
-            raise ApiException(
-                create_error("School matching the given UUID was not found")
-            )
+            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(School))
         return SchoolCRUD(request.state.db_session).update(obj, schema.dict())
 
     @classmethod

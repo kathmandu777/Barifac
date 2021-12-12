@@ -1,7 +1,7 @@
 from typing import List, Optional
 from uuid import UUID
 
-from app.core.exceptions import ApiException, create_error
+from app.core.exceptions import NOT_FOUND_OBJ_MATCHING_UUID, ApiException
 from app.crud import UserCRUD
 from app.models import User
 from app.schemas import CreateUserSchema, UpdateUserSchema
@@ -26,9 +26,7 @@ class UserAPI:
     def update(cls, request: Request, uuid: UUID, schema: UpdateUserSchema) -> User:
         obj = UserCRUD(request.state.db_session).get_by_uuid(uuid)
         if not obj:
-            raise ApiException(
-                create_error("User matching the given UUID was not found")
-            )
+            raise ApiException(NOT_FOUND_OBJ_MATCHING_UUID(User))
         return UserCRUD(request.state.db_session).update(obj, schema.dict())
 
     @classmethod
