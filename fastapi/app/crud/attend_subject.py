@@ -42,7 +42,9 @@ class AttendSubjectCRUD(BaseCRUD):
         if not user:
             raise ApiException(NotFoundObjectMatchingUuid(User))
         attend_subject = self.get_by_user_and_subject(user, subject)
-        return attend_subject if attend_subject else super().create(data)
+        if attend_subject:
+            raise ApiException(SameObjectAlreadyExists)
+        return super().create(data)
 
     def update(self, obj: AttendSubject, data: dict = {}) -> AttendSubject:
         subject: Subject = data["subject"]

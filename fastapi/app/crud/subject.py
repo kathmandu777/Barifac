@@ -51,7 +51,9 @@ class SubjectCRUD(BaseCRUD):
             raise ApiException(NotFoundObjectMatchingUuid(Teacher))
         name: str = data["name"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
-        return subject if subject else super().create(data)
+        if subject:
+            raise ApiException(SameObjectAlreadyExists)
+        return super().create(data)
 
     def update(self, obj: Subject, data: dict = {}) -> Subject:
         term: Optional[Term] = TermCRUD(db_session).get_by_uuid(data["term_uuid"])

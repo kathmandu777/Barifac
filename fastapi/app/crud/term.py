@@ -24,7 +24,9 @@ class TermCRUD(BaseCRUD):
         academic_year: int = data["academic_year"]
         semester: str = data["semester"]
         term = self.get_by_year_and_semester(academic_year, semester)
-        return term if term else super().create(data)
+        if term:
+            raise ApiException(SameObjectAlreadyExists)
+        return super().create(data)
 
     def update(self, obj: Term, data: dict = {}) -> Term:
         academic_year: int = data["academic_year"]

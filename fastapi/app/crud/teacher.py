@@ -33,7 +33,9 @@ class TeacherCRUD(BaseCRUD):
         if not school:
             raise ApiException(NotFoundObjectMatchingUuid(School))
         teacher = self.get_by_name_and_school(name, school)
-        return teacher if teacher else super().create(data)
+        if teacher:
+            raise ApiException(SameObjectAlreadyExists)
+        return super().create(data)
 
     def update(self, obj: Teacher, data: dict = {}) -> Teacher:
         name: str = data["name"]

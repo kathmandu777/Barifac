@@ -33,7 +33,9 @@ class DepartmentCRUD(BaseCRUD):
         if not school:
             raise ApiException(NotFoundObjectMatchingUuid(School))
         department = self.get_by_school_and_name(school, name)
-        return department if department else super().create(data)
+        if department:
+            raise ApiException(SameObjectAlreadyExists)
+        return super().create(data)
 
     def update(self, obj: Department, data: dict = {}) -> Department:
         name: str = data["name"]
