@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel
 
 
@@ -7,3 +9,15 @@ class BaseTermSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class CreateTermSchema(BaseTermSchema):
+    pass
+
+
+class UpdateTermSchema(BaseTermSchema):
+    pass
+
+
+class ReadTermSchema(BaseTermSchema):
+    uuid: UUID

@@ -1,15 +1,30 @@
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from ..models import Subject, User
+from .subject import ReadSubjectSchema
+from .user import ReadUserSchema
 
 
 class BaseSubjectCommentSchema(BaseModel):
-    subject: Subject
-    user: User
     comment: Optional[str] = Field(None, max_length=2000)
 
     class Config:
         orm_mode = True
-        arbitrary_types_allowed = True
+
+
+class ReadSubjectCommentSchema(BaseSubjectCommentSchema):
+    uuid: UUID
+    subject: ReadSubjectSchema
+    user: ReadUserSchema
+
+
+class CreateSubjectCommentSchema(BaseSubjectCommentSchema):
+    subject_uuid: UUID
+    user_uuid: UUID
+
+
+class UpdateSubjectCommentSchema(BaseSubjectCommentSchema):
+    subject_uuid: UUID
+    user_uuid: UUID

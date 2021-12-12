@@ -1,14 +1,30 @@
+from uuid import UUID
+
 from pydantic import BaseModel
 
-from ..models import Subject, User
+from .subject import ReadSubjectSchema
+from .user import ReadUserSchema
 
 
 class BaseAttendSubjectSchema(BaseModel):
-    user: User
-    subject: Subject
     target_value: str
     target_score: int
 
     class Config:
         orm_mode = True
-        arbitrary_types_allowed = True
+
+
+class ReadAttendSubjectSchema(BaseAttendSubjectSchema):
+    uuid: UUID
+    subject: ReadSubjectSchema
+    user: ReadUserSchema
+
+
+class CreateAttendSubjectSchema(BaseAttendSubjectSchema):
+    subject_uuid: UUID
+    user_uuid: UUID
+
+
+class UpdateAttendSubjectSchema(BaseAttendSubjectSchema):
+    subject_uuid: UUID
+    user_uuid: UUID

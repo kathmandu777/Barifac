@@ -1,12 +1,25 @@
+from uuid import UUID
+
 from pydantic import BaseModel
 
-from ..models import School
+from .school import ReadSchoolSchema
 
 
 class BaseTeacherSchema(BaseModel):
     name: str
-    school: School
 
     class Config:
         orm_mode = True
-        arbitrary_types_allowed = True
+
+
+class CreateTeacherSchema(BaseTeacherSchema):
+    school_uuid: UUID
+
+
+class UpdateTeacherSchema(BaseTeacherSchema):
+    school_uuid: UUID
+
+
+class ReadTeacherSchema(BaseTeacherSchema):
+    uuid: UUID
+    school: ReadSchoolSchema
