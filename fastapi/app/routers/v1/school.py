@@ -2,10 +2,11 @@ from typing import List, Optional
 from uuid import UUID
 
 from app.api.v1 import SchoolAPI
+from app.dependencies import admin_required
 from app.models import School
 from app.schemas import CreateSchoolSchema, ReadSchoolSchema, UpdateSchoolSchema
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 
 school_router = APIRouter()
 
@@ -32,6 +33,6 @@ async def update(request: Request, uuid: UUID, schema: UpdateSchoolSchema) -> Sc
     return SchoolAPI.update(request, uuid, schema)
 
 
-@school_router.delete("/{uuid}/")
+@school_router.delete("/{uuid}/", dependencies=[Depends(admin_required)])
 async def delete(request: Request, uuid: UUID) -> None:
     return SchoolAPI.delete(request, uuid)

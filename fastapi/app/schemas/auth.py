@@ -1,9 +1,7 @@
 from fastapi import Form
 
 
-class AuthRequestSchema:
-    """認証に関するスキーマ"""
-
+class PaswordLoginSchema:
     def __init__(
         self,
         username: str = Form(...),
@@ -11,3 +9,11 @@ class AuthRequestSchema:
     ):
         self.email = username
         self.password = password
+
+
+class FirebaseLoginSchema:
+    def __init__(
+        self,
+        idtoken: str = Form(...),
+    ):
+        self.idtoken = idtoken
