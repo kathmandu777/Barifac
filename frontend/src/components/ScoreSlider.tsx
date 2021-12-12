@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   Flex,
+  Link,
   Slider,
   SliderTrack,
   SliderThumb,
@@ -30,7 +31,9 @@ const ScoreSlider: React.FC<ScoreSliderProps> = ({
         <Text color='gray.500'>
           {name}({rate}%)
         </Text>
-        <ArrowForwardIcon boxSize={6} color='whiteAlpha.900' />
+        <Link href='/score_edit'>
+          <ArrowForwardIcon boxSize={6} color='whiteAlpha.900' />
+        </Link>
       </Flex>
       <Flex w='full'>
         <Text lineHeight={6} color='whiteAlpha.900'>
