@@ -4,7 +4,6 @@ from app.models import AttendSubject
 from pydantic import BaseModel, Field
 
 from .subject import ReadSubjectSchema
-from .user import ReadUserSchema
 
 
 class BaseAttendSubjectSchema(BaseModel):
@@ -18,14 +17,16 @@ class BaseAttendSubjectSchema(BaseModel):
 class ReadAttendSubjectSchema(BaseAttendSubjectSchema):
     uuid: UUID
     subject: ReadSubjectSchema
-    user: ReadUserSchema
+
+
+class CreateAttendSubjectSchemaForSeed(BaseAttendSubjectSchema):
+    subject_uuid: UUID
+    user_uuid: UUID
 
 
 class CreateAttendSubjectSchema(BaseAttendSubjectSchema):
     subject_uuid: UUID
-    user_uuid: UUID
 
 
 class UpdateAttendSubjectSchema(BaseAttendSubjectSchema):
     subject_uuid: UUID
-    user_uuid: UUID

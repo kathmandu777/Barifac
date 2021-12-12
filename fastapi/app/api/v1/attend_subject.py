@@ -1,6 +1,11 @@
 from typing import List, Optional
 from uuid import UUID
 
+from app.core.exceptions import (
+    ApiException,
+    NotFoundObjectMatchingUuid,
+    PermissionDenied,
+)
 from app.crud import AttendSubjectCRUD
 from app.models import AttendSubject
 from app.schemas import CreateAttendSubjectSchema, UpdateAttendSubjectSchema
@@ -15,27 +20,39 @@ class AttendSubjectAPI:
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[AttendSubject]:
+        attend_subject = AttendSubjectCRUD(request.state.db_session).get_by_uuid(uuid)
+        if not attend_subject:
+            raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
+        if attend_subject.user_uuid != request.user.uuid:
+            raise ApiException(PermissionDenied)
         return AttendSubjectCRUD(request.state.db_session).get_by_uuid(uuid)
 
     @classmethod
     def create(
         cls, request: Request, schema: CreateAttendSubjectSchema
     ) -> AttendSubject:
-        schema.user_uuid = request.user.uuid
-        return AttendSubjectCRUD(request.state.db_session).create(schema.dict())
+        data = schema.dict()
+        data["user_uuid"] = request.user.uuid
+        return AttendSubjectCRUD(request.state.db_session).create(data)
 
     @classmethod
     def update(
         cls, request: Request, uuid: UUID, schema: UpdateAttendSubjectSchema
     ) -> AttendSubject:
-        user = request.user
-        schema.user_uuid = user.uuid
-        return AttendSubjectCRUD(request.state.db_session).update_by_user_and_uuid(
-            user, uuid, schema.dict()
-        )
+        obj = AttendSubjectCRUD(request.state.db_session).get_by_uuid(uuid)
+        if not obj:
+            raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
+        if obj.user_uuid != request.user.uuid:
+            raise ApiException(PermissionDenied)
+        data = schema.dict()
+        data["user_uuid"] = request.user.uuid
+        return AttendSubjectCRUD(request.state.db_session).update(obj, data)
 
     @classmethod
     def delete(cls, request: Request, uuid: UUID) -> None:
-        return AttendSubjectCRUD(request.state.db_session).delete_by_user_and_uuid(
-            request.user, uuid
-        )
+        obj = AttendSubjectCRUD(request.state.db_session).get_by_uuid(uuid)
+        if not obj:
+            raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
+        if obj.user_uuid != request.user.uuid:
+            raise ApiException(PermissionDenied)
+        return AttendSubjectCRUD(request.state.db_session).delete_by_uuid(uuid)

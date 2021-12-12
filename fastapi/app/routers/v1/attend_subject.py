@@ -15,35 +15,44 @@ from fastapi import APIRouter, Depends, Request
 attend_subject_router = APIRouter()
 
 
-@attend_subject_router.get("/", response_model=List[ReadAttendSubjectSchema])
-async def gets(request: Request, _=Depends(login_required)) -> List[AttendSubject]:
+@attend_subject_router.get(
+    "/",
+    response_model=List[ReadAttendSubjectSchema],
+    dependencies=[Depends(login_required)],
+)
+async def gets(request: Request) -> List[AttendSubject]:
     return AttendSubjectAPI.gets(request)
 
 
-@attend_subject_router.get("/{uuid}", response_model=ReadAttendSubjectSchema)
-async def get(
-    request: Request, uuid: UUID, _=Depends(login_required)
-) -> Optional[AttendSubject]:
+@attend_subject_router.get(
+    "/{uuid}",
+    response_model=ReadAttendSubjectSchema,
+    dependencies=[Depends(login_required)],
+)
+async def get(request: Request, uuid: UUID) -> Optional[AttendSubject]:
     return AttendSubjectAPI.get(request, uuid)
 
 
-@attend_subject_router.post("/", response_model=ReadAttendSubjectSchema)
-async def create(
-    request: Request, schema: CreateAttendSubjectSchema, _=Depends(login_required)
-) -> AttendSubject:
+@attend_subject_router.post(
+    "/", response_model=ReadAttendSubjectSchema, dependencies=[Depends(login_required)]
+)
+async def create(request: Request, schema: CreateAttendSubjectSchema) -> AttendSubject:
     return AttendSubjectAPI.create(request, schema)
 
 
-@attend_subject_router.put("/{uuid}/", response_model=ReadAttendSubjectSchema)
+@attend_subject_router.put(
+    "/{uuid}/",
+    response_model=ReadAttendSubjectSchema,
+    dependencies=[Depends(login_required)],
+)
 async def update(
     request: Request,
     uuid: UUID,
     schema: UpdateAttendSubjectSchema,
-    _=Depends(login_required),
 ) -> AttendSubject:
     return AttendSubjectAPI.update(request, uuid, schema)
 
 
-@attend_subject_router.delete("/{uuid}/")
-async def delete(request: Request, uuid: UUID, _=Depends(login_required)) -> None:
+@attend_subject_router.delete("/{uuid}/", dependencies=[Depends(login_required)])
+async def delete(request: Request, uuid: UUID) -> None:
     return AttendSubjectAPI.delete(request, uuid)
