@@ -19,4 +19,5 @@ class Score(BaseModelMixin):
     )
     got_score = Column(Integer, nullable=False)
     max_score = Column(Integer, nullable=False)
-    memo = Column(VARCHAR(2000), nullable=True)
+    MAX_LENGTH_MEMO = 2000
+    memo = Column(VARCHAR(MAX_LENGTH_MEMO), nullable=True)

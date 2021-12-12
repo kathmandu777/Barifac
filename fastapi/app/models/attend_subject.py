@@ -19,7 +19,8 @@ class AttendSubject(BaseModelMixin):
         ForeignKey("subjects.uuid"),
         nullable=False,
     )
-    target_value = Column(VARCHAR(1), nullable=False)
+    MAX_LENGTH_TARGET_NAME = 1
+    target_value = Column(VARCHAR(MAX_LENGTH_TARGET_NAME), nullable=False)
     target_score = Column(Integer, nullable=False)
 
     scores = relationship("Score", backref="attend_subject")

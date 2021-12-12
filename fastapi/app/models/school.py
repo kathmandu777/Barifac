@@ -7,7 +7,8 @@ from ..models import BaseModelMixin
 class School(BaseModelMixin):
     __tablename__ = "schools"
 
-    name = Column(VARCHAR(100), unique=True, nullable=False)
+    MAX_LENGTH_NAME = 100
+    name = Column(VARCHAR(MAX_LENGTH_NAME), unique=True, nullable=False)
 
     departments = relationship("Department", backref="school")
     teachers = relationship("Teacher", backref="school")

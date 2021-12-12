@@ -1,13 +1,14 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from app.models import Evaluation
+from pydantic import BaseModel, Field
 
 from .subject import ReadSubjectSchema
 
 
 class BaseEvaluationSchema(BaseModel):
-    name: str
-    rate: int
+    name: str = Field(..., max_length=Evaluation.MAX_LENGTH_NAME)
+    rate: int = Field(..., ge=0, le=100)
     type: str
 
     class Config:

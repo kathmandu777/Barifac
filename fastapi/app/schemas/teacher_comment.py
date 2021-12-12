@@ -1,6 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
+from app.models import TeacherComment
 from pydantic import BaseModel, Field
 
 from .teacher import ReadTeacherSchema
@@ -8,7 +9,7 @@ from .user import ReadUserSchema
 
 
 class BaseTeacherCommentSchema(BaseModel):
-    comment: Optional[str] = Field(None, max_length=2000)
+    comment: Optional[str] = Field(None, max_length=TeacherComment.MAX_LENGTH_COMMENT)
 
     class Config:
         orm_mode = True

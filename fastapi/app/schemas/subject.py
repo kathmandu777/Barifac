@@ -1,6 +1,7 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from app.models import Subject
+from pydantic import BaseModel, Field
 
 from .school import ReadSchoolSchema
 from .teacher import ReadTeacherSchema
@@ -8,7 +9,7 @@ from .term import ReadTermSchema
 
 
 class BaseSubjectSchema(BaseModel):
-    name: str
+    name: str = Field(..., max_length=Subject.MAX_LENGTH_NAME)
     credits: int
 
     class Config:

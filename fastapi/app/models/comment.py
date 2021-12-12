@@ -11,7 +11,8 @@ class TeacherComment(BaseModelMixin):
         UUID(as_uuid=True), ForeignKey("teachers.uuid"), nullable=False
     )
     user_uuid = Column(UUID(as_uuid=True), ForeignKey("users.uuid"), nullable=False)
-    comment = Column(VARCHAR(2000), nullable=False)
+    MAX_LENGTH_COMMENT = 2000
+    comment = Column(VARCHAR(MAX_LENGTH_COMMENT), nullable=False)
 
 
 class SubjectComment(BaseModelMixin):
@@ -21,4 +22,5 @@ class SubjectComment(BaseModelMixin):
         UUID(as_uuid=True), ForeignKey("subjects.uuid"), nullable=False
     )
     user_uuid = Column(UUID(as_uuid=True), ForeignKey("users.uuid"), nullable=False)
-    comment = Column(VARCHAR(2000), nullable=False)
+    MAX_LENGTH_COMMENT = 2000
+    comment = Column(VARCHAR(MAX_LENGTH_COMMENT), nullable=False)

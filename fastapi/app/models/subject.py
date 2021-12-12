@@ -13,7 +13,8 @@ class Subject(BaseModelMixin):
         {},
     )
 
-    name = Column(VARCHAR(100), nullable=False)
+    MAX_LENGTH_NAME = 100
+    name = Column(VARCHAR(MAX_LENGTH_NAME), nullable=False)
     school_uuid = Column(
         UUID(as_uuid=True),
         ForeignKey("schools.uuid"),
