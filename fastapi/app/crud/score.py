@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import List, Optional
 
 from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
 
-from ..models import AttendSubject, Evaluation, Score
+from ..models import AttendSubject, Evaluation, Score, User
 from .attend_subject import AttendSubjectCRUD
 from .base import BaseCRUD
 from .evaluation import EvaluationCRUD
@@ -15,6 +15,14 @@ db_session = get_db_session()
 class ScoreCRUD(BaseCRUD):
     def __init__(self, db_session: scoped_session):
         super().__init__(db_session, Score)
+
+    def gets_by_user(self, user: User) -> List[Score]:
+        return (
+            self.get_query()
+            .join(AttendSubject)
+            .filter(AttendSubject.user_uuid == user.uuid)
+            .all()
+        )
 
     def create(self, data: dict = {}) -> Score:
         attend_subject: Optional[Score] = AttendSubjectCRUD(
