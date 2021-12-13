@@ -20,12 +20,12 @@ class AttendSubjectAPI:
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[AttendSubject]:
-        attend_subject = AttendSubjectCRUD(request.state.db_session).get_by_uuid(uuid)
-        if not attend_subject:
+        obj = AttendSubjectCRUD(request.state.db_session).get_by_uuid(uuid)
+        if not obj:
             raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
-        if attend_subject.user_uuid != request.user.uuid:
+        if obj.user_uuid != request.user.uuid:
             raise ApiException(PermissionDenied)
-        return AttendSubjectCRUD(request.state.db_session).get_by_uuid(uuid)
+        return obj
 
     @classmethod
     def create(
