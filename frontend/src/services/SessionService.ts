@@ -1,0 +1,51 @@
+import { SessionFactory } from 'domains';
+import { noAuthClient } from 'infras/RestClient';
+import {
+  getStoreToken,
+  removeStoreToken,
+  setStoreToken,
+} from 'infras/TokenStore';
+
+interface SigninRequest {
+  idToken: string;
+}
+
+export class SessionService {
+  public static build(storedSession: string | null) {
+    if (!storedSession) return null;
+    const session = SessionFactory.createFromResponseObject(
+      JSON.parse(storedSession),
+    );
+    if (session.isExpired) return null;
+    return session;
+  }
+
+  static async signin(idToken: string) {
+    const res = await noAuthClient().post<
+      SigninRequest,
+      { token: string; type: 'store' }
+    >('/login/firebase', { idToken });
+    this.store(res.data.token);
+  }
+
+  static store(token: string) {
+    const timeOut = Date.now() + 60 * 60 * 24 * 1000;
+    const session = SessionFactory.createFromResponseObject({
+      token: token,
+      expiration: timeOut,
+    });
+    setStoreToken(session);
+  }
+
+  static isLoggedin() {
+    const token = getStoreToken();
+    if (!token) return false;
+    const session = SessionFactory.createFromResponseObject(JSON.parse(token));
+    if (session.isExpired) return false;
+    return true;
+  }
+
+  static signout() {
+    removeStoreToken();
+  }
+}

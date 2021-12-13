@@ -16,3 +16,5 @@ export * from './Term';
 export * from './TermFactory';
 export * from './User';
 export * from './UserFactory';
+export * from './Session';
+export * from './SessionFactory';

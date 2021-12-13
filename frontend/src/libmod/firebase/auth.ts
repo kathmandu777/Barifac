@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged as onFirebaseAuthStateChanged,
 } from 'firebase/auth';
+import { SessionService } from 'services/SessionService';
 
 const provider = new GoogleAuthProvider();
 
@@ -14,7 +15,7 @@ export const login = (): void => {
   signInWithPopup(auth, provider)
     .then(credential => credential.user.getIdToken(true))
     .then(idToken => {
-      console.log(idToken);
+      SessionService.signin(idToken);
     })
     .catch(err => console.error(err));
 };
