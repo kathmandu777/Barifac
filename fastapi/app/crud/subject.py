@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import List, Optional
+from uuid import UUID
 
 from app.core.exceptions import (
     ApiException,
@@ -20,6 +21,9 @@ db_session = get_db_session()
 class SubjectCRUD(BaseCRUD):
     def __init__(self, db_session: scoped_session):
         super().__init__(db_session, Subject)
+
+    def gets_by_school_uuid(self, school_uuid: UUID) -> List[Subject]:
+        return self.get_query().filter_by(school_uuid=school_uuid).all()
 
     def get_by_name_term_school_teacher(
         self, name: str, term: Term, school: School, teacher: Teacher
