@@ -27,7 +27,7 @@ class User(BaseModelMixin):
         ForeignKey("departments.uuid", ondelete="CASCADE"),
         nullable=True,
     )
-    grade = Column(Integer, nullable=False)
+    grade = Column(Integer, nullable=True)
 
     is_admin = Column(BOOLEAN, nullable=False, default=False)
     is_active = Column(BOOLEAN, nullable=False, default=True)
