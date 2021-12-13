@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import List, Optional
+from uuid import UUID
 
 from app.core.exceptions import (
     ApiException,
@@ -30,6 +31,9 @@ class EvaluationCRUD(BaseCRUD):
             )
             .first()
         )
+
+    def gets_by_subject_uuid(self, subject_uuid: UUID) -> List[Evaluation]:
+        return self.get_query().filter_by(subject_uuid=subject_uuid).all()
 
     def create(self, data: dict = {}) -> Evaluation:
         subject: Optional[Subject] = SubjectCRUD(db_session).get_by_uuid(
