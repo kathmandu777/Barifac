@@ -1,7 +1,7 @@
 """update score
 
 Revision ID: b26a53bb453c
-Revises: 1595a2312b55
+Revises: 20baa426751c
 Create Date: 2021-12-12 21:01:42.335838+09:00
 
 """
@@ -9,7 +9,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "b26a53bb453c"
-down_revision = "1595a2312b55"
+down_revision = "20baa426751c"
 branch_labels = None
 depends_on = None
 
