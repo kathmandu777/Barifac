@@ -1,7 +1,7 @@
 from logging import getLogger
 
 from app.core.auth import AuthenticatedUser, UnauthenticatedUser
-from app.core.exceptions import ApiException, ExpiredToken, InvalidToken
+from app.core.exceptions import ApiException, ExpiredToken
 from app.core.jwt_handler import jwt_decord_handler
 from app.crud.user import UserCRUD
 from jose import jwt
@@ -41,7 +41,11 @@ class BackendAuth(authentication.AuthenticationBackend):
 
         user = UserCRUD(request.state.db_session).get_by_uuid(claims["user_uuid"])
         if not user or not user.is_active:
-            raise ApiException(InvalidToken)
+            # raise ApiException(InvalidToken)
+            return (
+                authentication.AuthCredentials(["unauthenticated"]),
+                UnauthenticatedUser(),
+            )
         return authentication.AuthCredentials(["authenticated"]), AuthenticatedUser(
             user
         )

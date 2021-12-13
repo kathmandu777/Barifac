@@ -17,17 +17,14 @@ class BaseUserSchema(BaseModel):
 
 
 class CreateUserSchema(BaseUserSchema):
-    uid: Optional[str]
     password: Optional[str] = Field(None, min_length=User.MIN_LENGTH_PASSWORD)
 
 
 class UpdateUserSchema(BaseUserSchema):
-    uid: Optional[str]
     password: Optional[str] = Field(None, min_length=User.MIN_LENGTH_PASSWORD)
-    is_admin: bool
+    school_uuid: UUID
+    department_uuid: UUID
 
 
 class ReadUserSchema(BaseUserSchema):
     uuid: UUID
-    uid: Optional[str]
-    is_admin: bool

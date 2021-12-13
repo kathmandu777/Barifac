@@ -1,11 +1,20 @@
 from typing import Optional
 
-from app.models import User
+from app.db.database import get_db_session
+from app.models import Department, School, User
 from sqlalchemy.orm import scoped_session
 
-from ..core.exceptions import ApiException, UidOrPasswordMustBeSet
+from ..core.exceptions import (
+    ApiException,
+    NotFoundObjectMatchingUuid,
+    UidOrPasswordMustBeSet,
+)
 from ..core.security import get_password_hash
 from .base import BaseCRUD
+from .department import DepartmentCRUD
+from .school import SchoolCRUD
+
+db_session = get_db_session()
 
 
 class UserCRUD(BaseCRUD):
@@ -23,6 +32,11 @@ class UserCRUD(BaseCRUD):
             raise ApiException(UidOrPasswordMustBeSet)
 
     def update(self, obj: User, data: dict = {}) -> User:
+        if not SchoolCRUD(db_session).get_by_uuid(data["school_uuid"]):
+            raise ApiException(NotFoundObjectMatchingUuid(School))
+        if not DepartmentCRUD(db_session).get_by_uuid(data["department_uuid"]):
+            raise ApiException(NotFoundObjectMatchingUuid(Department))
+
         if data["password"] is not None:
             password = data.pop("password")
             data["hashed_password"] = get_password_hash(password)
