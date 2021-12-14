@@ -5,18 +5,31 @@ from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.crud import SubjectCRUD
 from app.models import Subject
 from app.schemas import CreateSubjectSchema, UpdateSubjectSchema
+from sqlalchemy import and_
 
 from fastapi import Request
 
 
 class SubjectAPI:
     @classmethod
-    def gets(cls, request: Request, school_uuid: Optional[UUID]) -> List[Subject]:
+    def gets(
+        cls,
+        request: Request,
+        school_uuid: Optional[UUID],
+        department_uuid: Optional[UUID],
+        term_uuid: Optional[UUID],
+        target_grade: Optional[int],
+    ) -> List[Subject]:
+        q = True
         if school_uuid:
-            return SubjectCRUD(request.state.db_session).gets_by_school_uuid(
-                school_uuid
-            )
-        return SubjectCRUD(request.state.db_session).gets()
+            q = and_(q, Subject.school_uuid == school_uuid)
+        if department_uuid:
+            q = and_(q, (Subject.target_department_uuid == department_uuid))
+        if term_uuid:
+            q = and_(q, (Subject.term_uuid == term_uuid))
+        if target_grade:
+            q = and_(q, (Subject.target_grade == target_grade))
+        return SubjectCRUD(request.state.db_session).gets(q)
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[Subject]:

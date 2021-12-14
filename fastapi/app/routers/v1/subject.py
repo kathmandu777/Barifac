@@ -11,8 +11,16 @@ subject_router = APIRouter()
 
 
 @subject_router.get("/", response_model=List[ReadSubjectSchema])
-async def gets(request: Request, school_uuid: Optional[UUID] = None) -> List[Subject]:
-    return SubjectAPI.gets(request, school_uuid)
+async def gets(
+    request: Request,
+    school_uuid: Optional[UUID] = None,
+    department_uuid: Optional[UUID] = None,
+    term_uuid: Optional[UUID] = None,
+    target_grade: Optional[int] = None,
+) -> List[Subject]:
+    return SubjectAPI.gets(
+        request, school_uuid, department_uuid, term_uuid, target_grade
+    )
 
 
 @subject_router.get("/{uuid}", response_model=ReadSubjectSchema)
