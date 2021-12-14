@@ -18,50 +18,8 @@ import SubjectList, { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
 import { SelectProps } from '@chakra-ui/react';
 
-export const ALLSUBJECTS: SubjectListProps[] = [
-  {
-    subjectID: '101001',
-    subjectName: '微分方程式',
-    score: 0,
-  },
-  {
-    subjectID: '102024',
-    subjectName: '国語IIA',
-    score: 0,
-  },
-  {
-    subjectID: '105007',
-    subjectName: 'コンピュータアーキテクチャ',
-    score: 0,
-  },
-  {
-    subjectID: '101003',
-    subjectName: '歴史',
-    score: 0,
-  },
-  {
-    subjectID: '103019',
-    subjectName: '上級Cプログラミング',
-    score: 0,
-  },
-  {
-    subjectID: '104022',
-    subjectName: '数理工学演習',
-    score: 0,
-  },
-  {
-    subjectID: '105011',
-    subjectName: '科学英語基礎',
-    score: 0,
-  },
-  {
-    subjectID: '109000',
-    subjectName: '電気回路II',
-    score: 0,
-  },
-];
-
 export type AddSubjectProps = {
+  gotlist: SubjectListProps[];
   list: SubjectListProps[];
   hook: Dispatch<SetStateAction<SubjectListProps[]>>;
 };
@@ -98,7 +56,7 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
           <ModalBody pb={6}>
             <FormControl>
               <Select ref={initialRef}>
-                {ALLSUBJECTS.map(sub => {
+                {props.gotlist.map(sub => {
                   return <option key={sub.subjectID}>{sub.subjectName}</option>;
                 })}
               </Select>
