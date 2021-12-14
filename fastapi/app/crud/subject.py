@@ -54,11 +54,13 @@ class SubjectCRUD(BaseCRUD):
         )
         if not teacher:
             raise ApiException(NotFoundObjectMatchingUuid(Teacher))
-        department = DepartmentCRUD(db_session).get_by_uuid(
-            data["target_department_uuid"]
-        )
-        if not department:
-            raise ApiException(NotFoundObjectMatchingUuid(Department))
+
+        if data["target_department_uuid"] is not None:
+            department = DepartmentCRUD(db_session).get_by_uuid(
+                data["target_department_uuid"]
+            )
+            if not department:
+                raise ApiException(NotFoundObjectMatchingUuid(Department))
         name: str = data["name"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
         if subject:
@@ -79,11 +81,13 @@ class SubjectCRUD(BaseCRUD):
         )
         if not teacher:
             raise ApiException(NotFoundObjectMatchingUuid(Teacher))
-        department = DepartmentCRUD(db_session).get_by_uuid(
-            data["target_department_uuid"]
-        )
-        if not department:
-            raise ApiException(NotFoundObjectMatchingUuid(Department))
+
+        if data["target_department_uuid"] is not None:
+            department = DepartmentCRUD(db_session).get_by_uuid(
+                data["target_department_uuid"]
+            )
+            if not department:
+                raise ApiException(NotFoundObjectMatchingUuid(Department))
         name: str = data["name"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
         if subject and subject.uuid != obj.uuid:
