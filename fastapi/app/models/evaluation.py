@@ -24,6 +24,7 @@ class Evaluation(BaseModelMixin):
         nullable=False,
     )
     rate = Column(Integer, nullable=False)
-    type = Column(VARCHAR(20), nullable=False)  # TODO: enum
+    MAX_LENGTH_TYPE = 50
+    type = Column(VARCHAR(MAX_LENGTH_TYPE), nullable=False)  # TODO: enum
 
     scores = relationship("Score", backref="evaluation", cascade="all")
