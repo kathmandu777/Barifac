@@ -6,10 +6,6 @@ import {
   setStoreToken,
 } from 'infras/TokenStore';
 
-interface SigninRequest {
-  idToken: string;
-}
-
 export class SessionService {
   public static build(storedSession: string | null) {
     if (!storedSession) return null;
@@ -21,11 +17,11 @@ export class SessionService {
   }
 
   static async signin(idToken: string) {
-    const res = await noAuthClient().post<
-      SigninRequest,
-      { token: string; type: 'store' }
-    >('/login/firebase', { idToken });
-    this.store(res.data.token);
+    console.log(process.env.API_ORIGIN);
+    const res = await noAuthClient().formURLEncodedPost<{
+      access_token: string;
+    }>('/api/v1/auth/login/firebase', 'idtoken', idToken);
+    this.store(res.data.access_token);
   }
 
   static store(token: string) {

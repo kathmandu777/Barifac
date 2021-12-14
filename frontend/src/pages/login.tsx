@@ -13,11 +13,6 @@ const Login: NextPage = () => {
   // fetchData = responce user data
   const fetchData = null;
 
-  useEffect(() => {
-    {
-      uid && fetchData ? router.replace('/') : router.replace('/user');
-    }
-  });
   return (
     <VStack spacing={10} mt={300}>
       <Heading as='h1' size='xl' color='blue.400' fontWeight='bold'>

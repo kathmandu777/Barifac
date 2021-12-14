@@ -41,13 +41,28 @@ export default class RestClient {
     );
   }
 
+  async formURLEncodedPost<ResponseInterface>(
+    path: string,
+    name: string,
+    value: string,
+  ) {
+    const params = new URLSearchParams();
+    params.append(name, value);
+
+    return await axios.post<ResponseInterface>(
+      path,
+      params,
+      this.formRequestConfig,
+    );
+  }
+
   async delete(path: string) {
     return await axios.delete(path, this.requestConfig);
   }
 
   private get requestConfig(): AxiosRequestConfig {
     return {
-      baseURL: process.env.API_ORIGIN,
+      baseURL: 'http://localhost:8000', //process.env.API_ORIGIN,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.token}`,
@@ -57,7 +72,7 @@ export default class RestClient {
 
   private get formRequestConfig(): AxiosRequestConfig {
     return {
-      baseURL: process.env.API_ORIGIN,
+      baseURL: 'http://localhost:8000', // process.env.API_ORIGIN,
       headers: {
         Authorization: this.token ? `Bearer ${this.token}` : 'null',
       },
