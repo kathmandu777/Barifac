@@ -80,7 +80,7 @@ export default class RestClient {
   }
 }
 
-export function authStoreClient() {
+export function authClient() {
   const session = SessionService.build(getStoreToken());
   if (!session) return null;
   return new RestClient(session.token);

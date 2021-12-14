@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Container,
@@ -10,6 +10,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { SessionService } from 'services/SessionService';
+import { useRouter } from 'next/router';
 
 const SCORE_EDIT_DATA = {
   name: '微分方程式 小テスト',
@@ -28,6 +30,17 @@ const SCORE_EDIT_DATA = {
 const ScoreEdit = () => {
   const name = SCORE_EDIT_DATA.name;
   const [scores, setScores] = useState(SCORE_EDIT_DATA.scores);
+
+  const router = useRouter();
+  const fetchData = async () => {
+    if (!SessionService.isLoggedin()) {
+      alert('ログインし直してください');
+      return router.push('/login');
+    }
+  };
+  useEffect(() => {
+    fetchData;
+  }, []);
 
   const handleAddScore = () => {
     const score = {

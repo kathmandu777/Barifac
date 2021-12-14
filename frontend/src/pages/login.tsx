@@ -1,18 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button } from '@chakra-ui/button';
 import { login } from 'libmod/firebase/auth';
 import { Heading, VStack } from '@chakra-ui/layout';
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useAuthContext } from 'context/AuthContext';
 
 const Login: NextPage = () => {
-  const { uid } = useAuthContext();
-  const router = useRouter();
-
-  // fetchData = responce user data
-  const fetchData = null;
-
   return (
     <VStack spacing={10} mt={300}>
       <Heading as='h1' size='xl' color='blue.400' fontWeight='bold'>
