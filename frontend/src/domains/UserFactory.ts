@@ -1,12 +1,12 @@
-import { Grade, User } from '.';
+import { Grade, User, SchoolObject, DepartmentObject } from '.';
 
 export interface UserObject {
   id: number;
   uid: string;
   name: string;
   email: string;
-  school: string;
-  department: string;
+  school: SchoolObject;
+  department: DepartmentObject;
   grade: Grade;
 }
 

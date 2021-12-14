@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   CircularProgress,
@@ -13,6 +13,9 @@ import {
 
 import EvaluationTable from '../../components/EvaluationTable';
 import ScoreSlider from '../../components/ScoreSlider';
+
+import { SessionService } from 'services/SessionService';
+import { useRouter } from 'next/router';
 
 const SCORES = [
   {
@@ -44,6 +47,17 @@ const ScoreShow = () => {
 
   const [scores, setScores] = useState(SCORES);
   const [targetEval, setTargetEval] = useState(TARGET_EVALUATION);
+
+  const router = useRouter();
+  const fetchData = async () => {
+    if (!SessionService.isLoggedin()) {
+      alert('ログインし直してください');
+      return router.push('/login');
+    }
+  };
+  useEffect(() => {
+    fetchData;
+  }, []);
 
   const handleChangeScore = (index: number, score: number) => {
     const changed = scores.map((s, i) => {
