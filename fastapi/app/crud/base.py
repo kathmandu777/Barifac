@@ -18,7 +18,9 @@ class BaseCRUD:
     def get_query(self) -> query.Query:
         return self.model.query
 
-    def gets(self) -> List[ModelType]:
+    def gets(self, query=None) -> List[ModelType]:
+        if query is not None:
+            return self.get_query().filter(query).all()
         return self.get_query().all()
 
     def get_by_uuid(self, uuid: UUID) -> Optional[ModelType]:
