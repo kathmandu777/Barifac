@@ -9,7 +9,7 @@ from .subject import ReadSubjectSchema
 class BaseEvaluationSchema(BaseModel):
     name: str = Field(..., max_length=Evaluation.MAX_LENGTH_NAME)
     rate: int = Field(..., ge=0, le=100)
-    type: str
+    type: str = Field(..., max_length=Evaluation.MAX_LENGTH_TYPE)
 
     class Config:
         orm_mode = True

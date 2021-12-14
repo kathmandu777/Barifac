@@ -18,4 +18,8 @@ class Department(BaseModelMixin):
         nullable=False,
     )
 
+    # syllabus information
+    MAX_LENGTH_SYLLABUS_URL = 1024
+    syllabus_url = Column(VARCHAR(MAX_LENGTH_SYLLABUS_URL), nullable=True)
+
     users = relationship("User", backref="department", cascade="all")

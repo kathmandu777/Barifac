@@ -9,8 +9,9 @@ from app.core.exceptions import (
 from app.db.database import get_db_session
 from sqlalchemy.orm import scoped_session
 
-from ..models import School, Subject, Teacher, Term
+from ..models import Department, School, Subject, Teacher, Term
 from .base import BaseCRUD
+from .department import DepartmentCRUD
 from .school import SchoolCRUD
 from .teacher import TeacherCRUD
 from .term import TermCRUD
@@ -53,6 +54,13 @@ class SubjectCRUD(BaseCRUD):
         )
         if not teacher:
             raise ApiException(NotFoundObjectMatchingUuid(Teacher))
+
+        if data["target_department_uuid"] is not None:
+            department = DepartmentCRUD(db_session).get_by_uuid(
+                data["target_department_uuid"]
+            )
+            if not department:
+                raise ApiException(NotFoundObjectMatchingUuid(Department))
         name: str = data["name"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
         if subject:
@@ -73,6 +81,13 @@ class SubjectCRUD(BaseCRUD):
         )
         if not teacher:
             raise ApiException(NotFoundObjectMatchingUuid(Teacher))
+
+        if data["target_department_uuid"] is not None:
+            department = DepartmentCRUD(db_session).get_by_uuid(
+                data["target_department_uuid"]
+            )
+            if not department:
+                raise ApiException(NotFoundObjectMatchingUuid(Department))
         name: str = data["name"]
         subject = self.get_by_name_term_school_teacher(name, term, school, teacher)
         if subject and subject.uuid != obj.uuid:
