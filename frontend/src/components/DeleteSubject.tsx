@@ -8,7 +8,7 @@ import {
   AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { Button } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 import { SUBJECTS } from '../pages';
 import { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
@@ -26,7 +26,6 @@ const DeleteSubject: React.FC<DeleteSubjectProp> = props => {
   const onDelete = () => {
     // NOTE: API に置き換えるときはエラー処理必要
     setIsOpen(false);
-    console.log(props.index);
     const tempList = props.list.slice(0, props.list.length);
     tempList.splice(props.index, 1);
     //props.hook(props.list.splice(props.index, 1));
@@ -58,10 +57,16 @@ const DeleteSubject: React.FC<DeleteSubjectProp> = props => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button ref={cancelRef} onClick={onClose} rounded='full'>
                 やっぱ削除しない！
               </Button>
-              <Button bg='blue.400' color='white' onClick={onDelete} ml={3}>
+              <Button
+                bg='blue.400'
+                color='gray.800'
+                onClick={onDelete}
+                ml={3}
+                rounded='full'
+              >
                 削除する！
               </Button>
             </AlertDialogFooter>

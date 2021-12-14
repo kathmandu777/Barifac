@@ -18,7 +18,7 @@ import {
 import DeleteSubject from './DeleteSubject';
 
 export type SubjectListProps = {
-  subjectID: number;
+  subjectID: string;
   subjectName: string;
   score: number;
 };
