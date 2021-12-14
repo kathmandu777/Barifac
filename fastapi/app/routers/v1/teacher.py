@@ -2,10 +2,11 @@ from typing import List, Optional
 from uuid import UUID
 
 from app.api.v1 import TeacherAPI
+from app.dependencies import admin_required
 from app.models import Teacher
 from app.schemas import CreateTeacherSchema, ReadTeacherSchema, UpdateTeacherSchema
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 
 teacher_router = APIRouter()
 
@@ -25,11 +26,13 @@ async def create(request: Request, schema: CreateTeacherSchema) -> Teacher:
     return TeacherAPI.create(request, schema)
 
 
-@teacher_router.put("/{uuid}/", response_model=ReadTeacherSchema)
+@teacher_router.put(
+    "/{uuid}", response_model=ReadTeacherSchema, dependencies=[Depends(admin_required)]
+)
 async def update(request: Request, uuid: UUID, schema: UpdateTeacherSchema) -> Teacher:
     return TeacherAPI.update(request, uuid, schema)
 
 
-@teacher_router.delete("/{uuid}/")
+@teacher_router.delete("/{uuid}", dependencies=[Depends(admin_required)])
 async def delete(request: Request, uuid: UUID) -> None:
     return TeacherAPI.delete(request, uuid)

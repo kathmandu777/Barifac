@@ -28,11 +28,13 @@ async def create(request: Request, schema: CreateSchoolSchema) -> School:
     return SchoolAPI.create(request, schema)
 
 
-@school_router.put("/{uuid}/", response_model=ReadSchoolSchema)
+@school_router.put(
+    "/{uuid}", response_model=ReadSchoolSchema, dependencies=[Depends(admin_required)]
+)
 async def update(request: Request, uuid: UUID, schema: UpdateSchoolSchema) -> School:
     return SchoolAPI.update(request, uuid, schema)
 
 
-@school_router.delete("/{uuid}/", dependencies=[Depends(admin_required)])
+@school_router.delete("/{uuid}", dependencies=[Depends(admin_required)])
 async def delete(request: Request, uuid: UUID) -> None:
     return SchoolAPI.delete(request, uuid)

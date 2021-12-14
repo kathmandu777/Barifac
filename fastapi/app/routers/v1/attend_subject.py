@@ -41,7 +41,7 @@ async def create(request: Request, schema: CreateAttendSubjectSchema) -> AttendS
 
 
 @attend_subject_router.put(
-    "/{uuid}/",
+    "/{uuid}",
     response_model=ReadAttendSubjectSchema,
     dependencies=[Depends(login_required)],
 )
@@ -53,6 +53,6 @@ async def update(
     return AttendSubjectAPI.update(request, uuid, schema)
 
 
-@attend_subject_router.delete("/{uuid}/", dependencies=[Depends(login_required)])
+@attend_subject_router.delete("/{uuid}", dependencies=[Depends(login_required)])
 async def delete(request: Request, uuid: UUID) -> None:
     return AttendSubjectAPI.delete(request, uuid)
