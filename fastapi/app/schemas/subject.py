@@ -10,7 +10,7 @@ from .term import ReadTermSchema
 
 class BaseSubjectSchema(BaseModel):
     name: str = Field(..., max_length=Subject.MAX_LENGTH_NAME)
-    credits: int
+    credits: float
 
     class Config:
         orm_mode = True

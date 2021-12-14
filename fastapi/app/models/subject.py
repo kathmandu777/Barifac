@@ -1,4 +1,4 @@
-from sqlalchemy import VARCHAR, Column, ForeignKey, Integer
+from sqlalchemy import Column, Float, ForeignKey, VARCHAR
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
@@ -30,7 +30,7 @@ class Subject(BaseModelMixin):
         ForeignKey("teachers.uuid", ondelete="CASCADE"),
         nullable=False,
     )
-    credits = Column(Integer, nullable=False)
+    credits = Column(Float, nullable=False)
 
     evaluations = relationship("Evaluation", backref="subject", cascade="all")
     # TODO: fix variable name
