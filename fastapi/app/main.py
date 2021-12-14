@@ -51,10 +51,43 @@ app.include_router(router)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Barifac API Server")
-    parser.add_argument("command", help="command", choices=["seed"])
+    parser.add_argument("command", help="command", choices=["seed", "scraping"])
+    parser.add_argument(
+        "--only_add_schools",
+        action="store_true",
+        help="only add schools",
+        default=False,
+    )
+    parser.add_argument(
+        "--only-add-schools-and-departments",
+        action="store_true",
+        help="only add schools and departments",
+        default=False,
+    )
+    parser.add_argument("--school-name", help="school name", default="")
+    parser.add_argument("--department-name", help="department name", default="")
 
     args = parser.parse_args()
     if args.command == "seed":
         from app.db.seed import seed_all
 
         seed_all()
+
+    elif args.command == "scraping":
+        from app.core.scraping_syllabus import (
+            add_all_data,
+            add_schools,
+            add_schools_and_departments,
+            add_subjects_with_school_and_department,
+        )
+
+        if args.school_name and args.department_name:
+            add_subjects_with_school_and_department(
+                args.school_name, args.department_name
+            )
+        elif args.only_add_schools_and_departments:
+            add_schools_and_departments()
+        elif args.only_add_schools:
+            add_schools()
+        else:
+            add_all_data()
