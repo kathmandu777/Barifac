@@ -37,7 +37,7 @@ class Subject(BaseModelMixin):
     MAX_LENGTH_TYPE = 10
     type = Column(VARCHAR(MAX_LENGTH_TYPE), nullable=True)
     target_grade = Column(Integer, nullable=True)
-    target_department = Column(
+    target_department_uuid = Column(
         UUID(as_uuid=True),
         ForeignKey("departments.uuid", ondelete="CASCADE"),
         nullable=True,
