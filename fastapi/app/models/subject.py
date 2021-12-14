@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Float, ForeignKey, VARCHAR
+from sqlalchemy import VARCHAR, Column, Float, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
@@ -31,6 +31,21 @@ class Subject(BaseModelMixin):
         nullable=False,
     )
     credits = Column(Float, nullable=False)
+
+    MAX_LENGTH_CATEGORY = 10
+    category = Column(VARCHAR(MAX_LENGTH_CATEGORY), nullable=True)
+    MAX_LENGTH_TYPE = 10
+    type = Column(VARCHAR(MAX_LENGTH_TYPE), nullable=True)
+    target_grade = Column(Integer, nullable=True)
+    target_department = Column(
+        UUID(as_uuid=True),
+        ForeignKey("departments.uuid", ondelete="CASCADE"),
+        nullable=True,
+    )
+
+    # syllabus information
+    MAX_LENGTH_SYLLABUS_URL = 1024
+    syllabus_url = Column(VARCHAR(MAX_LENGTH_SYLLABUS_URL), nullable=True)
 
     evaluations = relationship("Evaluation", backref="subject", cascade="all")
     # TODO: fix variable name
