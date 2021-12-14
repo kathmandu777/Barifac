@@ -4,6 +4,9 @@ from uuid import UUID
 from app.models import User
 from pydantic import BaseModel, Field
 
+from .department import ReadDepartmentSchema
+from .school import ReadSchoolSchema
+
 
 class BaseUserSchema(BaseModel):
     username: str = Field(
@@ -28,3 +31,5 @@ class UpdateUserSchema(BaseUserSchema):
 
 class ReadUserSchema(BaseUserSchema):
     uuid: UUID
+    school: Optional[ReadSchoolSchema]
+    department: Optional[ReadDepartmentSchema]
