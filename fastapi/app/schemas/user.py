@@ -10,7 +10,7 @@ class BaseUserSchema(BaseModel):
         ..., min_length=User.MIN_LENGTH_USERNAME, max_length=User.MAX_LENGTH_USERNAME
     )
     email: str = Field(..., regex=r"[^\s]+@[^\s]+")
-    grade: Optional[int] = Field(None, gte=1, lte=5)
+    grade: Optional[int] = Field(None, ge=1, le=5)
 
     class Config:
         orm_mode = True
