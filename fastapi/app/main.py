@@ -53,19 +53,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Barifac API Server")
     parser.add_argument("command", help="command", choices=["seed", "scraping"])
     parser.add_argument(
+        "-os",
         "--only_add_schools",
         action="store_true",
         help="only add schools",
         default=False,
     )
     parser.add_argument(
+        "-osd",
         "--only-add-schools-and-departments",
         action="store_true",
         help="only add schools and departments",
         default=False,
     )
-    parser.add_argument("--school-name", help="school name", default="")
-    parser.add_argument("--department-name", help="department name", default="")
+    parser.add_argument("-sn", "--school-name", help="school name")
+    parser.add_argument("-dn", "--department-name", help="department name")
 
     args = parser.parse_args()
     if args.command == "seed":
