@@ -14,6 +14,7 @@ class BaseUserSchema(BaseModel):
     )
     email: str = Field(..., regex=r"[^\s]+@[^\s]+")
     grade: Optional[int] = Field(None, ge=1, le=5)
+    uid: Optional[str] = Field(None, max_length=User.MAX_LENGTH_UID)
 
     class Config:
         orm_mode = True

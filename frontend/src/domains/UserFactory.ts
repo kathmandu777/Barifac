@@ -1,9 +1,9 @@
 import { Grade, User, SchoolObject, DepartmentObject } from '.';
 
 export interface UserObject {
-  id: number;
+  uuid: string;
   uid: string;
-  name: string;
+  username: string;
   email: string;
   school: SchoolObject;
   department: DepartmentObject;
@@ -13,9 +13,9 @@ export interface UserObject {
 export class UserFactory {
   public static createFromResponseObject(obj: UserObject) {
     return new User(
-      obj.id,
+      obj.uuid,
       obj.uid,
-      obj.name,
+      obj.username,
       obj.email,
       obj.school,
       obj.department,
