@@ -10,12 +10,14 @@ import {
 } from '@chakra-ui/react';
 import { SUBJECTS } from '..';
 import SubjectNameList from '../../components/SubjectNameList';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AddIcon } from '@chakra-ui/icons';
 import AddSubject from '../../components/AddSubject';
 import { SubjectListProps } from '../../components/SubjectList';
 
-export const ALLSUBJECTS: SubjectListProps[] = [
+export const GRADELIST = [1, 2, 3, 4, 5];
+
+export const ALLSUBJECT1: SubjectListProps[] = [
   {
     subjectID: '101001',
     subjectName: '微分方程式',
@@ -58,14 +60,67 @@ export const ALLSUBJECTS: SubjectListProps[] = [
   },
 ];
 
+export const ALLSUBJECT2: SubjectListProps[] = [
+  {
+    subjectID: '101001',
+    subjectName: '特別活動',
+    score: 0,
+  },
+  {
+    subjectID: '102024',
+    subjectName: '国語IIA',
+    score: 0,
+  },
+  {
+    subjectID: '105007',
+    subjectName: '地理IIB',
+    score: 0,
+  },
+  {
+    subjectID: '101003',
+    subjectName: '体育',
+    score: 0,
+  },
+  {
+    subjectID: '103019',
+    subjectName: '線形数学',
+    score: 0,
+  },
+  {
+    subjectID: '104022',
+    subjectName: '数理工学演習IIA',
+    score: 0,
+  },
+  {
+    subjectID: '105011',
+    subjectName: '英語講読',
+    score: 0,
+  },
+];
+
+export const ALLSUBJECT3: SubjectListProps[] = [];
+export const ALLSUBJECT4: SubjectListProps[] = [];
+export const ALLSUBJECT5: SubjectListProps[] = [];
+
+const GRADEANDSUBJECTS: SubjectListProps[][] = [
+  ALLSUBJECT1,
+  ALLSUBJECT2,
+  ALLSUBJECT3,
+  ALLSUBJECT4,
+  ALLSUBJECT5,
+];
+
+const USERGRADE = 1; // ユーザの学年を1年と決め打ち
+
 const Edit = () => {
   const [editedSubject, setSubject] = useState(SUBJECTS);
   const saveSubjects = () => {};
   const addAllSubject = () => {
     const tempList = editedSubject.slice(0, editedSubject.length);
-    Array.prototype.push.apply(tempList, ALLSUBJECTS);
+    Array.prototype.push.apply(tempList, GRADEANDSUBJECTS[USERGRADE - 1]);
     setSubject(tempList);
   };
+
   return (
     <>
       <Center w='100%'>
@@ -96,7 +151,7 @@ const Edit = () => {
         <Divider borderColor='gray.700' />
         <Center w='100%'>
           <AddSubject
-            gotlist={ALLSUBJECTS}
+            gotlist={GRADEANDSUBJECTS}
             list={editedSubject}
             hook={setSubject}
           />
