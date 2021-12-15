@@ -5,7 +5,7 @@ from app.models import SubjectComment
 from pydantic import BaseModel, Field
 
 from .subject import ReadSubjectSchema
-from .user import ReadUserSchema
+from .user import ReadSimpleUserSchema
 
 
 class BaseSubjectCommentSchema(BaseModel):
@@ -18,7 +18,7 @@ class BaseSubjectCommentSchema(BaseModel):
 class ReadSubjectCommentSchema(BaseSubjectCommentSchema):
     uuid: UUID
     subject: ReadSubjectSchema
-    user: ReadUserSchema
+    user: ReadSimpleUserSchema
 
 
 class CreateSubjectCommentSchema(BaseSubjectCommentSchema):
