@@ -31,9 +31,10 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
   const finalRef = React.useRef(null);
   const onAdd = () => {
     const tempList = props.list.slice(0, props.list.length);
+    const valueList = initialRef.current!.value.split(',');
     const pushedSubject: SubjectListProps = {
-      subjectID: initialRef.current!.value[0],
-      subjectName: initialRef.current!.value[1],
+      subjectID: valueList[0],
+      subjectName: valueList[1],
       score: 0,
     };
     tempList.push(pushedSubject);
