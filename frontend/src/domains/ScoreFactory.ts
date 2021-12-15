@@ -1,11 +1,18 @@
-import { AttendSubjectObject, EvaluationObject, Score } from '.';
+import {
+  AttendSubject,
+  AttendSubjectFactory,
+  AttendSubjectObject,
+  EvaluationFactory,
+  EvaluationObject,
+  Score,
+} from '.';
 
 export interface ScoreObject {
   uuid: string;
   attendSubject: AttendSubjectObject;
   evaluation: EvaluationObject;
-  gotScore: number;
-  maxScore: number;
+  got_score: number;
+  max_score: number;
   memo: string;
 }
 
@@ -13,10 +20,10 @@ export class ScoreFactory {
   public static createFromResponseObject(obj: ScoreObject) {
     return new Score(
       obj.uuid,
-      obj.attendSubject,
-      obj.evaluation,
-      obj.gotScore,
-      obj.maxScore,
+      AttendSubjectFactory.createFromResponseObject(obj.attendSubject),
+      EvaluationFactory.createFromResponseObject(obj.evaluation),
+      obj.got_score,
+      obj.max_score,
       obj.memo,
     );
   }
