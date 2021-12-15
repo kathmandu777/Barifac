@@ -14,8 +14,6 @@ from fastapi import APIRouter, Depends, Request
 
 department_router = APIRouter()
 
-# TODO: departmentのdeleteなどはadmin_requiredをかける
-
 
 @department_router.get("/", response_model=List[ReadDepartmentSchema])
 async def gets(
