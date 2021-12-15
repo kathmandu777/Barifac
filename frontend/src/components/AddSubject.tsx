@@ -32,8 +32,8 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
   const onAdd = () => {
     const tempList = props.list.slice(0, props.list.length);
     const pushedSubject: SubjectListProps = {
-      subjectID: initialRef.current!.accessKey,
-      subjectName: initialRef.current!.value,
+      subjectID: initialRef.current!.value[0],
+      subjectName: initialRef.current!.value[1],
       score: 0,
     };
     tempList.push(pushedSubject);
@@ -57,7 +57,14 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
             <FormControl>
               <Select ref={initialRef}>
                 {props.gotlist.map(sub => {
-                  return <option key={sub.subjectID}>{sub.subjectName}</option>;
+                  return (
+                    <option
+                      key={sub.subjectID}
+                      value={[sub.subjectID, sub.subjectName]}
+                    >
+                      {sub.subjectName}
+                    </option>
+                  );
                 })}
               </Select>
             </FormControl>
