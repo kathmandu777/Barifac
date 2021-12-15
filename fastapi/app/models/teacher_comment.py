@@ -17,20 +17,3 @@ class TeacherComment(BaseModelMixin):
     )
     MAX_LENGTH_COMMENT = 2000
     comment = Column(VARCHAR(MAX_LENGTH_COMMENT), nullable=False)
-
-
-class SubjectComment(BaseModelMixin):
-    __tablename__ = "subject_comments"
-
-    subject_uuid = Column(
-        UUID(as_uuid=True),
-        ForeignKey("subjects.uuid", ondelete="CASCADE"),
-        nullable=False,
-    )
-    user_uuid = Column(
-        UUID(as_uuid=True),
-        ForeignKey("users.uuid", ondelete="CASCADE"),
-        nullable=False,
-    )
-    MAX_LENGTH_COMMENT = 2000
-    comment = Column(VARCHAR(MAX_LENGTH_COMMENT), nullable=False)
