@@ -1,4 +1,4 @@
-import { TeacherObject, UserObject } from '.';
+import { TeacherFactory, TeacherObject, UserFactory, UserObject } from '.';
 import { TeacherComment } from './TeacherComment';
 
 export interface TeacherCommentObject {
@@ -10,6 +10,11 @@ export interface TeacherCommentObject {
 
 export class TeacherCommentFactory {
   public static createFromResponseObject(obj: TeacherCommentObject) {
-    return new TeacherComment(obj.uuid, obj.teacher, obj.user, obj.comment);
+    return new TeacherComment(
+      obj.uuid,
+      TeacherFactory.createFromResponseObject(obj.teacher),
+      UserFactory.createFromResponseObject(obj.user),
+      obj.comment,
+    );
   }
 }

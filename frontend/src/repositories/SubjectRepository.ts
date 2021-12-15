@@ -12,7 +12,7 @@ export class SubjectRepository {
   static async gets() {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<Subject[]>(`/api/v1/subjects`);
+    const res = await authClientObject.get<SubjectObject[]>(`/api/v1/subjects`);
     return res.data.map(subject =>
       SubjectFactory.createFromResponseObject(subject),
     );
@@ -20,7 +20,9 @@ export class SubjectRepository {
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<Subject>(`/api/v1/subjects/${uuid}`);
+    const res = await authClientObject.get<SubjectObject>(
+      `/api/v1/subjects/${uuid}`,
+    );
     return SubjectFactory.createFromResponseObject(res.data);
   }
   public static async create({

@@ -1,4 +1,4 @@
-import { Department, SchoolObject } from '.';
+import { Department, SchoolFactory, SchoolObject } from '.';
 
 export interface DepartmentObject {
   uuid: string;
@@ -9,6 +9,11 @@ export interface DepartmentObject {
 
 export class DepartmentFactory {
   public static createFromResponseObject(obj: DepartmentObject) {
-    return new Department(obj.uuid, obj.school, obj.syllabus_url, obj.name);
+    return new Department(
+      obj.uuid,
+      SchoolFactory.createFromResponseObject(obj.school),
+      obj.syllabus_url,
+      obj.name,
+    );
   }
 }

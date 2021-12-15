@@ -1,21 +1,28 @@
-import { AttendSubject, TargetScore, SubjectObject, UserObject } from '.';
+import {
+  AttendSubject,
+  TargetScore,
+  SubjectObject,
+  UserObject,
+  UserFactory,
+  SubjectFactory,
+} from '.';
 
 export interface AttendSubjectObject {
   uuid: string;
   user: UserObject;
   subject: SubjectObject;
-  targetValue: number;
-  targetScore: TargetScore;
+  target_value: number;
+  target_score: TargetScore;
 }
 
 export class AttendSubjectFactory {
   public static createFromResponseObject(obj: AttendSubjectObject) {
     return new AttendSubject(
       obj.uuid,
-      obj.user,
-      obj.subject,
-      obj.targetValue,
-      obj.targetScore,
+      UserFactory.createFromResponseObject(obj.user),
+      SubjectFactory.createFromResponseObject(obj.subject),
+      obj.target_value,
+      obj.target_score,
     );
   }
 }
