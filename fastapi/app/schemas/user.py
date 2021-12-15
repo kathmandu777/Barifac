@@ -4,7 +4,7 @@ from uuid import UUID
 from app.models import User
 from pydantic import BaseModel, Field
 
-from .department import ReadDepartmentSchema
+from .department import ReadDepartmentSchema, ReadSimpleDepartmentSchema
 from .school import ReadSchoolSchema
 
 
@@ -33,3 +33,9 @@ class ReadUserSchema(BaseUserSchema):
     uuid: UUID
     school: Optional[ReadSchoolSchema]
     department: Optional[ReadDepartmentSchema]
+
+
+class ReadSimpleUserSchema(BaseUserSchema):
+    uuid: UUID
+    school: Optional[ReadSchoolSchema]
+    department: Optional[ReadSimpleDepartmentSchema]

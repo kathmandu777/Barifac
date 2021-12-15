@@ -32,3 +32,7 @@ class CreateScoreSchema(BaseScoreSchema):
 class UpdateScoreSchema(BaseScoreSchema):
     attend_subject_uuid: UUID
     evaluation_uuid: UUID
+
+
+class ReadSimpleScoreSchema(BaseScoreSchema):
+    uuid: UUID

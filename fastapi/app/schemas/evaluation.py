@@ -26,3 +26,7 @@ class CreateEvaluationSchema(BaseEvaluationSchema):
 
 class UpdateEvaluationSchema(BaseEvaluationSchema):
     subject_uuid: UUID
+
+
+class ReadSimpleEvaluationSchema(BaseEvaluationSchema):
+    uuid: UUID

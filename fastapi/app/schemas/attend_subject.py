@@ -3,7 +3,7 @@ from uuid import UUID
 from app.models import AttendSubject
 from pydantic import BaseModel, Field
 
-from .subject import ReadSubjectSchema
+from .subject import ReadSimpleSubjectSchema, ReadSubjectSchema
 
 
 class BaseAttendSubjectSchema(BaseModel):
@@ -30,3 +30,8 @@ class CreateAttendSubjectSchema(BaseAttendSubjectSchema):
 
 class UpdateAttendSubjectSchema(BaseAttendSubjectSchema):
     subject_uuid: UUID
+
+
+class ReadAttendSubjectWithEvaluationsScoresSchema(BaseAttendSubjectSchema):
+    uuid: UUID
+    subject: ReadSimpleSubjectSchema
