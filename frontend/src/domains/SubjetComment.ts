@@ -1,6 +1,6 @@
-import { Subject, User } from ".";
+import { Subject, User } from '.';
 
-export class Comment {
+export class SubjectComment {
   constructor(
     public uuid: string,
     public subject: Subject,
