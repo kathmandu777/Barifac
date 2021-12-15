@@ -5,5 +5,6 @@ from .school import SchoolAPI
 from .score import ScoreAPI
 from .subject import SubjectAPI
 from .teacher import TeacherAPI
+from .teacher_comment import TeacherCommentAPI
 from .term import TermAPI
 from .user import UserAPI
