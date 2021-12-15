@@ -36,7 +36,10 @@ class BaseCRUD:
         self.db_session.refresh(obj)
         return obj
 
-    def update(self, obj: ModelType, data: dict = {}) -> ModelType:
+    def update(self, uuid: UUID, data: dict = {}) -> ModelType:
+        obj = self.get_by_uuid(uuid)
+        if obj is None:
+            raise ApiException(NotFoundObjectMatchingUuid(self.model))
         for key, value in data.items():
             if hasattr(obj, key):
                 setattr(obj, key, value)
