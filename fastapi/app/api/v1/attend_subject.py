@@ -6,7 +6,7 @@ from app.core.exceptions import (
     NotFoundObjectMatchingUuid,
     PermissionDenied,
 )
-from app.crud import AttendSubjectCRUD
+from app.crud import AttendSubjectCRUD, EvaluationCRUD, ScoreCRUD
 from app.models import AttendSubject
 from app.schemas import CreateAttendSubjectSchema, UpdateAttendSubjectSchema
 
@@ -17,6 +17,49 @@ class AttendSubjectAPI:
     @classmethod
     def gets(cls, request: Request) -> List[AttendSubject]:
         return AttendSubjectCRUD(request.state.db_session).gets_by_user(request.user)
+
+    @classmethod
+    def gets_by_term(cls, request: Request, term_uuid: UUID):
+        attend_subjects = AttendSubjectCRUD(request.state.db_session).gets_by_term(
+            request.user, term_uuid
+        )
+        data = []
+        for attend_subject in attend_subjects:
+            evaluations = EvaluationCRUD(request.state.db_session).gets_by_subject_uuid(
+                attend_subject.subject.uuid
+            )
+            evaluations_data = []
+            for evaluation in evaluations:
+                scores = ScoreCRUD(
+                    request.state.db_session
+                ).gets_by_attend_subject_evaluation(attend_subject, evaluation)
+                evaluations_data.append(
+                    {
+                        "evaluation_uuid": evaluation.uuid,
+                        "evaluation_name": evaluation.name,
+                        "rate": evaluation.rate,
+                        "scores": [
+                            {
+                                "score_uuid": score.uuid,
+                                "got_score": score.got_score,
+                                "max_score": score.max_score,
+                                "memo": score.memo,
+                            }
+                            for score in scores
+                        ],
+                    }
+                )
+            data.append(
+                {
+                    "uuid": attend_subject.uuid,
+                    "target_value": attend_subject.target_value,
+                    "target_score": attend_subject.target_score,
+                    "subject_uuid": attend_subject.subject_uuid,
+                    "subject_name": attend_subject.subject.name,
+                    "evaluations": evaluations_data,
+                }
+            )
+        return data
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[AttendSubject]:

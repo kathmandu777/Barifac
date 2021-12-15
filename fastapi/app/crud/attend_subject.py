@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 
 from app.core.exceptions import (
     ApiException,
@@ -23,6 +24,16 @@ class AttendSubjectCRUD(BaseCRUD):
 
     def gets_by_user(self, user: User) -> List[AttendSubject]:
         return self.get_query().filter_by(user_uuid=user.uuid).all()
+
+    def gets_by_term(self, user: User, term_uuid: UUID) -> List[AttendSubject]:
+        return (
+            self.get_query()
+            .join(Subject)
+            .filter(
+                Subject.term_uuid == term_uuid, AttendSubject.user_uuid == user.uuid
+            )
+            .all()
+        )
 
     def get_by_user_and_subject(
         self, user: User, subject: Subject
