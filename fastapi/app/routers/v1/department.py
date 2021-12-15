@@ -2,6 +2,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from app.api.v1 import DepartmentAPI
+from app.dependencies import admin_required
 from app.models import Department
 from app.schemas import (
     CreateDepartmentSchema,
@@ -9,7 +10,7 @@ from app.schemas import (
     UpdateDepartmentSchema,
 )
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 
 department_router = APIRouter()
 
@@ -33,13 +34,17 @@ async def create(request: Request, schema: CreateDepartmentSchema) -> Department
     return DepartmentAPI.create(request, schema)
 
 
-@department_router.put("/{uuid}/", response_model=ReadDepartmentSchema)
+@department_router.put(
+    "/{uuid}",
+    response_model=ReadDepartmentSchema,
+    dependencies=[Depends(admin_required)],
+)
 async def update(
     request: Request, uuid: UUID, schema: UpdateDepartmentSchema
 ) -> Department:
     return DepartmentAPI.update(request, uuid, schema)
 
 
-@department_router.delete("/{uuid}/")
+@department_router.delete("/{uuid}", dependencies=[Depends(admin_required)])
 async def delete(request: Request, uuid: UUID) -> None:
     return DepartmentAPI.delete(request, uuid)
