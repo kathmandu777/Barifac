@@ -1,7 +1,6 @@
 from typing import List, Optional
 from uuid import UUID
 
-from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.crud import SubjectCRUD
 from app.models import Subject
 from app.schemas import CreateSubjectSchema, UpdateSubjectSchema
@@ -19,6 +18,8 @@ class SubjectAPI:
         department_uuid: Optional[UUID],
         term_uuid: Optional[UUID],
         target_grade: Optional[int],
+        category: Optional[str],
+        type: Optional[str],
     ) -> List[Subject]:
         q = True
         if school_uuid:
@@ -29,6 +30,10 @@ class SubjectAPI:
             q = and_(q, (Subject.term_uuid == term_uuid))
         if target_grade:
             q = and_(q, (Subject.target_grade == target_grade))
+        if category:
+            q = and_(q, (Subject.category == category))
+        if type:
+            q = and_(q, (Subject.type == type))
         return SubjectCRUD(request.state.db_session).gets(q)
 
     @classmethod
@@ -43,10 +48,7 @@ class SubjectAPI:
     def update(
         cls, request: Request, uuid: UUID, schema: UpdateSubjectSchema
     ) -> Subject:
-        obj = SubjectCRUD(request.state.db_session).get_by_uuid(uuid)
-        if not obj:
-            raise ApiException(NotFoundObjectMatchingUuid(Subject))
-        return SubjectCRUD(request.state.db_session).update(obj, schema.dict())
+        return SubjectCRUD(request.state.db_session).update(uuid, schema.dict())
 
     @classmethod
     def delete(cls, request: Request, uuid: UUID) -> None:
