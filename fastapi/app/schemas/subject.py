@@ -4,8 +4,9 @@ from uuid import UUID
 from app.models import Subject
 from pydantic import BaseModel, Field
 
+from .department import ReadSimpleDepartmentSchema
 from .school import ReadSchoolSchema
-from .teacher import ReadTeacherSchema
+from .teacher import ReadSimpleTeacherSchema
 from .term import ReadTermSchema
 
 
@@ -18,7 +19,6 @@ class BaseSubjectSchema(BaseModel):
     category: Optional[str] = Field(None, max_length=Subject.MAX_LENGTH_CATEGORY)
     type: Optional[str] = Field(None, max_length=Subject.MAX_LENGTH_TYPE)
     target_grade: Optional[int] = Field(None, ge=1, le=5)
-    target_department: Optional[UUID] = Field(None)
 
     class Config:
         orm_mode = True
@@ -27,8 +27,9 @@ class BaseSubjectSchema(BaseModel):
 class ReadSubjectSchema(BaseSubjectSchema):
     uuid: UUID
     term: ReadTermSchema
-    teacher: ReadTeacherSchema
+    teacher: ReadSimpleTeacherSchema
     school: ReadSchoolSchema
+    target_department: Optional[ReadSimpleDepartmentSchema]
 
 
 class ReadSimpleSubjectSchema(BaseSubjectSchema):

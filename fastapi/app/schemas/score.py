@@ -4,7 +4,6 @@ from uuid import UUID
 from app.models import Score
 from pydantic import BaseModel, Field
 
-from .attend_subject import ReadAttendSubjectSchema
 from .evaluation import ReadEvaluationSchema
 
 
@@ -20,7 +19,6 @@ class BaseScoreSchema(BaseModel):
 
 class ReadScoreSchema(BaseScoreSchema):
     uuid: UUID
-    attend_subject: ReadAttendSubjectSchema
     evaluation: ReadEvaluationSchema
 
 

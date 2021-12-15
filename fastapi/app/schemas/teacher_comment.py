@@ -5,7 +5,7 @@ from app.models import TeacherComment
 from pydantic import BaseModel, Field
 
 from .teacher import ReadTeacherSchema
-from .user import ReadUserSchema
+from .user import ReadSimpleUserSchema
 
 
 class BaseTeacherCommentSchema(BaseModel):
@@ -18,7 +18,7 @@ class BaseTeacherCommentSchema(BaseModel):
 class ReadTeacherCommentSchema(BaseTeacherCommentSchema):
     uuid: UUID
     teacher: ReadTeacherSchema
-    user: ReadUserSchema
+    user: ReadSimpleUserSchema
 
 
 class CreateTeacherCommentSchema(BaseTeacherCommentSchema):
