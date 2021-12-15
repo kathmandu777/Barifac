@@ -26,7 +26,7 @@ api_v1_router.include_router(
 )
 api_v1_router.include_router(subject_router, prefix="/subjects", tags=["subjects"])
 api_v1_router.include_router(
-    subject_comment_router, prefix="/subjects_comment", tags=["subject_comments"]
+    subject_comment_router, prefix="/subjects_comments", tags=["subject_comments"]
 )
 api_v1_router.include_router(
     evaluation_router, prefix="/evaluations", tags=["evaluations"]

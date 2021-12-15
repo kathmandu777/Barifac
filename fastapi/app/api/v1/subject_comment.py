@@ -9,6 +9,7 @@ from app.core.exceptions import (
 from app.crud import SubjectCommentCRUD, SubjectCRUD
 from app.models import Subject, SubjectComment
 from app.schemas import CreateSubjectCommentSchema, UpdateSubjectCommentSchema
+from sqlalchemy import and_
 
 from fastapi import Request
 
@@ -16,16 +17,20 @@ from fastapi import Request
 class SubjectCommentAPI:
     @classmethod
     def gets(
-        cls, request: Request, subject_uuid: Optional[UUID]
+        cls,
+        request: Request,
+        subject_uuid: Optional[UUID],
+        user_uuid: Optional[UUID],
     ) -> List[SubjectComment]:
+        q = True
         if subject_uuid:
-            return SubjectCommentCRUD(request.state.db_session).gets_by_subject_uuid(
-                subject_uuid
-            )
-        return SubjectCommentCRUD(request.state.db_session).gets()
+            q = and_(q, SubjectComment.subject_uuid == subject_uuid)
+        if user_uuid:
+            q = and_(q, (SubjectComment.user_uuid == user_uuid))
+        return SubjectCommentCRUD(request.state.db_session).gets(q)
 
     @classmethod
-    def get(cls, request: Request, uuid: UUID) -> Optional[SubjectComment]:
+    def get(cls, request: Request, uuid: UUID) -> SubjectComment:
         obj: Optional[SubjectComment] = SubjectCommentCRUD(
             request.state.db_session
         ).get_by_uuid(uuid)

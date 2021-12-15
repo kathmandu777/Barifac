@@ -17,13 +17,15 @@ subject_comment_router = APIRouter()
 
 @subject_comment_router.get("/", response_model=List[ReadSubjectCommentSchema])
 async def gets(
-    request: Request, subject_uuid: Optional[UUID] = None
+    request: Request,
+    subject_uuid: Optional[UUID] = None,
+    user_uuid: Optional[UUID] = None,
 ) -> List[SubjectComment]:
-    return SubjectCommentAPI.gets(request, subject_uuid)
+    return SubjectCommentAPI.gets(request, subject_uuid, user_uuid)
 
 
 @subject_comment_router.get("/{uuid}", response_model=ReadSubjectCommentSchema)
-async def get(request: Request, uuid: UUID) -> Optional[SubjectComment]:
+async def get(request: Request, uuid: UUID) -> SubjectComment:
     return SubjectCommentAPI.get(request, uuid)
 
 
