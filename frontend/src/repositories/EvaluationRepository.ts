@@ -22,11 +22,21 @@ interface EvaluationUpdateRequest {
 }
 
 export class EvaluationRepository {
-  static async gets() {
+  static async gets(subjectUuid: string) {
+    const authClientObject = authClient();
+    if (!authClientObject) return;
+    const res = await authClientObject.get<EvaluationObject[]>(
+      `/api/v1/evaluations?subject_uuid=${subjectUuid}`,
+    );
+    return res.data.map(evaluation =>
+      EvaluationFactory.createFromResponseObject(evaluation),
+    );
+  }
+  static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.get<EvaluationObject>(
-      '/api/v1/evaluations',
+      `/api/v1/evaluations/${uuid}`,
     );
     return EvaluationFactory.createFromResponseObject(res.data);
   }
