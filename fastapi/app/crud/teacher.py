@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 
 from app.core.exceptions import (
     ApiException,
@@ -37,7 +38,11 @@ class TeacherCRUD(BaseCRUD):
             raise ApiException(SameObjectAlreadyExists)
         return super().create(data)
 
-    def update(self, obj: Teacher, data: dict = {}) -> Teacher:
+    def update(self, uuid: UUID, data: dict = {}) -> Teacher:
+        obj = self.get_by_uuid(uuid)
+        if obj is None:
+            raise ApiException(NotFoundObjectMatchingUuid(Teacher))
+
         name: str = data["name"]
         school: Optional[School] = SchoolCRUD(db_session).get_by_uuid(
             data["school_uuid"]
