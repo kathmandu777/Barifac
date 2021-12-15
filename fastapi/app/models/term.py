@@ -1,3 +1,5 @@
+from enum import Enum
+
 from sqlalchemy import VARCHAR, Column, Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import UniqueConstraint
@@ -13,3 +15,8 @@ class Term(BaseModelMixin):
     semester = Column(VARCHAR(10), nullable=False)  # TODO: enum
 
     subjects = relationship("Subject", backref="term", cascade="all")
+
+
+class SemesterEnum(str, Enum):
+    first_semester = "前期"
+    second_semester = "後期"
