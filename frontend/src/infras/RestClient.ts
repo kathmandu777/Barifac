@@ -67,6 +67,7 @@ export default class RestClient {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.token}`,
       },
+      withCredentials: true,
     };
   }
 
@@ -76,6 +77,7 @@ export default class RestClient {
       headers: {
         Authorization: this.token ? `Bearer ${this.token}` : 'null',
       },
+      withCredentials: true,
     };
   }
 }
