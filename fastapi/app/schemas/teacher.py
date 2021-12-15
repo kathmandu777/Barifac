@@ -24,3 +24,7 @@ class UpdateTeacherSchema(BaseTeacherSchema):
 class ReadTeacherSchema(BaseTeacherSchema):
     uuid: UUID
     school: ReadSchoolSchema
+
+
+class ReadSimpleTeacherSchema(BaseTeacherSchema):
+    uuid: UUID

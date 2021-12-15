@@ -31,6 +31,10 @@ class ReadSubjectSchema(BaseSubjectSchema):
     school: ReadSchoolSchema
 
 
+class ReadSimpleSubjectSchema(BaseSubjectSchema):
+    uuid: UUID
+
+
 class CreateSubjectSchema(BaseSubjectSchema):
     term_uuid: UUID
     teacher_uuid: UUID

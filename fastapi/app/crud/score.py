@@ -24,6 +24,19 @@ class ScoreCRUD(BaseCRUD):
             .all()
         )
 
+    def gets_by_attend_subject_evaluation(
+        self, attend_subject: AttendSubject, evaluation: Evaluation
+    ) -> List[Score]:
+        return (
+            self.get_query()
+            .join(Evaluation)
+            .filter(
+                Score.attend_subject_uuid == attend_subject.uuid,
+                Evaluation.uuid == evaluation.uuid,
+            )
+            .all()
+        )
+
     def create(self, data: dict = {}) -> Score:
         attend_subject: Optional[Score] = AttendSubjectCRUD(
             self.db_session

@@ -25,6 +25,14 @@ async def gets(request: Request) -> List[AttendSubject]:
 
 
 @attend_subject_router.get(
+    "/terms/{term_uuid}",
+    dependencies=[Depends(login_required)],
+)
+async def gets_by_term(request: Request, term_uuid: UUID):
+    return AttendSubjectAPI.gets_by_term(request, term_uuid)
+
+
+@attend_subject_router.get(
     "/{uuid}",
     response_model=ReadAttendSubjectSchema,
     dependencies=[Depends(login_required)],

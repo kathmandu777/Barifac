@@ -28,3 +28,7 @@ class CreateDepartmentSchema(BaseDepartmentSchema):
 
 class UpdateDepartmentSchema(BaseDepartmentSchema):
     school_uuid: UUID
+
+
+class ReadSimpleDepartmentSchema(BaseDepartmentSchema):
+    uuid: UUID
