@@ -29,7 +29,7 @@ class ReadSubjectSchema(BaseSubjectSchema):
     term: ReadTermSchema
     teacher: ReadSimpleTeacherSchema
     school: ReadSchoolSchema
-    target_department: Optional[ReadSimpleDepartmentSchema]
+    department: Optional[ReadSimpleDepartmentSchema]
 
 
 class ReadSimpleSubjectSchema(BaseSubjectSchema):
@@ -40,7 +40,7 @@ class CreateSubjectSchema(BaseSubjectSchema):
     term_uuid: UUID
     teacher_uuid: UUID
     school_uuid: UUID
-    target_department_uuid: Optional[UUID] = Field(None)
+    department_uuid: Optional[UUID] = Field(None)
 
 
 class UpdateSubjectSchema(BaseSubjectSchema):

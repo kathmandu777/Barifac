@@ -150,7 +150,7 @@ def add_subject_to_db(department, department_url) -> None:
                             teacher_uuid=teacher.uuid,
                             credits=subject_credits,
                             target_grade=subject_grade,
-                            target_department_uuid=None
+                            department_uuid=None
                             if general_special == "一般"
                             else department.uuid,
                             category=general_special,

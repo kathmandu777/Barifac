@@ -24,7 +24,7 @@ class SubjectAPI:
         if school_uuid:
             q = and_(q, Subject.school_uuid == school_uuid)
         if department_uuid:
-            q = and_(q, (Subject.target_department_uuid == department_uuid))
+            q = and_(q, (Subject.department_uuid == department_uuid))
         if term_uuid:
             q = and_(q, (Subject.term_uuid == term_uuid))
         if target_grade:

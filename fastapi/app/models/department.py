@@ -23,3 +23,4 @@ class Department(BaseModelMixin):
     syllabus_url = Column(VARCHAR(MAX_LENGTH_SYLLABUS_URL), nullable=True)
 
     users = relationship("User", backref="department", cascade="all")
+    subjects = relationship("Subject", backref="department", cascade="all")
