@@ -80,7 +80,7 @@ export class EvaluationRepository {
     if (!authClientObject) return;
     const res = await authClientObject.put<
       Partial<EvaluationUpdateRequest>,
-      Evaluation
+      EvaluationObject
     >('/api/v1/evaluations', params);
     return EvaluationFactory.createFromResponseObject(res.data);
   }
