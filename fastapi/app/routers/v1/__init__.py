@@ -7,6 +7,7 @@ from .evaluation import evaluation_router
 from .school import school_router
 from .score import score_router
 from .subject import subject_router
+from .subject_comment import subject_comment_router
 from .teacher import teacher_router
 from .term import term_router
 from .user import user_router
@@ -24,6 +25,9 @@ api_v1_router.include_router(
     attend_subject_router, prefix="/attend_subjects", tags=["attend_subjects"]
 )
 api_v1_router.include_router(subject_router, prefix="/subjects", tags=["subjects"])
+api_v1_router.include_router(
+    subject_comment_router, prefix="/subjects_comment", tags=["subject_comments"]
+)
 api_v1_router.include_router(
     evaluation_router, prefix="/evaluations", tags=["evaluations"]
 )

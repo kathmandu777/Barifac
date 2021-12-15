@@ -4,6 +4,7 @@ from .evaluation import EvaluationAPI
 from .school import SchoolAPI
 from .score import ScoreAPI
 from .subject import SubjectAPI
+from .subject_comment import SubjectCommentAPI
 from .teacher import TeacherAPI
 from .term import TermAPI
 from .user import UserAPI

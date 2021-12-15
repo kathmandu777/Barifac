@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.db.database import get_db_session
@@ -14,6 +14,9 @@ db_session = get_db_session()
 class SubjectCommentCRUD(BaseCRUD):
     def __init__(self, db_session: scoped_session):
         super().__init__(db_session, SubjectComment)
+
+    def gets_by_subject_uuid(self, subject_uuid) -> List[SubjectComment]:
+        return self.get_query().filter_by(subject_uuid=subject_uuid).all()
 
     def create(self, data: dict = {}) -> SubjectComment:
         subject: Optional[SubjectComment] = SubjectCRUD(db_session).get_by_uuid(
