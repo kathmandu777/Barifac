@@ -25,7 +25,9 @@ class AttendSubjectCRUD(BaseCRUD):
     def gets_by_user(self, user: User) -> List[AttendSubject]:
         return self.get_query().filter_by(user_uuid=user.uuid).all()
 
-    def gets_by_term(self, user: User, term_uuid: UUID) -> List[AttendSubject]:
+    def gets_by_user_and_term_uuid(
+        self, user: User, term_uuid: UUID
+    ) -> List[AttendSubject]:
         return (
             self.get_query()
             .join(Subject)
@@ -61,7 +63,11 @@ class AttendSubjectCRUD(BaseCRUD):
             raise ApiException(SameObjectAlreadyExists)
         return super().create(data)
 
-    def update(self, obj: AttendSubject, data: dict = {}) -> AttendSubject:
+    def update(self, uuid: UUID, data: dict = {}) -> AttendSubject:
+        obj = self.get_by_uuid(uuid)
+        if obj is None:
+            raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
+
         subject: Optional[Subject] = SchoolCRUD(db_session).get_by_uuid(
             data["subject_uuid"]
         )

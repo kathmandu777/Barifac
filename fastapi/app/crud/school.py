@@ -1,6 +1,11 @@
 from typing import Optional
+from uuid import UUID
 
-from app.core.exceptions import ApiException, SameObjectAlreadyExists
+from app.core.exceptions import (
+    ApiException,
+    NotFoundObjectMatchingUuid,
+    SameObjectAlreadyExists,
+)
 from sqlalchemy.orm import scoped_session
 
 from ..models import School
@@ -21,9 +26,12 @@ class SchoolCRUD(BaseCRUD):
             raise ApiException(SameObjectAlreadyExists)
         return super().create(data)
 
-    def update(self, obj: School, data: dict = {}) -> School:
+    def update(self, uuid: UUID, data: dict = {}) -> School:
+        obj = self.get_by_uuid(uuid)
+        if obj is None:
+            raise ApiException(NotFoundObjectMatchingUuid(School))
         name: str = data["name"]
         school = self.get_by_name(name)
         if school and school.uuid != obj.uuid:
             raise ApiException(SameObjectAlreadyExists)
-        return super().update(obj, data)
+        return super().update(uuid, data)

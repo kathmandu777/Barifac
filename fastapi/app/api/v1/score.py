@@ -9,14 +9,26 @@ from app.core.exceptions import (
 from app.crud import AttendSubjectCRUD, ScoreCRUD
 from app.models import AttendSubject, Score
 from app.schemas import CreateScoreSchema, UpdateScoreSchema
+from sqlalchemy import and_
 
 from fastapi import Request
 
 
 class ScoreAPI:
     @classmethod
-    def gets(cls, request: Request) -> List[Score]:
-        return ScoreCRUD(request.state.db_session).gets_by_user(request.user)
+    def gets(
+        cls,
+        request: Request,
+        attend_subject_uuid: Optional[UUID],
+        evaluation_uuid: Optional[UUID],
+    ) -> List[Score]:
+        q = True
+        if attend_subject_uuid:
+            q = and_(q, Score.attend_subject_uuid == attend_subject_uuid)
+        if evaluation_uuid:
+            q = and_(q, Score.evaluation_uuid == evaluation_uuid)
+        q = and_(q, AttendSubject.user_uuid == request.user.uuid)
+        return ScoreCRUD(request.state.db_session).gets_from_joined_attend_subjects(q)
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Score:

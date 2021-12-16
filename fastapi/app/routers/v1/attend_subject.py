@@ -20,16 +20,18 @@ attend_subject_router = APIRouter()
     response_model=List[ReadAttendSubjectSchema],
     dependencies=[Depends(login_required)],
 )
-async def gets(request: Request) -> List[AttendSubject]:
-    return AttendSubjectAPI.gets(request)
+async def gets(
+    request: Request, term_uuid: Optional[UUID] = None
+) -> List[AttendSubject]:
+    return AttendSubjectAPI.gets(request, term_uuid)
 
 
 @attend_subject_router.get(
-    "/terms/{term_uuid}",
+    "/readable",
     dependencies=[Depends(login_required)],
 )
-async def gets_by_term(request: Request, term_uuid: UUID):
-    return AttendSubjectAPI.gets_by_term(request, term_uuid)
+async def gets_readable_data(request: Request, term_uuid: Optional[UUID] = None):
+    return AttendSubjectAPI.gets_readable_data(request, term_uuid)
 
 
 @attend_subject_router.get(
@@ -39,6 +41,14 @@ async def gets_by_term(request: Request, term_uuid: UUID):
 )
 async def get(request: Request, uuid: UUID) -> Optional[AttendSubject]:
     return AttendSubjectAPI.get(request, uuid)
+
+
+@attend_subject_router.get(
+    "/{uuid}/readable",
+    dependencies=[Depends(login_required)],
+)
+async def get_readable_data(request: Request, uuid: UUID):
+    return AttendSubjectAPI.get_readable_data(request, uuid)
 
 
 @attend_subject_router.post(

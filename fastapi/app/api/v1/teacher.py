@@ -1,7 +1,6 @@
 from typing import List, Optional
 from uuid import UUID
 
-from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.crud import TeacherCRUD
 from app.models import Teacher
 from app.schemas import CreateTeacherSchema, UpdateTeacherSchema
@@ -30,10 +29,7 @@ class TeacherAPI:
     def update(
         cls, request: Request, uuid: UUID, schema: UpdateTeacherSchema
     ) -> Teacher:
-        obj = TeacherCRUD(request.state.db_session).get_by_uuid(uuid)
-        if not obj:
-            raise ApiException(NotFoundObjectMatchingUuid(Teacher))
-        return TeacherCRUD(request.state.db_session).update(obj, schema.dict())
+        return TeacherCRUD(request.state.db_session).update(uuid, schema.dict())
 
     @classmethod
     def delete(cls, request: Request, uuid: UUID) -> None:

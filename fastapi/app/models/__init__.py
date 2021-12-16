@@ -8,5 +8,5 @@ from .school import School
 from .score import Score
 from .subject import Subject
 from .teacher import Teacher
-from .term import Term
+from .term import SemesterEnum, Term
 from .user import User

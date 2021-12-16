@@ -46,7 +46,11 @@ class EvaluationCRUD(BaseCRUD):
             raise ApiException(SameObjectAlreadyExists)
         return super().create(data)
 
-    def update(self, obj: Evaluation, data: dict = {}) -> Evaluation:
+    def update(self, uuid: UUID, data: dict = {}) -> Evaluation:
+        obj = self.get_by_uuid(uuid)
+        if obj is None:
+            raise ApiException(NotFoundObjectMatchingUuid(Evaluation))
+
         subject: Optional[Subject] = SubjectCRUD(db_session).get_by_uuid(
             data["subject_uuid"]
         )

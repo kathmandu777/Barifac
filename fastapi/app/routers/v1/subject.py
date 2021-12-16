@@ -18,9 +18,11 @@ async def gets(
     department_uuid: Optional[UUID] = None,
     term_uuid: Optional[UUID] = None,
     target_grade: Optional[int] = None,
+    category: Optional[str] = None,
+    type: Optional[str] = None,
 ) -> List[Subject]:
     return SubjectAPI.gets(
-        request, school_uuid, department_uuid, term_uuid, target_grade
+        request, school_uuid, department_uuid, term_uuid, target_grade, category, type
     )
 
 

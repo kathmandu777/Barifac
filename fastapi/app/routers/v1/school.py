@@ -10,8 +10,6 @@ from fastapi import APIRouter, Depends, Request
 
 school_router = APIRouter()
 
-# TODO: schoolのdeleteなどはadmin_requiredをかける
-
 
 @school_router.get("/", response_model=List[ReadSchoolSchema])
 async def gets(request: Request) -> List[School]:

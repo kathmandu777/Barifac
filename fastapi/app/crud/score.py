@@ -24,6 +24,9 @@ class ScoreCRUD(BaseCRUD):
             .all()
         )
 
+    def gets_from_joined_attend_subjects(self, query) -> List[Score]:
+        return self.get_query().join(AttendSubject).filter(query).all()
+
     def gets_by_attend_subject_evaluation(
         self, attend_subject: AttendSubject, evaluation: Evaluation
     ) -> List[Score]:

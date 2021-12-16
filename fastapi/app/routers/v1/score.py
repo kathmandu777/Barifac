@@ -16,8 +16,12 @@ score_router = APIRouter()
     response_model=List[ReadScoreSchema],
     dependencies=[Depends(login_required)],
 )
-async def gets(request: Request) -> List[Score]:
-    return ScoreAPI.gets(request)
+async def gets(
+    request: Request,
+    attend_subject_uuid: Optional[UUID] = None,
+    evaluation_uuid: Optional[UUID] = None,
+) -> List[Score]:
+    return ScoreAPI.gets(request, attend_subject_uuid, evaluation_uuid)
 
 
 @score_router.get(

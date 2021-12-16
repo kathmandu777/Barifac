@@ -3,7 +3,7 @@ from uuid import UUID
 
 from app.api.v1 import TermAPI
 from app.dependencies import admin_required
-from app.models import Term
+from app.models import SemesterEnum, Term
 from app.schemas import CreateTermSchema, ReadTermSchema, UpdateTermSchema
 
 from fastapi import APIRouter, Depends, Request
@@ -12,8 +12,12 @@ term_router = APIRouter()
 
 
 @term_router.get("/", response_model=List[ReadTermSchema])
-async def gets(request: Request) -> List[Term]:
-    return TermAPI.gets(request)
+async def gets(
+    request: Request,
+    academic_year: Optional[int] = None,
+    semester: Optional[SemesterEnum] = None,
+) -> List[Term]:
+    return TermAPI.gets(request, academic_year, semester)
 
 
 @term_router.get("/{uuid}", response_model=ReadTermSchema)

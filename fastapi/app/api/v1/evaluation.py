@@ -1,7 +1,6 @@
 from typing import List, Optional
 from uuid import UUID
 
-from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.crud import EvaluationCRUD
 from app.models import Evaluation
 from app.schemas import CreateEvaluationSchema, UpdateEvaluationSchema
@@ -30,10 +29,7 @@ class EvaluationAPI:
     def update(
         cls, request: Request, uuid: UUID, schema: UpdateEvaluationSchema
     ) -> Evaluation:
-        obj = EvaluationCRUD(request.state.db_session).get_by_uuid(uuid)
-        if not obj:
-            raise ApiException(NotFoundObjectMatchingUuid(Evaluation))
-        return EvaluationCRUD(request.state.db_session).update(obj, schema.dict())
+        return EvaluationCRUD(request.state.db_session).update(uuid, schema.dict())
 
     @classmethod
     def delete(cls, request: Request, uuid: UUID) -> None:
