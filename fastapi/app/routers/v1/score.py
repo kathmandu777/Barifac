@@ -33,6 +33,13 @@ async def get(request: Request, uuid: UUID) -> Optional[Score]:
     return ScoreAPI.get(request, uuid)
 
 
+@score_router.get(
+    "/evaluations/{evaluation_uuid}", dependencies=[Depends(login_required)]
+)
+async def get_by_evaluation_uuid(request: Request, evaluation_uuid: UUID):
+    return ScoreAPI.get_by_evaluation_uuid(request, evaluation_uuid)
+
+
 @score_router.post(
     "/", response_model=ReadScoreSchema, dependencies=[Depends(login_required)]
 )

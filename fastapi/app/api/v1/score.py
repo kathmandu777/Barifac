@@ -6,8 +6,8 @@ from app.core.exceptions import (
     NotFoundObjectMatchingUuid,
     PermissionDenied,
 )
-from app.crud import AttendSubjectCRUD, ScoreCRUD
-from app.models import AttendSubject, Score
+from app.crud import AttendSubjectCRUD, EvaluationCRUD, ScoreCRUD
+from app.models import AttendSubject, Evaluation, Score
 from app.schemas import CreateScoreSchema, UpdateScoreSchema
 from sqlalchemy import and_
 
@@ -38,6 +38,34 @@ class ScoreAPI:
         if obj.attend_subject.user_uuid != request.user.uuid:
             raise ApiException(PermissionDenied)
         return obj
+
+    @classmethod
+    def get_by_evaluation_uuid(cls, request: Request, evaluation_uuid: UUID):
+        evaluation = EvaluationCRUD(request.state.db_session).get_by_uuid(
+            evaluation_uuid
+        )
+        if evaluation is None:
+            raise ApiException(NotFoundObjectMatchingUuid(Evaluation))
+        scores = ScoreCRUD(request.state.db_session).gets_from_joined_attend_subjects(
+            and_(
+                AttendSubject.user_uuid == request.user.uuid,
+                Score.evaluation_uuid == evaluation_uuid,
+            )
+        )
+        return {
+            "evaluation_name": evaluation.name,
+            "evaluation_uuid": evaluation.uuid,
+            "rate": evaluation.rate,
+            "scores": [
+                {
+                    "got_score": score.got_score,
+                    "max_score": score.max_score,
+                    "score_uuid": score.uuid,
+                    "memo": score.memo,
+                }
+                for score in scores
+            ],
+        }
 
     @classmethod
     def create(cls, request: Request, schema: CreateScoreSchema) -> Score:
