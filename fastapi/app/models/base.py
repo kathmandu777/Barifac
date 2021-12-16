@@ -27,4 +27,4 @@ class BaseModelMixin(Base):
         comment="最終更新日時",
     )
 
-    is_active = Column(BOOLEAN, nullable=False, server_default="true")
+    is_active = Column(BOOLEAN, nullable=False, server_default="true", default=True)
