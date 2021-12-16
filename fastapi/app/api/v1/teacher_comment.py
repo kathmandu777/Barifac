@@ -31,37 +31,22 @@ class TeacherCommentAPI:
             q = and_(q, TeacherComment.user_uuid == user_uuid)
         return TeacherCommentCRUD(request.state.db_session).gets(q)
 
-        # if subject_uuid:
-        #     return TeacherCommentCRUD(request.state.db_session).gets_by_teacher_uuid(
-        #         subject_uuid
-        #     )
-        # return TeacherCommentCRUD(request.state.db_session).gets()
-
     @classmethod
-    def get(cls, request: Request, uuid: UUID) -> TeacherComment:
-        obj: Optional[TeacherComment] = TeacherCommentCRUD(
-            request.state.db_session
-        ).get_by_uuid(uuid)
-        if not obj:
-            raise ApiException(NotFoundObjectMatchingUuid(TeacherComment))
-        return obj
+    def get(cls, request: Request, uuid: UUID) -> Optional[TeacherComment]:
+        return TeacherCommentCRUD(request.state.db_session).get_by_uuid(uuid)
 
     @classmethod
     def create(
         cls, request: Request, schema: CreateTeacherCommentSchema
     ) -> TeacherComment:
-
         teacher: Optional[Teacher] = TeacherCRUD(request.state.db_session).get_by_uuid(
             schema.teacher_uuid
         )
-
-        if not teacher:
+        if teacher is None:
             raise ApiException(NotFoundObjectMatchingUuid(Teacher))
-
-        if schema.user_uuid != request.user.uuid:
-            raise ApiException(PermissionDenied)
-
-        return TeacherCommentCRUD(request.state.db_session).create(schema.dict())
+        data = schema.dict()
+        data["user_uuid"] = request.user.uuid
+        return TeacherCommentCRUD(request.state.db_session).create(data)
 
     @classmethod
     def update(
@@ -74,7 +59,9 @@ class TeacherCommentAPI:
             raise ApiException(NotFoundObjectMatchingUuid(TeacherComment))
         if obj.user_uuid != request.user.uuid:
             raise ApiException(PermissionDenied)
-        return TeacherCommentCRUD(request.state.db_session).update(obj, schema.dict())
+        data = schema.dict()
+        data["user_uuid"] = request.user.uuid
+        return TeacherCommentCRUD(request.state.db_session).update(uuid, data)
 
     @classmethod
     def delete(cls, request: Request, uuid: UUID) -> None:
