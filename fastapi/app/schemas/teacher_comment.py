@@ -27,4 +27,3 @@ class CreateTeacherCommentSchema(BaseTeacherCommentSchema):
 
 class UpdateTeacherCommentSchema(BaseTeacherCommentSchema):
     teacher_uuid: UUID
-    user_uuid: UUID

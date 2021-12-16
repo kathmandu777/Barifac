@@ -37,4 +37,4 @@ class TeacherCommentCRUD(BaseCRUD):
         )
         if not teacher:
             raise ApiException(NotFoundObjectMatchingUuid(Teacher))
-        return super().update(obj, data)
+        return super().update(uuid, data)
