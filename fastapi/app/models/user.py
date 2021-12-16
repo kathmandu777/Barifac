@@ -30,7 +30,6 @@ class User(BaseModelMixin):
     grade = Column(Integer, nullable=True)
 
     is_admin = Column(BOOLEAN, nullable=False, default=False)
-    is_active = Column(BOOLEAN, nullable=False, default=True)
 
     attend_subjects = relationship("AttendSubject", backref="user", cascade="all")
     teacher_comments = relationship("TeacherComment", backref="user", cascade="all")
