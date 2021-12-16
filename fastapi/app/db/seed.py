@@ -60,11 +60,11 @@ def seed_attend_subjects(users):
         query = and_(query, Subject.school_uuid == user_school.uuid)
         query = and_(query, Subject.target_grade == user_data["grade"])
         q_special = and_(
-            Subject.target_department_uuid == user_department.uuid,
+            Subject.department_uuid == user_department.uuid,
             Subject.category == "専門",
         )
         q_general = and_(
-            Subject.target_department_uuid is None,
+            Subject.department_uuid is None,
             Subject.category == "一般",
         )
         query = and_(query, or_(q_special, q_general))
