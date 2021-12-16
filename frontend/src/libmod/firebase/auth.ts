@@ -10,14 +10,15 @@ import { SessionService } from 'services/SessionService';
 
 const provider = new GoogleAuthProvider();
 
-export const login = (): void => {
+export const login = async () => {
   const auth = getAuth(firebaseApp);
-  signInWithPopup(auth, provider)
-    .then(credential => credential.user.getIdToken(true))
-    .then(idToken => {
-      SessionService.signin(idToken);
-    })
-    .catch(err => console.error(err));
+  try {
+    const credential = await signInWithPopup(auth, provider);
+    const idToken = await credential.user.getIdToken(true);
+    await SessionService.signin(idToken);
+  } catch {
+    console.error('Token Error');
+  }
 };
 
 export const logout = (): Promise<void> => {

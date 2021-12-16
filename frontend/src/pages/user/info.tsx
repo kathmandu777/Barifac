@@ -69,8 +69,12 @@ const UserPage: NextPage = () => {
     e.preventDefault();
     setIsDisabledDep(true);
     // School に対応する Department をすべて取得
-    setRequestBody({ ...requestBody, school_uuid: e.target.value });
-    setSelectedDepartments(await DepartmentRepository.gets(e.target.value));
+    try {
+      setSelectedDepartments(await DepartmentRepository.gets(e.target.value));
+      setRequestBody({ ...requestBody, school_uuid: e.target.value });
+    } catch {
+      return;
+    }
     setIsDisabledDep(false);
     return;
   };
