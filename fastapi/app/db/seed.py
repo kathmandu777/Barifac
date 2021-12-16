@@ -32,11 +32,19 @@ db_session = get_db_session()
 def seed_users(users):
     for user in users:
         if not UserCRUD(db_session).get_by_email(user["email"]):
+            school = SchoolCRUD(db_session).get_by_name(user["school_name"])
+            assert school is not None
+            department = DepartmentCRUD(db_session).get_by_school_and_name(
+                school, user["department_name"]
+            )
+            assert department is not None
             user_schema = CreateUserSchema(
                 username=user["username"],
                 email=user["email"],
                 password=user["password"],
                 grade=user["grade"],
+                school_uuid=school.uuid,
+                department_uuid=department.uuid,
             )
             created_user = UserCRUD(db_session).create(user_schema.dict())
             logger.info(f"Created user: {created_user.username}")
@@ -172,7 +180,7 @@ def seed_all():
     )
     add_subjects_with_school_and_department(TARGET_SCHOOL_NAME, TARGET_DEPARTMENT_NAME)
 
-    logger.info("Seeding local data...")
+    logger.info("Seeding users and attend_subjects and comments from data.py ...")
     seed_users(USERS)
     seed_attend_subjects(USERS)
     seed_subject_comments(SUBJECT_COMMENT_REPERTOIRES)
