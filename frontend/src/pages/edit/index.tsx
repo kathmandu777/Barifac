@@ -169,23 +169,6 @@ const Edit = () => {
             一括で追加
           </Button>
         </Center>
-        <Flex justifyContent='space-between' w='full'>
-          <Link href='/'>
-            <Button
-              bg='blue.400'
-              color='gray.800'
-              rounded='full'
-              onClick={saveSubjects}
-            >
-              保存する
-            </Button>
-          </Link>
-          <Link href='/'>
-            <Button bg='whiteAlpha.200' color='whiteAlpha.800' rounded='full'>
-              キャンセル
-            </Button>
-          </Link>
-        </Flex>
       </VStack>
     </>
   );
