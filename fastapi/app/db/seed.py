@@ -18,8 +18,8 @@ from app.models import Subject
 from app.schemas import (
     CreateAttendSubjectSchemaForSeed,
     CreateScoreSchema,
-    CreateSubjectCommentSchema,
-    CreateTeacherCommentSchema,
+    CreateSubjectCommentForSeedSchema,
+    CreateTeacherCommentForSeedSchema,
     CreateUserSchema,
 )
 from sqlalchemy import and_, or_
@@ -125,7 +125,7 @@ def seed_teacher_comments(repertoires):
             if random.random() < 0.3:
                 continue
             comment = repertoires[random.randint(0, len(repertoires) - 1)]
-            teacher_comment_schema = CreateTeacherCommentSchema(
+            teacher_comment_schema = CreateTeacherCommentForSeedSchema(
                 user_uuid=user.uuid,
                 teacher_uuid=teacher.uuid,
                 comment=comment,
@@ -145,7 +145,7 @@ def seed_subject_comments(repertoires):
             if random.random() < 0.3:
                 continue
             comment = repertoires[random.randint(0, len(repertoires) - 1)]
-            subject_comment_schema = CreateSubjectCommentSchema(
+            subject_comment_schema = CreateSubjectCommentForSeedSchema(
                 user_uuid=user.uuid,
                 subject_uuid=subject.uuid,
                 comment=comment,
