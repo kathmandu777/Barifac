@@ -34,3 +34,4 @@ class User(BaseModelMixin):
     attend_subjects = relationship("AttendSubject", backref="user", cascade="all")
     teacher_comments = relationship("TeacherComment", backref="user", cascade="all")
     subject_comments = relationship("SubjectComment", backref="user", cascade="all")
+    edit_requests = relationship("EditRequest", backref="user", cascade="all")

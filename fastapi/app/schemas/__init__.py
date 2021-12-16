@@ -1,5 +1,6 @@
 from .attend_subject import *
 from .department import *
+from .edit_request import *
 from .evaluation import *
 from .school import *
 from .score import *
