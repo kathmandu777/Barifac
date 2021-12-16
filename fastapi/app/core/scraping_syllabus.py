@@ -126,7 +126,7 @@ def add_subject_to_db(department, department_url) -> None:
                     )
                     term = TermCRUD(db_session).create(term_schema.dict())
                     logger.info(f"Created term: {term.academic_year}-{term.semester}")
-
+                    db_session.flush()
                 for teacher_name in subject_teachers:
                     teacher = TeacherCRUD(db_session).get_by_name_and_school(
                         teacher_name, department.school
@@ -138,11 +138,17 @@ def add_subject_to_db(department, department_url) -> None:
                         )
                         teacher = TeacherCRUD(db_session).create(teacher_schema.dict())
                         logger.info(f"Created teacher: {teacher.name}")
-
+                        db_session.flush()
                     subject = SubjectCRUD(db_session).get_by_name_term_school_teacher(
                         subject_name, term, department.school, teacher
                     )
-                    if not subject:
+                    if subject:
+                        logger.info(
+                            f"Skipped subject: {subject.name}({subject.school.name} "
+                            f"{subject.term.academic_year}-{subject.term.semester}) [{subject.teacher.name}]"
+                        )
+                        continue
+                    else:
                         subject_schema = CreateSubjectSchema(
                             name=subject_name,
                             term_uuid=term.uuid,
@@ -162,14 +168,8 @@ def add_subject_to_db(department, department_url) -> None:
                             f"Created subject: {subject.name}({subject.school.name} "
                             f"{subject.term.academic_year}-{subject.term.semester}) [{subject.teacher.name}]"
                         )
-                    else:
-                        logger.info(
-                            f"Skipped subject: {subject.name}({subject.school.name} "
-                            f"{subject.term.academic_year}-{subject.term.semester}) [{subject.teacher.name}]"
-                        )
-                    db_session.commit()
-
-                    add_evaluation_to_db(subject, subject_url)
+                        db_session.flush()
+                        add_evaluation_to_db(subject, subject_url)
 
 
 def add_evaluation_to_db(subject, subject_url) -> None:
@@ -200,11 +200,12 @@ def add_evaluation_to_db(subject, subject_url) -> None:
             logger.info(
                 f"Created evaluation: {evaluation.name}-{evaluation.rate}({evaluation.subject.name})"
             )
+            db_session.flush()
         else:
             logger.info(
                 f"Skipped evaluation: {evaluation.name}-{evaluation.rate}({evaluation.subject.name})"
             )
-        db_session.commit()
+    db_session.commit()
 
 
 def add_all_data() -> None:
