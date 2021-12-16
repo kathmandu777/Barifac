@@ -25,7 +25,7 @@ async def gets(
 
 
 @teacher_comment_router.get("/{uuid}", response_model=ReadTeacherCommentSchema)
-async def get(request: Request, uuid: UUID) -> TeacherComment:
+async def get(request: Request, uuid: UUID) -> Optional[TeacherComment]:
     return TeacherCommentAPI.get(request, uuid)
 
 
