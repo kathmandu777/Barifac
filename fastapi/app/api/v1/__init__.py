@@ -1,5 +1,6 @@
 from .attend_subject import AttendSubjectAPI
 from .department import DepartmentAPI
+from .edit_request import EditRequestAPI
 from .evaluation import EvaluationAPI
 from .school import SchoolAPI
 from .score import ScoreAPI

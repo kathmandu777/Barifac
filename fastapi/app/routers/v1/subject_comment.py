@@ -25,7 +25,7 @@ async def gets(
 
 
 @subject_comment_router.get("/{uuid}", response_model=ReadSubjectCommentSchema)
-async def get(request: Request, uuid: UUID) -> SubjectComment:
+async def get(request: Request, uuid: UUID) -> Optional[SubjectComment]:
     return SubjectCommentAPI.get(request, uuid)
 
 

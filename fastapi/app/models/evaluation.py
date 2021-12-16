@@ -28,3 +28,4 @@ class Evaluation(BaseModelMixin):
     type = Column(VARCHAR(MAX_LENGTH_TYPE), nullable=False)  # TODO: enum
 
     scores = relationship("Score", backref="evaluation", cascade="all")
+    edit_requests = relationship("EditRequest", backref="evaluation", cascade="all")

@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from .attend_subject import attend_subject_router
 from .auth import auth_router
 from .department import department_router
+from .edit_request import edit_request_router
 from .evaluation import evaluation_router
 from .school import school_router
 from .score import score_router
@@ -36,3 +37,6 @@ api_v1_router.include_router(
     teacher_comment_router, prefix="/teacher_comment", tags=["teacher_comments"]
 )
 api_v1_router.include_router(score_router, prefix="/scores", tags=["scores"])
+api_v1_router.include_router(
+    edit_request_router, prefix="/edit_requests", tags=["edit_requests"]
+)

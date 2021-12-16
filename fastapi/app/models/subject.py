@@ -51,3 +51,4 @@ class Subject(BaseModelMixin):
     # TODO: fix variable name
     attend_subjects = relationship("AttendSubject", backref="subject", cascade="all")
     comments = relationship("SubjectComment", backref="subject", cascade="all")
+    edit_requests = relationship("EditRequest", backref="subject", cascade="all")
