@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column
+from sqlalchemy import BOOLEAN, Column
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.sql.functions import current_timestamp
 
@@ -27,6 +27,4 @@ class BaseModelMixin(Base):
         comment="最終更新日時",
     )
 
-    # @declared_attr
-    # def __mapper_args__(cls):
-    #     return {'order_by': desc('updated_at')}
+    is_active = Column(BOOLEAN, nullable=False, server_default="true")

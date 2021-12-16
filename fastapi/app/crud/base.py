@@ -16,7 +16,7 @@ class BaseCRUD:
         self.model.query = self.db_session.query_property()
 
     def get_query(self) -> query.Query:
-        return self.model.query
+        return self.model.query.filter_by(is_active=True)
 
     def gets(self, query=None) -> List[ModelType]:
         if query is not None:
@@ -51,6 +51,7 @@ class BaseCRUD:
         obj = self.get_by_uuid(uuid)
         if not obj:
             raise ApiException(NotFoundObjectMatchingUuid(self.model))
-        self.db_session.delete(obj)
+        obj.is_active = False
         self.db_session.flush()
+        self.db_session.refresh(obj)
         return None
