@@ -180,7 +180,7 @@ def seed_all():
     )
     add_subjects_with_school_and_department(TARGET_SCHOOL_NAME, TARGET_DEPARTMENT_NAME)
 
-    logger.info("Seeding local data...")
+    logger.info("Seeding users and attend_subjects and comments from data.py ...")
     seed_users(USERS)
     seed_attend_subjects(USERS)
     seed_subject_comments(SUBJECT_COMMENT_REPERTOIRES)
