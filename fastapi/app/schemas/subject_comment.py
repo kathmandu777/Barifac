@@ -27,4 +27,3 @@ class CreateSubjectCommentSchema(BaseSubjectCommentSchema):
 
 class UpdateSubjectCommentSchema(BaseSubjectCommentSchema):
     subject_uuid: UUID
-    user_uuid: UUID
