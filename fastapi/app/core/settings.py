@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     db_engine: str = "postgresql+psycopg2"
 
     # cors
-    allow_origins: list = ["*"]
+    allow_origins: list = ["http://localhost:3000"]
     allow_headers: list = ["*"]
 
     # JWT

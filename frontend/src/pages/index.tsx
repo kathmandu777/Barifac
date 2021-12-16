@@ -3,7 +3,7 @@ import { Divider, VStack, Center, Heading } from '@chakra-ui/layout';
 import SubjectList, { SubjectListProps } from '../components/SubjectList';
 import EditButton from '../components/EditButton';
 
-export let SUBJECTS: SubjectListProps[] = [
+export const SUBJECTS: SubjectListProps[] = [
   {
     subjectID: '101001',
     subjectName: '微分方程式',

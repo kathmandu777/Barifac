@@ -1,5 +1,12 @@
 import { authClient } from 'infras/RestClient';
-import { ScoreFactory, ScoreObject, AttendSubject, Evaluation } from 'domains';
+import {
+  ScoreFactory,
+  ScoreObject,
+  AttendSubject,
+  Evaluation,
+  ScoreEvalResponseObject,
+  ScoreEvalResponseObjectFactory,
+} from 'domains';
 
 interface ScoreCreateRequest {
   attendSubject: AttendSubject;
@@ -24,6 +31,15 @@ export class ScoreRepository {
     if (!authClientObject) return;
     const res = await authClientObject.get<ScoreObject[]>('/api/v1/scores');
     return res.data.map(score => ScoreFactory.createFromResponseObject(score));
+  }
+
+  static async getsByEvaluation(evalUUID: string) {
+    const authClientObject = authClient();
+    if (!authClientObject) return;
+    const res = await authClientObject.get<ScoreEvalResponseObject>(
+      `/api/v1/scores/evaluations/${evalUUID}`,
+    );
+    return ScoreEvalResponseObjectFactory.createFromResponseObject(res.data);
   }
 
   static async get(uuid: string) {
