@@ -1,4 +1,3 @@
-from typing import Optional
 from uuid import UUID
 
 from app.models import TeacherComment
@@ -9,7 +8,7 @@ from .user import ReadSimpleUserSchema
 
 
 class BaseTeacherCommentSchema(BaseModel):
-    comment: Optional[str] = Field(None, max_length=TeacherComment.MAX_LENGTH_COMMENT)
+    comment: str = Field(..., max_length=TeacherComment.MAX_LENGTH_COMMENT)
 
     class Config:
         orm_mode = True
