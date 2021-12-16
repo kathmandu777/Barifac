@@ -22,3 +22,5 @@ export * from './User';
 export * from './UserFactory';
 export * from './Session';
 export * from './SessionFactory';
+export * from './UserUpdateRequest';
+export * from './UserUpdateRequestFactory';

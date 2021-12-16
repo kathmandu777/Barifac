@@ -1,14 +1,5 @@
 import { authClient } from 'infras/RestClient';
-import { UserFactory, UserObject, Grade } from 'domains';
-
-interface UserUpdateRequest {
-  username: string;
-  uid: string;
-  email: string | undefined;
-  grade: Grade;
-  school_uuid: string;
-  department_uuid: string;
-}
+import { UserFactory, UserObject, UserUpdateRequest } from 'domains';
 
 export class UserRepository {
   static async getMe() {
