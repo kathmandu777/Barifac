@@ -30,10 +30,13 @@ class SubjectCommentCRUD(BaseCRUD):
             raise ApiException(NotFoundObjectMatchingUuid(Subject))
         return super().create(data)
 
-    def update(self, obj: SubjectComment, data: dict = {}) -> SubjectComment:
+    def update(self, uuid: UUID, data: dict = {}) -> SubjectComment:
+        obj = self.get_by_uuid(uuid)
+        if obj is None:
+            raise ApiException(NotFoundObjectMatchingUuid(SubjectComment))
         subject: Optional[SubjectComment] = SubjectCRUD(db_session).get_by_uuid(
             data["subject_uuid"]
         )
         if not subject:
             raise ApiException(NotFoundObjectMatchingUuid(Subject))
-        return super().update(obj, data)
+        return super().update(uuid, data)

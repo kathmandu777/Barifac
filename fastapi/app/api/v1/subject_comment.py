@@ -30,30 +30,21 @@ class SubjectCommentAPI:
         return SubjectCommentCRUD(request.state.db_session).gets(q)
 
     @classmethod
-    def get(cls, request: Request, uuid: UUID) -> SubjectComment:
-        obj: Optional[SubjectComment] = SubjectCommentCRUD(
-            request.state.db_session
-        ).get_by_uuid(uuid)
-        if not obj:
-            raise ApiException(NotFoundObjectMatchingUuid(SubjectComment))
-        return obj
+    def get(cls, request: Request, uuid: UUID) -> Optional[SubjectComment]:
+        return SubjectCommentCRUD(request.state.db_session).get_by_uuid(uuid)
 
     @classmethod
     def create(
         cls, request: Request, schema: CreateSubjectCommentSchema
     ) -> SubjectComment:
-
         subject: Optional[Subject] = SubjectCRUD(request.state.db_session).get_by_uuid(
             schema.subject_uuid
         )
-
-        if not subject:
+        if subject is None:
             raise ApiException(NotFoundObjectMatchingUuid(Subject))
-
-        if schema.user_uuid != request.user.uuid:
-            raise ApiException(PermissionDenied)
-
-        return SubjectCommentCRUD(request.state.db_session).create(schema.dict())
+        data = schema.dict()
+        data["user_uuid"] = request.user.uuid
+        return SubjectCommentCRUD(request.state.db_session).create(data)
 
     @classmethod
     def update(
@@ -66,7 +57,9 @@ class SubjectCommentAPI:
             raise ApiException(NotFoundObjectMatchingUuid(SubjectComment))
         if obj.user_uuid != request.user.uuid:
             raise ApiException(PermissionDenied)
-        return SubjectCommentCRUD(request.state.db_session).update(obj, schema.dict())
+        data = schema.dict()
+        data["user_uuid"] = request.user.uuid
+        return SubjectCommentCRUD(request.state.db_session).update(uuid, data)
 
     @classmethod
     def delete(cls, request: Request, uuid: UUID) -> None:

@@ -23,7 +23,6 @@ class ReadSubjectCommentSchema(BaseSubjectCommentSchema):
 
 class CreateSubjectCommentSchema(BaseSubjectCommentSchema):
     subject_uuid: UUID
-    user_uuid: UUID
 
 
 class UpdateSubjectCommentSchema(BaseSubjectCommentSchema):
