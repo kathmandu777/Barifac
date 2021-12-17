@@ -1,4 +1,4 @@
-import { Subject, User } from ".";
+import { Subject, User } from '.';
 
 export type TargetScore = 'A' | 'B' | 'C';
 
@@ -7,7 +7,8 @@ export class AttendSubject {
     public uuid: string,
     public user: User,
     public subject: Subject,
-    public targetValue: number,
-    public targetScore: TargetScore,
+    // 応急処置
+    public target_value: number,
+    public target_score: TargetScore,
   ) {}
 }

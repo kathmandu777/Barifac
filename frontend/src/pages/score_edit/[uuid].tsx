@@ -17,44 +17,41 @@ import {
   ModalBody,
   ModalFooter,
   ModalCloseButton,
+  FormControl,
+  FormLabel,
 } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/hooks';
 import { SessionService } from 'services/SessionService';
 import { useRouter } from 'next/router';
+import { ScoreRepository, UserRepository } from 'repositories';
 import {
-  ScoreCreateRequest,
-  ScoreRepository,
+  ScoreCreateRequestFactory,
+  ScoreCreateRequestObject,
+  ScoreEval,
+  ScoreEvalResponse,
   ScoreUpdateRequest,
-  UserRepository,
-} from 'repositories';
-import { AttendSubject, Score, ScoreEvalResponse } from 'domains';
-
-const SCORE_EDIT_DATA = {
-  name: '微分方程式 小テスト',
-  scores: [
-    {
-      maxScore: 100,
-      gotScore: 70,
-    },
-    {
-      maxScore: 50,
-      gotScore: 45,
-    },
-  ],
-};
+  ScoreUpdateRequestFactory,
+  ScoreUpdateRequestObject,
+} from 'domains';
 
 const ScoreEdit = () => {
-  const [scores, setScores] = useState<ScoreUpdateRequest[]>();
+  // 良くない
   const [scoreCreateRequest, setScoreCreateRequest] =
-    useState<ScoreCreateRequest>();
+    useState<ScoreCreateRequestObject>(ScoreCreateRequestFactory.createEmpty());
   const [scoreUpdateRequest, setScoreUpdateRequest] =
-    useState<ScoreUpdateRequest[]>();
-  const [attendSubjectUUID, setAttendSubjectUUID] = useState<string>();
-  const [evaluationUUID, setEvaluationUUID] = useState<string>();
+    useState<ScoreUpdateRequestObject[]>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [scoresByEval, setScoresByEval] = useState<ScoreEvalResponse>();
+  const [loading, setLoading] = useState<boolean>(false);
+  //const [willDeleteIndex, setWillDeleteIndex] = useState<number>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const { uuid } = router.query;
+
+  const [update, setUpdate] = useState<boolean>(false);
+  const updateRendering = () => {
+    setUpdate(!update);
+  };
 
   const fetchData = async () => {
     const user = await UserRepository.getMe();
@@ -69,6 +66,25 @@ const ScoreEdit = () => {
     if (!scores) {
       return;
     }
+    setScoreCreateRequest({
+      ...scoreCreateRequest,
+      evaluation_uuid: scores.evaluationUUID,
+      attend_subject_uuid: scores.attendSubjectUUID,
+    });
+    setScoreUpdateRequest(
+      scores.scores.map<ScoreUpdateRequest>(
+        (score: ScoreEval): ScoreUpdateRequest => {
+          return ScoreUpdateRequestFactory.createFromResponseObject({
+            uuid: score.score_uuid,
+            got_score: score.got_score,
+            max_score: score.max_score,
+            memo: score.memo,
+            attend_subject_uuid: scores.attendSubjectUUID,
+            evaluation_uuid: scores.evaluationUUID,
+          });
+        },
+      ),
+    );
     setScoresByEval(scores);
   };
   useEffect(() => {
@@ -80,27 +96,108 @@ const ScoreEdit = () => {
       }
     };
     uuid && fetchData();
-  }, [uuid]);
+  }, [uuid, update]);
 
-  const handleAddScore = () => {
-    const score = {
-      max_score: 0,
-      got_score: 0,
-      memo: null,
-    };
-    if (!scores) return;
+  // Generics とか使える？
+  const handleMaxScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setScoreCreateRequest({
+      ...scoreCreateRequest,
+      max_score: Number(e.target.value),
+    });
   };
 
-  const handleDeleteScore = (index: number) => {
-    if (!scores) return;
-    setScores(
-      scores.filter((_, i) => {
-        return i != index;
-      }),
+  const handleGotScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setScoreCreateRequest({
+      ...scoreCreateRequest,
+      got_score: Number(e.target.value),
+    });
+  };
+
+  const handleMaxScoresChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (!scoreUpdateRequest) return;
+    setScoreUpdateRequest(
+      scoreUpdateRequest.map<ScoreUpdateRequest>(
+        (score: ScoreUpdateRequest, i: number): ScoreUpdateRequest => {
+          if (index == i) {
+            return { ...score, max_score: Number(e.target.value) };
+          }
+          return score;
+        },
+      ),
     );
   };
 
+  const handleGotScoresChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (!scoreUpdateRequest) return;
+    setScoreUpdateRequest(
+      scoreUpdateRequest.map<ScoreUpdateRequest>(
+        (score: ScoreUpdateRequest, i: number): ScoreUpdateRequest => {
+          if (index == i) {
+            return { ...score, got_score: Number(e.target.value) };
+          }
+          return score;
+        },
+      ),
+    );
+  };
+
+  const handleAddScore = async () => {
+    try {
+      setIsSubmitting(true);
+      await ScoreRepository.create(scoreCreateRequest);
+      setIsSubmitting(false);
+
+      onClose();
+      // あんま良くないかも
+      updateRendering();
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+  };
+
+  const handleDeleteScore = async (index: number) => {
+    if (!scoreUpdateRequest) return;
+    try {
+      const willDeleteScore = scoreUpdateRequest.filter((_, i) => {
+        return i === index;
+      });
+      console.log(willDeleteScore);
+      await ScoreRepository.delete(willDeleteScore[0].uuid);
+      updateRendering();
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+  };
+
+  const handleUpdateScores = async () => {
+    if (!scoreUpdateRequest) return;
+    try {
+      setLoading(true);
+      setIsSubmitting(true);
+      await Promise.all(
+        scoreUpdateRequest.map(async score => {
+          return await ScoreRepository.update(score);
+        }),
+      );
+      setIsSubmitting(false);
+      setLoading(false);
+      updateRendering();
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+  };
+
   if (!scoresByEval) return null;
+  if (loading) return <Spinner />;
   return (
     <>
       {!uuid ? (
@@ -108,29 +205,47 @@ const ScoreEdit = () => {
       ) : (
         <Container w='80vw'>
           <AddScoreModal
+            isDisabled={isSubmitting}
             isOpen={isOpen}
             onClose={onClose}
             onClick={handleAddScore}
+            onChangeGotScore={handleGotScoreChange}
+            onChangeMaxScore={handleMaxScoreChange}
           />
           <VStack pt='14vh' pb='5vh' spacing={10} w='full'>
             <Heading color='whiteAlpha.900' fontSize='2xl'>
-              {scoresByEval.evaluationName}
+              <Text textAlign='center'>{scoresByEval.subjectName}</Text>
+              <Text textAlign='center'>{scoresByEval.evaluationName}</Text>
             </Heading>
             <VStack w='full'>
-              {scoresByEval.scores.map((score, i) => {
-                console.log(score.got_score, i);
-                return (
-                  <ScoreRow
-                    gotScore={score.got_score}
-                    index={i}
-                    key={i}
-                    maxScore={score.max_score}
-                    onDelete={() => {
-                      handleDeleteScore(i);
-                    }}
-                  />
-                );
-              })}
+              {scoreUpdateRequest &&
+                scoreUpdateRequest.map((score, i) => {
+                  console.log(score.got_score, i);
+                  return (
+                    <ScoreRow
+                      gotScore={score.got_score}
+                      index={i}
+                      key={score.uuid}
+                      maxScore={score.max_score}
+                      onDelete={() => {
+                        handleDeleteScore(i);
+                      }}
+                      // onPressModal={() => {
+                      //   setWillDeleteIndex(i);
+                      // }}
+                      onChangeMaxScore={(
+                        e: React.ChangeEvent<HTMLInputElement>,
+                      ) => {
+                        handleMaxScoresChange(i, e);
+                      }}
+                      onChangeGotScore={(
+                        e: React.ChangeEvent<HTMLInputElement>,
+                      ) => {
+                        handleGotScoresChange(i, e);
+                      }}
+                    />
+                  );
+                })}
             </VStack>
             <Divider />
             <Button
@@ -148,10 +263,22 @@ const ScoreEdit = () => {
             </Button>
             <Spacer />
             <Flex justifyContent='space-between' w='full'>
-              <Button bg='blue.400' color='gray.800' rounded='full'>
+              <Button
+                bg='blue.400'
+                color='gray.800'
+                rounded='full'
+                onClick={handleUpdateScores}
+              >
                 保存する
               </Button>
-              <Button bg='whiteAlpha.200' color='whiteAlpha.800' rounded='full'>
+              <Button
+                bg='whiteAlpha.200'
+                color='whiteAlpha.800'
+                rounded='full'
+                onClick={() =>
+                  router.push(`/score_show/${scoresByEval.attendSubjectUUID}`)
+                }
+              >
                 キャンセル
               </Button>
             </Flex>
@@ -167,6 +294,9 @@ type ScoreRowProps = {
   gotScore: number;
   maxScore: number;
   onDelete: VoidFunction;
+  //onPressModal: VoidFunction;
+  onChangeMaxScore: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeGotScore: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const ScoreRow: React.FC<ScoreRowProps> = ({
@@ -174,6 +304,9 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
   gotScore,
   maxScore,
   onDelete,
+  //onPressModal,
+  onChangeMaxScore,
+  onChangeGotScore,
 }) => {
   return (
     <Flex w='full' justifyContent='space-between'>
@@ -186,6 +319,7 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
           bg='white'
           color='black'
           defaultValue={gotScore}
+          onChange={onChangeGotScore}
           type='number'
         ></Input>
       </Flex>
@@ -195,6 +329,7 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
           bg='white'
           color='black'
           defaultValue={maxScore}
+          onChange={onChangeMaxScore}
           type='number'
         ></Input>
         <Button
@@ -214,44 +349,60 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
 
 type AddScoreModalProps = {
   isOpen: boolean;
+  isDisabled: boolean;
   onClose: () => void;
   onClick: () => void;
+  onChangeMaxScore: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeGotScore: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const AddScoreModal: React.FC<AddScoreModalProps> = ({
+  isDisabled,
   isOpen,
   onClose,
   onClick,
+  onChangeMaxScore,
+  onChangeGotScore,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>点数の追加</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <Flex>
-            <Input
-              w='5rem'
-              bg='white'
-              color='black'
-              placeholder='点数'
-              type='number'
-            ></Input>
-            <Input
-              w='5rem'
-              bg='white'
-              color='black'
-              placeholder='満点'
-              type='number'
-            ></Input>
+            <FormControl id='gotScore'>
+              <FormLabel>獲得点数</FormLabel>
+              <Input
+                w='5rem'
+                bg='white'
+                color='black'
+                type='number'
+                onChange={onChangeGotScore}
+              />
+            </FormControl>
+            <FormControl id='maxScore'>
+              <FormLabel>満点</FormLabel>
+              <Input
+                w='5rem'
+                bg='white'
+                color='black'
+                type='number'
+                onChange={onChangeMaxScore}
+              />
+            </FormControl>
           </Flex>
         </ModalBody>
         <ModalFooter>
           <Button
+            pr={10}
+            pl={10}
+            mr={15}
             bg='blue.400'
             color='gray.800'
             colorScheme={'blue'}
+            isDisabled={isDisabled}
             onClick={onClick}
             rounded='full'
             _hover={{
@@ -260,7 +411,7 @@ const AddScoreModal: React.FC<AddScoreModalProps> = ({
           >
             追加
           </Button>
-          <Button onClick={onClose} rounded='full'>
+          <Button mr={10} onClick={onClose} rounded='full'>
             キャンセル
           </Button>
         </ModalFooter>

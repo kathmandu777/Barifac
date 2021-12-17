@@ -1,11 +1,4 @@
-import {
-  Grade,
-  User,
-  SchoolObject,
-  DepartmentObject,
-  SchoolFactory,
-  DepartmentFactory,
-} from '.';
+import { Grade, User, SchoolObject, DepartmentObject } from '.';
 
 export interface UserObject {
   uuid: string;

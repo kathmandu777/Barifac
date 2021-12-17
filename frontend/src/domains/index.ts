@@ -26,3 +26,5 @@ export * from './UserUpdateRequest';
 export * from './UserUpdateRequestFactory';
 export * from './ScoreEvalResponse';
 export * from './ScoreEvalResponseFactory';
+export * from './ScoreRquest';
+export * from './ScoreRequestFactory';
