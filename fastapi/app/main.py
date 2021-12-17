@@ -6,11 +6,13 @@ from datetime import datetime
 from app.core.exceptions import ApiException
 from app.core.handlers import api_exception_handler
 from app.core.log import LogConfig
+from app.core.settings import get_env
 from app.middlwares import (
     BackendAuth,
     CORSMiddleware,
     DBSessionMiddleware,
     HttpRequestMiddleware,
+    TimeoutMiddleware,
 )
 from app.routers.monitoring import monitoring_router
 from app.routers.v1 import api_v1_router
@@ -39,6 +41,7 @@ So, at this stage, I left this code as comment out.
 app.add_exception_handler(ApiException, api_exception_handler)
 
 # middlewares (後に追加したものが先に実行される)
+app.add_middleware(TimeoutMiddleware, timeout=get_env().timeout_sec)
 app.add_middleware(AuthenticationMiddleware, backend=BackendAuth())
 app.add_middleware(DBSessionMiddleware)
 app.add_middleware(HttpRequestMiddleware)

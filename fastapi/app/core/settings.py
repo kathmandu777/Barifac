@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     # firebase
     firebase_credentials_path: str = "/src/firebase_credentials.json"
 
+    # timeout
+    timeout_sec: int = 1
+
     class Config:
         env_file = os.path.join(BASE_DIR, "fastapi.env")
 
