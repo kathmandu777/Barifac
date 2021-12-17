@@ -1,4 +1,5 @@
 from typing import Optional
+from uuid import UUID
 
 from app.db.database import get_db_session
 from app.models import Department, School, User
@@ -31,7 +32,7 @@ class UserCRUD(BaseCRUD):
         else:
             raise ApiException(UidOrPasswordMustBeSet)
 
-    def update(self, obj: User, data: dict = {}) -> User:
+    def update(self, uuid: UUID, data: dict = {}) -> User:
         if not SchoolCRUD(db_session).get_by_uuid(data["school_uuid"]):
             raise ApiException(NotFoundObjectMatchingUuid(School))
         if not DepartmentCRUD(db_session).get_by_uuid(data["department_uuid"]):
@@ -40,9 +41,9 @@ class UserCRUD(BaseCRUD):
         if data["password"] is not None:
             password = data.pop("password")
             data["hashed_password"] = get_password_hash(password)
-            return super().update(obj, data)
+            return super().update(uuid, data)
         elif data["uid"] is not None:
-            return super().update(obj, data)
+            return super().update(uuid, data)
         else:
             raise ApiException(UidOrPasswordMustBeSet)
 

@@ -52,4 +52,4 @@ class TeacherCRUD(BaseCRUD):
         teacher = self.get_by_name_and_school(name, school)
         if teacher and teacher.uuid != obj.uuid:
             raise ApiException(SameObjectAlreadyExists)
-        return super().update(obj, data)
+        return super().update(uuid, data)

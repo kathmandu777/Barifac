@@ -53,4 +53,4 @@ class TermCRUD(BaseCRUD):
         term = self.get_by_year_and_semester(academic_year, semester)
         if term and term.uuid != obj.uuid:
             raise ApiException(SameObjectAlreadyExists)
-        return super().update(obj, data)
+        return super().update(uuid, data)
