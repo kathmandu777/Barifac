@@ -1,11 +1,4 @@
-import {
-  Grade,
-  User,
-  SchoolObject,
-  DepartmentObject,
-  SchoolFactory,
-  DepartmentFactory,
-} from '.';
+import { Grade, User, SchoolObject, DepartmentObject } from '.';
 
 export interface UserObject {
   uuid: string;
@@ -24,8 +17,8 @@ export class UserFactory {
       obj.uid,
       obj.username,
       obj.email,
-      SchoolFactory.createFromResponseObject(obj.school),
-      DepartmentFactory.createFromResponseObject(obj.department),
+      obj.school,
+      obj.department,
       obj.grade,
     );
   }
