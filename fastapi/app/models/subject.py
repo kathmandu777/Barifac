@@ -32,9 +32,9 @@ class Subject(BaseModelMixin):
     )
     credits = Column(Float, nullable=False)
 
-    MAX_LENGTH_CATEGORY = 10
+    MAX_LENGTH_CATEGORY = 50
     category = Column(VARCHAR(MAX_LENGTH_CATEGORY), nullable=True)
-    MAX_LENGTH_TYPE = 10
+    MAX_LENGTH_TYPE = 50
     type = Column(VARCHAR(MAX_LENGTH_TYPE), nullable=True)
     target_grade = Column(Integer, nullable=True)
     department_uuid = Column(
