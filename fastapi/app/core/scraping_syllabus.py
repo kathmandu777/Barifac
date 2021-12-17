@@ -20,6 +20,7 @@ from app.schemas import (
     CreateTermSchema,
 )
 from bs4 import BeautifulSoup  # 取得したデータの解析
+from tqdm import tqdm
 
 SYLLABUS_URL = "https://syllabus.kosen-k.go.jp/Pages/PublicSchools"
 SYLLABUS_TOP_URL = "https://syllabus.kosen-k.go.jp"
@@ -34,7 +35,7 @@ def add_school_to_db(is_add_department=False, is_add_subject=False) -> None:
     soup = BeautifulSoup(res.text, "html.parser")
     school_soup_list = soup.find(string="学校一覧").parent.parent.parent
     school_a_list = school_soup_list.find_all("a")
-    for school_a in school_a_list:
+    for school_a in tqdm(school_a_list, position=0, desc="school"):
         if school_a.parent["style"] == "display:none":
             continue
         school_name = school_a.text
@@ -46,9 +47,9 @@ def add_school_to_db(is_add_department=False, is_add_subject=False) -> None:
                 syllabus_url=school_url,
             )
             school = SchoolCRUD(db_session).create(school_schema.dict())
-            logger.info(f"Created school: {school.name}")
+            tqdm.write(f"Created school: {school.name}")
         else:
-            logger.info(f"Skipped school: {school.name}")
+            tqdm.write(f"Skipped school: {school.name}")
         db_session.commit()
 
         if is_add_department:
@@ -60,8 +61,10 @@ def add_department_to_db(school, school_url, is_add_subject) -> None:
     assert res.status_code == 200
     soup = BeautifulSoup(res.text, "html.parser")
     department_soup_list = soup.find_all(string="本年度の開講科目一覧")
-    for department_soup in department_soup_list:
+    for department_soup in tqdm(department_soup_list, position=1, desc="department"):
         department_name = department_soup.parent.parent.parent.find("h4").text
+        if "専攻" in department_name:
+            continue
         department_url = SYLLABUS_TOP_URL + department_soup.parent.attrs["href"]
         department = DepartmentCRUD(db_session).get_by_school_and_name(
             school, department_name
@@ -73,11 +76,11 @@ def add_department_to_db(school, school_url, is_add_subject) -> None:
                 syllabus_url=department_url,
             )
             department = DepartmentCRUD(db_session).create(department_schema.dict())
-            logger.info(
+            tqdm.write(
                 f"Created department: {department.school.name}-{department_name}"
             )
         else:
-            logger.info(
+            tqdm.write(
                 f"Skipped department: {department.school.name}-{department_name}"
             )
         db_session.commit()
@@ -93,7 +96,7 @@ def add_subject_to_db(department, department_url) -> None:
     assert res.status_code == 200
     soup = BeautifulSoup(res.text, "html.parser")
     subject_tr_soup_list = soup.find_all("tr")
-    for subject_tr_soup in subject_tr_soup_list:
+    for subject_tr_soup in tqdm(subject_tr_soup_list, position=2, desc="subject"):
         if not subject_tr_soup.has_attr("data-course-value"):
             continue
         subject_td_soup_list = subject_tr_soup.find_all("td")
@@ -125,7 +128,7 @@ def add_subject_to_db(department, department_url) -> None:
                         semester=subject_semester,
                     )
                     term = TermCRUD(db_session).create(term_schema.dict())
-                    logger.info(f"Created term: {term.academic_year}-{term.semester}")
+                    tqdm.write(f"Created term: {term.academic_year}-{term.semester}")
                     db_session.flush()
                 for teacher_name in subject_teachers:
                     teacher = TeacherCRUD(db_session).get_by_name_and_school(
@@ -137,13 +140,13 @@ def add_subject_to_db(department, department_url) -> None:
                             school_uuid=department.school.uuid,
                         )
                         teacher = TeacherCRUD(db_session).create(teacher_schema.dict())
-                        logger.info(f"Created teacher: {teacher.name}")
+                        tqdm.write(f"Created teacher: {teacher.name}")
                         db_session.flush()
                     subject = SubjectCRUD(db_session).get_by_name_term_school_teacher(
                         subject_name, term, department.school, teacher
                     )
                     if subject:
-                        logger.info(
+                        tqdm.write(
                             f"Skipped subject: {subject.name}({subject.school.name} "
                             f"{subject.term.academic_year}-{subject.term.semester}) [{subject.teacher.name}]"
                         )
@@ -164,7 +167,7 @@ def add_subject_to_db(department, department_url) -> None:
                             syllabus_url=subject_url,
                         )
                         subject = SubjectCRUD(db_session).create(subject_schema.dict())
-                        logger.info(
+                        tqdm.write(
                             f"Created subject: {subject.name}({subject.school.name} "
                             f"{subject.term.academic_year}-{subject.term.semester}) [{subject.teacher.name}]"
                         )
@@ -186,6 +189,8 @@ def add_evaluation_to_db(subject, subject_url) -> None:
         if evaluation_name == "" or not evaluation_rate.isdigit():
             continue
         evaluation_rate = int(evaluation_rate)
+        if evaluation_rate <= 0 or evaluation_rate >= 100:
+            continue
         evaluation = EvaluationCRUD(db_session).get_by_name_and_subject(
             evaluation_name, subject
         )
@@ -197,12 +202,12 @@ def add_evaluation_to_db(subject, subject_url) -> None:
                 subject_uuid=subject.uuid,
             )
             evaluation = EvaluationCRUD(db_session).create(evaluation_schema.dict())
-            logger.info(
+            tqdm.write(
                 f"Created evaluation: {evaluation.name}-{evaluation.rate}({evaluation.subject.name})"
             )
             db_session.flush()
         else:
-            logger.info(
+            tqdm.write(
                 f"Skipped evaluation: {evaluation.name}-{evaluation.rate}({evaluation.subject.name})"
             )
     db_session.commit()
