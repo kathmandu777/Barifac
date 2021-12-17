@@ -52,7 +52,15 @@ class ScoreAPI:
                 Score.evaluation_uuid == evaluation_uuid,
             )
         )
+        attend_subject = AttendSubjectCRUD(
+            request.state.db_session
+        ).get_by_user_and_subject(request.user, evaluation.subject)
+        if attend_subject is None:
+            raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
         return {
+            "attend_subject_uuid": attend_subject.uuid,
+            "subject_name": attend_subject.subject.name,
+            "subject_uuid": attend_subject.subject.uuid,
             "evaluation_name": evaluation.name,
             "evaluation_uuid": evaluation.uuid,
             "rate": evaluation.rate,
