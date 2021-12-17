@@ -38,3 +38,14 @@ class ReadUserSchema(BaseUserSchema):
 
 class ReadSimpleUserSchema(BaseUserSchema):
     uuid: UUID
+
+
+class ReadUserForOtherUserSchema(BaseModel):
+    uuid: UUID
+    username: str
+    grade: Optional[int]
+    school: Optional[ReadSchoolSchema]
+    department: Optional[ReadSimpleDepartmentSchema]
+
+    class Config:
+        orm_mode = True

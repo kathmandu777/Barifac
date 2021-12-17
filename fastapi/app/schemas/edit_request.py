@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 from .evaluation import ReadSimpleEvaluationSchema
 from .subject import ReadSubjectSchema
-from .user import ReadSimpleUserSchema
+from .user import ReadUserForOtherUserSchema
 
 
 class BaseEditRequestSchema(BaseModel):
@@ -18,7 +18,7 @@ class BaseEditRequestSchema(BaseModel):
 
 class ReadEditRequestSchema(BaseEditRequestSchema):
     uuid: UUID
-    user: ReadSimpleUserSchema
+    user: ReadUserForOtherUserSchema
     subject: Optional[ReadSubjectSchema]
     evaluation: Optional[ReadSimpleEvaluationSchema]
 
