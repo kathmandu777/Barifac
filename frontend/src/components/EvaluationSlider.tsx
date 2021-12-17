@@ -12,14 +12,16 @@ import {
 } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
-export type ScoreSliderProps = {
+export type EvaluationSliderProps = {
+  evaluationUuid: string;
   name: string;
   rate: number;
   score: number;
   onChange: (score: number) => void;
 };
 
-const ScoreSlider: React.FC<ScoreSliderProps> = ({
+const EvaluationSlider: React.FC<EvaluationSliderProps> = ({
+  evaluationUuid,
   name,
   rate,
   score,
@@ -31,7 +33,7 @@ const ScoreSlider: React.FC<ScoreSliderProps> = ({
         <Text color='gray.500'>
           {name}({rate}%)
         </Text>
-        <Link href='/score_edit'>
+        <Link href={`/score_edit/${evaluationUuid}`}>
           <ArrowForwardIcon boxSize={6} color='whiteAlpha.900' />
         </Link>
       </Flex>
@@ -50,4 +52,4 @@ const ScoreSlider: React.FC<ScoreSliderProps> = ({
   );
 };
 
-export default ScoreSlider;
+export default EvaluationSlider;

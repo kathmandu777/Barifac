@@ -11,7 +11,6 @@ from sqlalchemy.orm import scoped_session
 
 from ..models import AttendSubject, Subject, User
 from .base import BaseCRUD
-from .school import SchoolCRUD
 from .subject import SubjectCRUD
 from .user import UserCRUD
 
@@ -68,7 +67,7 @@ class AttendSubjectCRUD(BaseCRUD):
         if obj is None:
             raise ApiException(NotFoundObjectMatchingUuid(AttendSubject))
 
-        subject: Optional[Subject] = SchoolCRUD(db_session).get_by_uuid(
+        subject: Optional[Subject] = SubjectCRUD(db_session).get_by_uuid(
             data["subject_uuid"]
         )
         if not subject:
@@ -79,4 +78,4 @@ class AttendSubjectCRUD(BaseCRUD):
         attend_subject = self.get_by_user_and_subject(user, subject)
         if attend_subject and attend_subject.uuid != obj.uuid:
             raise ApiException(SameObjectAlreadyExists)
-        return super().update(obj, data)
+        return super().update(uuid, data)
