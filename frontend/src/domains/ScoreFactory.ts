@@ -1,5 +1,4 @@
 import {
-  AttendSubject,
   AttendSubjectFactory,
   AttendSubjectObject,
   EvaluationFactory,

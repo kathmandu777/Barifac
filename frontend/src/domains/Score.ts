@@ -1,12 +1,12 @@
-import { AttendSubject,  Evaluation} from ".";
+import { AttendSubject, Evaluation } from '.';
 
 export class Score {
   constructor(
     public uuid: string,
     public attendSubject: AttendSubject,
     public evaluation: Evaluation,
-    public gotScore: number,
-    public maxScore: number,
+    public got_score: number,
+    public max_score: number,
     public memo: string,
   ) {}
 }

@@ -10,11 +10,24 @@ import {
   Text,
   VStack,
   Spinner,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
 } from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/hooks';
 import { SessionService } from 'services/SessionService';
 import { useRouter } from 'next/router';
-import { ScoreRepository, UserRepository } from 'repositories';
-import { ScoreEvalResponse } from 'domains';
+import {
+  ScoreCreateRequest,
+  ScoreRepository,
+  ScoreUpdateRequest,
+  UserRepository,
+} from 'repositories';
+import { AttendSubject, Score, ScoreEvalResponse } from 'domains';
 
 const SCORE_EDIT_DATA = {
   name: '微分方程式 小テスト',
@@ -31,12 +44,18 @@ const SCORE_EDIT_DATA = {
 };
 
 const ScoreEdit = () => {
-  const name = SCORE_EDIT_DATA.name;
-  const [scores, setScores] = useState(SCORE_EDIT_DATA.scores);
+  const [scores, setScores] = useState<ScoreUpdateRequest[]>();
+  const [scoreCreateRequest, setScoreCreateRequest] =
+    useState<ScoreCreateRequest>();
+  const [scoreUpdateRequest, setScoreUpdateRequest] =
+    useState<ScoreUpdateRequest[]>();
+  const [attendSubjectUUID, setAttendSubjectUUID] = useState<string>();
+  const [evaluationUUID, setEvaluationUUID] = useState<string>();
   const [scoresByEval, setScoresByEval] = useState<ScoreEvalResponse>();
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const { uuid } = router.query;
+
   const fetchData = async () => {
     const user = await UserRepository.getMe();
     if (!SessionService.isLoggedin() || !user) {
@@ -46,33 +65,34 @@ const ScoreEdit = () => {
     if (!uuid) {
       return;
     }
-    const scoresByEval = await ScoreRepository.getsByEvaluation(uuid as string);
-    if (!scoresByEval) {
+    const scores = await ScoreRepository.getsByEvaluation(uuid as string);
+    if (!scores) {
       return;
     }
-    setScoresByEval(scoresByEval);
+    setScoresByEval(scores);
   };
   useEffect(() => {
-    if (!router.isReady) return;
-    fetchData;
-    console.log(uuid);
-  }, [router.isReady]);
+    async () => {
+      const user = await UserRepository.getMe();
+      if (!SessionService.isLoggedin() || !user) {
+        alert('ログインし直してください');
+        return router.push('/login');
+      }
+    };
+    uuid && fetchData();
+  }, [uuid]);
 
   const handleAddScore = () => {
     const score = {
-      maxScore: 0,
-      gotScore: 0,
+      max_score: 0,
+      got_score: 0,
+      memo: null,
     };
-    setScores([...scores, score]);
+    if (!scores) return;
   };
 
   const handleDeleteScore = (index: number) => {
-    console.log(
-      scores.filter((_, i) => {
-        console.log(i, index);
-        return i != index;
-      }),
-    );
+    if (!scores) return;
     setScores(
       scores.filter((_, i) => {
         return i != index;
@@ -83,22 +103,28 @@ const ScoreEdit = () => {
   if (!scoresByEval) return null;
   return (
     <>
-      {!router.isReady ? (
+      {!uuid ? (
         <Spinner />
       ) : (
         <Container w='80vw'>
+          <AddScoreModal
+            isOpen={isOpen}
+            onClose={onClose}
+            onClick={handleAddScore}
+          />
           <VStack pt='14vh' pb='5vh' spacing={10} w='full'>
             <Heading color='whiteAlpha.900' fontSize='2xl'>
-              {name}
+              {scoresByEval.evaluationName}
             </Heading>
             <VStack w='full'>
-              {scores.map((score, i) => {
+              {scoresByEval.scores.map((score, i) => {
+                console.log(score.got_score, i);
                 return (
                   <ScoreRow
-                    gotScore={score.gotScore}
+                    gotScore={score.got_score}
                     index={i}
                     key={i}
-                    maxScore={score.maxScore}
+                    maxScore={score.max_score}
                     onDelete={() => {
                       handleDeleteScore(i);
                     }}
@@ -111,7 +137,7 @@ const ScoreEdit = () => {
               bg='blue.400'
               color='gray.800'
               colorScheme={'blue'}
-              onClick={handleAddScore}
+              onClick={onOpen}
               rounded='full'
               w='full'
               _hover={{
@@ -183,6 +209,63 @@ const ScoreRow: React.FC<ScoreRowProps> = ({
         </Button>
       </Flex>
     </Flex>
+  );
+};
+
+type AddScoreModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onClick: () => void;
+};
+
+const AddScoreModal: React.FC<AddScoreModalProps> = ({
+  isOpen,
+  onClose,
+  onClick,
+}) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>点数の追加</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody pb={6}>
+          <Flex>
+            <Input
+              w='5rem'
+              bg='white'
+              color='black'
+              placeholder='点数'
+              type='number'
+            ></Input>
+            <Input
+              w='5rem'
+              bg='white'
+              color='black'
+              placeholder='満点'
+              type='number'
+            ></Input>
+          </Flex>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            bg='blue.400'
+            color='gray.800'
+            colorScheme={'blue'}
+            onClick={onClick}
+            rounded='full'
+            _hover={{
+              bg: 'blue.300',
+            }}
+          >
+            追加
+          </Button>
+          <Button onClick={onClose} rounded='full'>
+            キャンセル
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

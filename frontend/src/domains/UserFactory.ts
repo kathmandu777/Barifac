@@ -24,8 +24,8 @@ export class UserFactory {
       obj.uid,
       obj.username,
       obj.email,
-      SchoolFactory.createFromResponseObject(obj.school),
-      DepartmentFactory.createFromResponseObject(obj.department),
+      obj.school,
+      obj.department,
       obj.grade,
     );
   }

@@ -8,7 +8,7 @@ import {
   ScoreEvalResponseObjectFactory,
 } from 'domains';
 
-interface ScoreCreateRequest {
+export interface ScoreCreateRequest {
   attendSubject: AttendSubject;
   evaluation: Evaluation;
   gotScore: number;
@@ -16,7 +16,7 @@ interface ScoreCreateRequest {
   memo: string;
 }
 
-interface ScoreUpdateRequest {
+export interface ScoreUpdateRequest {
   uuid: string;
   attendSubject: AttendSubject;
   evaluation: Evaluation;
