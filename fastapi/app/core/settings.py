@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     # firebase
     firebase_credentials_path: str = "/src/firebase_credentials.json"
 
+    # log
+    log_handler_file_path: str = "./barifac.log"
+
     class Config:
         env_file = os.path.join(BASE_DIR, "fastapi.env")
 
