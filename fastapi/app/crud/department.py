@@ -52,4 +52,4 @@ class DepartmentCRUD(BaseCRUD):
         department = self.get_by_school_and_name(school, name)
         if department and department.uuid != obj.uuid:
             raise ApiException(SameObjectAlreadyExists)
-        return super().update(obj, data)
+        return super().update(uuid, data)

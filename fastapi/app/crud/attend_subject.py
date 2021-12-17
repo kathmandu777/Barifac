@@ -79,4 +79,4 @@ class AttendSubjectCRUD(BaseCRUD):
         attend_subject = self.get_by_user_and_subject(user, subject)
         if attend_subject and attend_subject.uuid != obj.uuid:
             raise ApiException(SameObjectAlreadyExists)
-        return super().update(obj, data)
+        return super().update(uuid, data)

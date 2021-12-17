@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 
 from app.core.exceptions import ApiException, NotFoundObjectMatchingUuid
 from app.db.database import get_db_session
@@ -53,7 +54,7 @@ class ScoreCRUD(BaseCRUD):
             raise ApiException(NotFoundObjectMatchingUuid(Evaluation))
         return super().create(data)
 
-    def update(self, obj: Score, data: dict = {}) -> Score:
+    def update(self, uuid: UUID, data: dict = {}) -> Score:
         attend_subject: Optional[Score] = AttendSubjectCRUD(
             self.db_session
         ).get_by_uuid(data["attend_subject_uuid"])
@@ -64,4 +65,4 @@ class ScoreCRUD(BaseCRUD):
         )
         if not evaluation:
             raise ApiException(NotFoundObjectMatchingUuid(Evaluation))
-        return super().update(obj, data)
+        return super().update(uuid, data)

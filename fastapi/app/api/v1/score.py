@@ -93,7 +93,7 @@ class ScoreAPI:
             raise ApiException(NotFoundObjectMatchingUuid(Score))
         if obj.attend_subject.user_uuid != request.user.uuid:
             raise ApiException(PermissionDenied)
-        return ScoreCRUD(request.state.db_session).update(obj, schema.dict())
+        return ScoreCRUD(request.state.db_session).update(uuid, schema.dict())
 
     @classmethod
     def delete(cls, request: Request, uuid: UUID) -> None:

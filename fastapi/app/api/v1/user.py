@@ -27,7 +27,9 @@ class UserAPI:
         # data = schema.dict()
         # if not request.user.is_admin:
         #     data["is_admin"] = False
-        return UserCRUD(request.state.db_session).update(obj, schema.dict())
+        return UserCRUD(request.state.db_session).update(
+            request.user.uuid, schema.dict()
+        )
 
     @classmethod
     def delete(cls, request: Request) -> None:
