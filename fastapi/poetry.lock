@@ -418,6 +418,20 @@ grpcio = ">=1.42.0"
 protobuf = ">=3.6.0"
 
 [[package]]
+name = "gunicorn"
+version = "20.1.0"
+description = "WSGI HTTP Server for UNIX"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+eventlet = ["eventlet (>=0.24.1)"]
+gevent = ["gevent (>=1.4.0)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
+
+[[package]]
 name = "h11"
 version = "0.12.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -904,7 +918,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "ecf8c84f6108cd5386359d746beb532bf586272aa66978cfb3e811df11b72ded"
+content-hash = "2efef7e922e30f50bee71e0658386d508dd77859bc351c158331b8fe84526686"
 
 [metadata.files]
 aiomysql = [
@@ -1229,6 +1243,10 @@ grpcio = [
 grpcio-status = [
     {file = "grpcio-status-1.42.0.tar.gz", hash = "sha256:25533c4d65d7d513a638f0c4b88b2b66700e3bf43e6995a55a3bd15ec0b77902"},
     {file = "grpcio_status-1.42.0-py3-none-any.whl", hash = "sha256:8e922a1c5f1930e0d87e0a51fa40acbd2e58b9bd0aa79cb22fc9abc7c165da3f"},
+]
+gunicorn = [
+    {file = "gunicorn-20.1.0-py3-none-any.whl", hash = "sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e"},
+    {file = "gunicorn-20.1.0.tar.gz", hash = "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"},
 ]
 h11 = [
     {file = "h11-0.12.0-py3-none-any.whl", hash = "sha256:36a3cb8c0a032f56e2da7084577878a035d3b61d104230d4bd49c0c6b555a9c6"},
