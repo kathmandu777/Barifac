@@ -29,7 +29,10 @@ logger = getLogger(__name__)
 db_session = get_db_session()
 
 
-def add_school_to_db(is_add_department=False, is_add_subject=False) -> None:
+def add_school_to_db(
+    is_add_department=False, is_add_subject=False, processing_school_name=None
+) -> None:
+    is_before_processing_school = False if processing_school_name is None else True
     res = requests.get(SYLLABUS_URL)
     assert res.status_code == 200
     soup = BeautifulSoup(res.text, "html.parser")
@@ -39,6 +42,10 @@ def add_school_to_db(is_add_department=False, is_add_subject=False) -> None:
         if school_a.parent["style"] == "display:none":
             continue
         school_name = school_a.text
+        if processing_school_name and school_name == processing_school_name:
+            is_before_processing_school = False
+        if is_before_processing_school:
+            continue
         school_url = SYLLABUS_TOP_URL + school_a.get("href")
         school = SchoolCRUD(db_session).get_by_name(school_name)
         if not school:
@@ -102,6 +109,8 @@ def add_subject_to_db(department, department_url) -> None:
         subject_td_soup_list = subject_tr_soup.find_all("td")
         for i, grade in enumerate([1, 2, 3, 4, 5]):
             for j, semester in enumerate(["前期", "後期"]):
+                if len(subject_td_soup_list) == 16:  # 専攻科判定
+                    continue
                 if subject_td_soup_list[6 + i * 4 + j * 2].text == "":
                     continue
                 general_special = subject_td_soup_list[0].text
@@ -213,8 +222,12 @@ def add_evaluation_to_db(subject, subject_url) -> None:
     db_session.commit()
 
 
-def add_all_data() -> None:
-    add_school_to_db(is_add_department=True, is_add_subject=True)
+def add_all_data(school_name=None) -> None:
+    add_school_to_db(
+        is_add_department=True,
+        is_add_subject=True,
+        processing_school_name=school_name,
+    )
 
 
 def add_schools() -> None:
