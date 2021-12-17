@@ -1,22 +1,12 @@
 import { authClient } from 'infras/RestClient';
-import { ScoreFactory, ScoreObject, AttendSubject, Evaluation } from 'domains';
-
-interface ScoreCreateRequest {
-  attendSubject: AttendSubject;
-  evaluation: Evaluation;
-  gotScore: number;
-  maxScore: number;
-  memo: string;
-}
-
-interface ScoreUpdateRequest {
-  uuid: string;
-  attendSubject: AttendSubject;
-  evaluation: Evaluation;
-  gotScore: number;
-  maxScore: number;
-  memo: string;
-}
+import {
+  ScoreFactory,
+  ScoreObject,
+  ScoreEvalResponseObject,
+  ScoreEvalResponseObjectFactory,
+  ScoreCreateRequestObject,
+  ScoreUpdateRequestObject,
+} from 'domains';
 
 export class ScoreRepository {
   static async gets() {
@@ -24,6 +14,15 @@ export class ScoreRepository {
     if (!authClientObject) return;
     const res = await authClientObject.get<ScoreObject[]>('/api/v1/scores');
     return res.data.map(score => ScoreFactory.createFromResponseObject(score));
+  }
+
+  static async getsByEvaluation(evalUUID: string) {
+    const authClientObject = authClient();
+    if (!authClientObject) return;
+    const res = await authClientObject.get<ScoreEvalResponseObject>(
+      `/api/v1/scores/evaluations/${evalUUID}`,
+    );
+    return ScoreEvalResponseObjectFactory.createFromResponseObject(res.data);
   }
 
   static async get(uuid: string) {
@@ -36,57 +35,57 @@ export class ScoreRepository {
   }
 
   public static async create({
-    attendSubject,
-    evaluation,
-    gotScore,
-    maxScore,
+    attend_subject_uuid,
+    evaluation_uuid,
+    got_score,
+    max_score,
     memo,
-  }: ScoreCreateRequest) {
+  }: ScoreCreateRequestObject) {
     const params = {
-      attendSubject,
-      evaluation,
-      gotScore,
-      maxScore,
+      attend_subject_uuid,
+      evaluation_uuid,
+      got_score,
+      max_score,
       memo,
     };
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.post<ScoreCreateRequest, ScoreObject>(
-      `/api/v1/scores`,
-      params,
-    );
+    const res = await authClientObject.post<
+      ScoreCreateRequestObject,
+      // 要対応
+      ScoreObject
+    >(`/api/v1/scores`, params);
     return ScoreFactory.createFromResponseObject(res.data);
   }
 
   public static async update({
     uuid,
-    attendSubject,
-    evaluation,
-    gotScore,
-    maxScore,
+    attend_subject_uuid,
+    evaluation_uuid,
+    got_score,
+    max_score,
     memo,
-  }: ScoreUpdateRequest) {
+  }: ScoreUpdateRequestObject) {
     const params = {
-      uuid,
-      attendSubject,
-      evaluation,
-      gotScore,
-      maxScore,
+      attend_subject_uuid,
+      evaluation_uuid,
+      got_score,
+      max_score,
       memo,
     };
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.put<ScoreUpdateRequest, ScoreObject>(
-      '/api/v1/score',
-      params,
-    );
+    const res = await authClientObject.put<
+      ScoreCreateRequestObject,
+      ScoreObject
+    >(`/api/v1/scores/${uuid}`, params);
     return ScoreFactory.createFromResponseObject(res.data);
   }
 
   public static async delete(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.delete(`api/v1/evaluations/${uuid}`);
-    return res.data.text;
+    const res = await authClientObject.delete(`api/v1/scores/${uuid}`);
+    return res.data;
   }
 }

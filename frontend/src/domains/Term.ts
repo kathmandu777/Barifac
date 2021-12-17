@@ -1,7 +1,8 @@
 export class Term {
   constructor(
     public uuid: string,
-    public academicYear: number,
+    // 応急処置
+    public academic_year: number,
     public semester: string,
   ) {}
 }
