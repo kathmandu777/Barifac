@@ -64,6 +64,6 @@ export class AttendSubjectRepository {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.delete(`api/v1/attend_subjects/${uuid}`);
-    return res.data.text;
+    return res.data;
   }
 }

@@ -46,14 +46,17 @@ export class SubjectRepository {
   ) {
     const authClientObject = authClient();
     if (!authClientObject) return;
+    const department2 = '471bfab6-e473-491b-b55e-08f461079b29';
+    const department3 = 'bc7f927c-215b-46fe-b777-4f53c3d13c8b';
     const res = await authClientObject.get<SubjectInterface[]>(
-      `/api/v1/subjects/?school_uuid=${school}&department_uuid=${department}&term_uuid${term}&target_grade=${grade}`,
+      //`/api/v1/subjects/?school_uuid=${school}&department_uuid=${department}&term_uuid${term}&target_grade=${grade}`,
+      `/api/v1/subjects/?school_uuid=${school}&term_uuid${term}&target_grade=${grade}`,
     );
     return res.data;
   }
   static async get(uuid: string) {
     const authClientObject = authClient();
-    if (!authClientObject) return; // undefined の検証(呼び出し側)
+    if (!authClientObject) return;
     const res = await authClientObject.get<SubjectObject>(
       `/api/v1/subjects/${uuid}`,
     );

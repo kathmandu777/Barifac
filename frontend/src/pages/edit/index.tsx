@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   VStack,
   Divider,
@@ -27,10 +28,21 @@ import {
   TermRepository,
   TermInterface,
 } from 'repositories';
+import {
+  defaultTargetValue,
+  defaultTargetScore,
+} from '../../components/AddSubject';
+import { Dispatch } from 'react';
 
 export const GRADELIST = [1, 2, 3, 4, 5];
 
 const Edit = () => {
+  const [loading, setLoading] = useState(true);
+  const [isUpdating, setUpdate] = useState(false);
+  useEffect(() => {
+    getAllSubject();
+  }, [isUpdating]);
+
   const getAllSubject = async () => {
     try {
       // ユーザ情報の取得
@@ -57,7 +69,7 @@ const Edit = () => {
       setTerm(termRepo);
 
       // 学年毎の開講科目の取得
-      let subjectRepos: SubjectInterface[][] = [];
+      const subjectRepos: SubjectInterface[][] = [];
       for (let i = 1; i <= 5; i++) {
         const subjectRepo = await SubjectRepository.gets(
           userRepo.school.uuid,
@@ -75,6 +87,7 @@ const Edit = () => {
       }
       setAllSubject(subjectRepos);
       setErr('');
+      setLoading(false);
     } catch (e: unknown) {
       if (e instanceof Error) {
         console.log(e);
@@ -106,7 +119,7 @@ const Edit = () => {
   const [editedSubject, setSubject] = useState<
     AttendSubjectReadableInterface[]
   >([]);
-  const saveSubjects = () => {};
+
   const addAllSubject = () => {
     //const tempList = editedSubject.slice(0, editedSubject.length);
     //Array.prototype.push.apply(
@@ -114,9 +127,24 @@ const Edit = () => {
     //  allSubject[userInfo === undefined ? 1 : userInfo.grade - 1],
     //);
     //setSubject(tempList);
+    console.log(allSubject);
+    console.log(userInfo!.grade - 1);
+    console.log(allSubject[userInfo!.grade - 1]);
+    for (const s of allSubject[userInfo!.grade - 1]) {
+      const subjectRepo = AttendSubjectReadableRepository.create({
+        target_value: defaultTargetValue,
+        target_score: defaultTargetScore,
+        subject_uuid: s.uuid,
+      });
+      if (subjectRepo == undefined) {
+        // TODO: アラート
+        console.log('科目を追加できませんでした');
+      }
+    }
+    setUpdate(!isUpdating);
   };
 
-  if (errMsg === '') {
+  if (loading === false) {
     return (
       <>
         <Center w='100%'>
@@ -137,9 +165,12 @@ const Edit = () => {
             return (
               <SubjectNameList
                 subjectName={sub.subject_name}
-                index={index}
-                list={editedSubject}
-                hook={setSubject}
+                // index={index}
+                //list={editedSubject}
+                flag={isUpdating}
+                hook={setUpdate}
+                uuid={sub.uuid}
+                //update={getAllSubject}
                 key={index}
               />
             );
@@ -148,8 +179,9 @@ const Edit = () => {
           <Center w='100%'>
             <AddSubject
               gotlist={allSubject}
-              list={editedSubject}
-              hook={setSubject}
+              flag={isUpdating}
+              hook={setUpdate}
+              update={getAllSubject}
             />
           </Center>
           <Center w='100%'>
@@ -168,8 +200,10 @@ const Edit = () => {
         </VStack>
       </>
     );
-  } else {
+  } else if (errMsg != '') {
     return <Text color='white'>{errMsg}</Text>;
+  } else if (loading == true) {
+    return <Text color='white'>Now, Loading...</Text>;
   }
 };
 

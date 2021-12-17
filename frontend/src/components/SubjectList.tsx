@@ -52,7 +52,7 @@ const SubjectList: React.FC<SubjectListProps> = props => {
             {props.subject.subject_name}
           </Text>
           <Spacer />
-          <Link href={`${props.subject.subject_uuid}`}>
+          <Link href={`/score_show/${props.subject.subject_uuid}`}>
             <ArrowForwardIcon w={5} h={5} color='white' />
           </Link>
         </HStack>

@@ -1,4 +1,5 @@
 import { authClient } from 'infras/RestClient';
+import { Grade } from './UserRepository';
 
 export interface Evaluations {
   evaluations: {
@@ -23,6 +24,12 @@ export interface AttendSubjectReadableInterface {
   evaluations: Evaluations;
 }
 
+interface AttendSubjectCreateRequest {
+  target_value: string;
+  target_score: number;
+  subject_uuid: string;
+}
+
 export class AttendSubjectReadableRepository {
   static async gets() {
     const authClientObject = authClient();
@@ -30,6 +37,36 @@ export class AttendSubjectReadableRepository {
     const res = await authClientObject.get<AttendSubjectReadableInterface[]>(
       `/api/v1/attend_subjects/readable`,
     );
+    return res.data;
+  }
+
+  static async create({
+    target_value,
+    target_score,
+    subject_uuid,
+  }: Partial<AttendSubjectCreateRequest>) {
+    const params = {
+      target_value,
+      target_score,
+      subject_uuid,
+    };
+    const authClientObject = authClient();
+    if (!authClientObject) return;
+    try {
+      const res = await authClientObject.post<
+        Partial<AttendSubjectCreateRequest>,
+        AttendSubjectReadableInterface
+      >(`/api/v1/attend_subjects/`, params);
+      return res.data;
+    } catch {
+      return;
+    }
+  }
+
+  static async delete(uuid: string) {
+    const authClientObject = authClient();
+    if (!authClientObject) return;
+    const res = await authClientObject.delete(`api/v1/attend_subjects/${uuid}`);
     return res.data;
   }
 }

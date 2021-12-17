@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
 import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
 
-
 const Home = () => {
   const [SUBJECTS, setSubjects] = useState<AttendSubjectReadableInterface[]>(
     [],
