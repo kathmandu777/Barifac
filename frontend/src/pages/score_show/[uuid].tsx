@@ -23,17 +23,18 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
-
 import { ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
+import { useRouter } from 'next/router';
 
 import {
   ReadableAttendSubject,
   AttendSubjectRepository,
   UpdateAttendSubjectRequest,
 } from 'temp/AttendSubjectRepository';
-import { useRouter } from 'next/router';
+
 import EvaluationSlider from 'components/EvaluationSlider';
 import { SessionService } from 'services/SessionService';
+import CommentModal from 'components/CommentModal';
 
 interface SliderValues {
   evaluationUuid: string;
@@ -74,7 +75,11 @@ const ScoreShow = () => {
     setLoading(true);
     try {
       const res = await AttendSubjectRepository.getReadable(uuid);
-      if (!res) return;
+      if (!res) {
+        setLoading(false);
+        setError('データの取得に失敗しました');
+        return;
+      }
       setTargetScore(res.target_score);
       setTargetValue(res.target_value);
       setAttendSubject(res);
@@ -182,6 +187,12 @@ const ScoreShow = () => {
               />
             );
           })}
+          <CommentModal
+            subjectUuid={attendSubject.subject_uuid}
+            evaluations={attendSubject.evaluations.map(e => {
+              return { name: e.evaluation_name, uuid: e.evaluation_uuid };
+            })}
+          ></CommentModal>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>

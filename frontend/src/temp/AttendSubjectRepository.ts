@@ -71,8 +71,8 @@ export class AttendSubjectRepository {
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<ReadableAttendSubject>(
-      `/api/v1/attend_subjects/${uuid}/readable`,
+    const res = await authClientObject.get<AttendSubject>(
+      `/api/v1/attend_subjects/${uuid}`,
     );
     return res.data;
   }
