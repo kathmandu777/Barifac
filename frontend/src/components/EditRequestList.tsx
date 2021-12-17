@@ -40,7 +40,6 @@ const EditRequestList: React.FC<EditRequestListProps> = ({
     try {
       const res = await EditRequestRepository.getsBySubject(subjectUuid);
       if (res) {
-        console.log(res);
         tmp.push(...res);
       }
     } catch (e) {
@@ -51,12 +50,10 @@ const EditRequestList: React.FC<EditRequestListProps> = ({
 
     try {
       for (const i in evaluationUuids) {
-        console.log(evaluationUuids[i]);
         const res = await EditRequestRepository.getsByEvaluation(
           evaluationUuids[i],
         );
         if (res) {
-          console.log(res);
           tmp.push(...res);
         }
       }

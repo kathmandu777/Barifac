@@ -50,7 +50,6 @@ const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
     setLoading(true);
     try {
       const res = await TeacherCommentRepository.getsByTeacher(teacherUuid);
-      console.log('teacher', res);
       if (res) {
         setTeacherComments(res);
       }
@@ -73,7 +72,6 @@ const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
     <Box w='100%'>
       {error && <Text color='tomato'>{error}</Text>}
       {teacherComments.map(e => {
-        console.log(e);
         return (
           <Box key={e.uuid}>
             <TeacherCommentElement

@@ -118,7 +118,6 @@ const ScoreShow = () => {
   }, [uuid]);
 
   const handleSliderChange = (index: number, value: number) => {
-    console.log('value changed', index, value);
     setSliderValues(
       sliderValues.map((e, i) => {
         if (i == index) {
@@ -139,7 +138,6 @@ const ScoreShow = () => {
         target_value: targetValue,
         target_score: targetScore,
       };
-      console.log(req);
       try {
         const res = await AttendSubjectRepository.update(uuid, req);
         if (!res) {
@@ -206,7 +204,6 @@ const ScoreShow = () => {
                     defaultValue={targetValue}
                     onChange={({ target }) => {
                       setTargetValue(target.value);
-                      console.log(targetValue);
                     }}
                     w='4em'
                   >

@@ -180,9 +180,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
               </TabPanels>
             </Tabs>
           </ModalBody>
-          <Button colorScheme='blue' mr={3} onClick={onClose}>
-            コメントを閉じる
-          </Button>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>

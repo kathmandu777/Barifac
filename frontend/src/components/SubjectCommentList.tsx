@@ -40,7 +40,6 @@ const SubjectCommentList: React.FC<SubjectCommentListProps> = ({
     setLoading(true);
     try {
       const res = await SubjectCommentRepository.getsBySubject(subjectUuid);
-      console.log('subject', res);
       if (res) {
         setSubjectComments(res);
       }
@@ -72,7 +71,6 @@ const SubjectCommentList: React.FC<SubjectCommentListProps> = ({
     <Box w='100%'>
       {error && <Text color='tomato'>{error}</Text>}
       {subjectComments.map(e => {
-        console.log(e);
         return (
           <Box key={e.uuid}>
             <SubjectCommentElement
