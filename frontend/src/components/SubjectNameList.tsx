@@ -10,12 +10,13 @@ import {
 import { useState, SetStateAction, Dispatch } from 'react';
 import DeleteSubject from './DeleteSubject';
 import { SubjectListProps } from './SubjectList';
+import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
 
 export type SubjectNameListProps = {
   subjectName: string;
   index: number;
-  list: SubjectListProps[];
-  hook: Dispatch<SetStateAction<SubjectListProps[]>>;
+  list: AttendSubjectReadableInterface[];
+  hook: Dispatch<SetStateAction<AttendSubjectReadableInterface[]>>;
 };
 
 const SubjectNameList: React.FC<SubjectNameListProps> = props => {

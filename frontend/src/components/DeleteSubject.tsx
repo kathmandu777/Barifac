@@ -9,14 +9,15 @@ import {
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Button, Flex } from '@chakra-ui/react';
-import { SUBJECTS } from '../pages';
+//import { SUBJECTS } from '../pages';
 import { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
+import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
 
 export type DeleteSubjectProp = {
   index: number;
-  list: SubjectListProps[];
-  hook: Dispatch<SetStateAction<SubjectListProps[]>>;
+  list: AttendSubjectReadableInterface[];
+  hook: Dispatch<SetStateAction<AttendSubjectReadableInterface[]>>;
 };
 
 const DeleteSubject: React.FC<DeleteSubjectProp> = props => {

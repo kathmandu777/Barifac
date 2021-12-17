@@ -18,11 +18,13 @@ import SubjectList, { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
 import { SelectProps } from '@chakra-ui/react';
 import { GRADELIST } from '../pages/edit';
+import { SubjectInterface } from 'repositories';
+import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
 
 export type AddSubjectProps = {
-  gotlist: SubjectListProps[][];
-  list: SubjectListProps[];
-  hook: Dispatch<SetStateAction<SubjectListProps[]>>;
+  gotlist: SubjectInterface[][];
+  list: AttendSubjectReadableInterface[];
+  hook: Dispatch<SetStateAction<AttendSubjectReadableInterface[]>>;
 };
 
 const AddSubject: React.FC<AddSubjectProps> = props => {
@@ -31,18 +33,18 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
   const initialRef = React.useRef<HTMLSelectElement>(null);
   const finalRef = React.useRef(null);
   const onAdd = () => {
-    const tempList = props.list.slice(0, props.list.length);
-    const valueList = initialRef.current!.value.split(',');
-    if (valueList.length == 1) {
-      return;
-    }
-    const pushedSubject: SubjectListProps = {
-      subjectID: valueList[0],
-      subjectName: valueList[1],
-      score: 0,
-    };
-    tempList.push(pushedSubject);
-    props.hook(tempList);
+    // const tempList = props.list.slice(0, props.list.length);
+    // const valueList = initialRef.current!.value.split(',');
+    // if (valueList.length == 1) {
+    //   return;
+    // }
+    // const pushedSubject: SubjectListProps = {
+    //   subjectID: valueList[0],
+    //   subjectName: valueList[1],
+    //   score: 0,
+    // };
+    // tempList.push(pushedSubject);
+    // props.hook(tempList);
   };
   const initialRef2 = React.useRef<HTMLSelectElement>(null);
   const [selectedGrade, changeGrade] = React.useState(0);
@@ -85,11 +87,8 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
               <Select ref={initialRef}>
                 {props.gotlist[selectedGrade].map(sub => {
                   return (
-                    <option
-                      key={sub.subjectID}
-                      value={[sub.subjectID, sub.subjectName]}
-                    >
-                      {sub.subjectName}
+                    <option key={sub.uuid} value={[sub.uuid, sub.name]}>
+                      {sub.name}
                     </option>
                   );
                 })}
