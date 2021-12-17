@@ -33,9 +33,7 @@ export interface SubjectComment {
   };
   user: {
     username: string;
-    email: string;
     grade: number;
-    uid: string;
     uuid: string;
   };
 }

@@ -14,9 +14,7 @@ export interface TeacherComment {
   };
   user: {
     username: string;
-    email: string;
     grade: number;
-    uid: string;
     uuid: string;
   };
 }

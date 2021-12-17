@@ -5,9 +5,7 @@ export interface EditRequest {
   uuid: string;
   user: {
     username: string;
-    email: string;
     grade: 5;
-    uid: string;
     uuid: string;
   };
   subject?: {
