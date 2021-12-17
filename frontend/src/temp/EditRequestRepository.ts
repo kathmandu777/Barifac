@@ -52,4 +52,11 @@ export class EditRequestRepository {
     );
     return res.data;
   }
+
+  static async delete(uuid: string) {
+    const authClientObject = authClient();
+    if (!authClientObject) return;
+    const res = await authClientObject.delete(`/api/v1/edit_requests/${uuid}`);
+    return res.data;
+  }
 }

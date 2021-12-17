@@ -47,4 +47,13 @@ export class TeacherCommentRepository {
     >(`/api/v1/teacher_comment`, data);
     return res.data;
   }
+
+  static async delete(uuid: string) {
+    const authClientObject = authClient();
+    if (!authClientObject) return;
+    const res = await authClientObject.delete(
+      `/api/v1/teacher_comment/${uuid}`,
+    );
+    return res.data;
+  }
 }

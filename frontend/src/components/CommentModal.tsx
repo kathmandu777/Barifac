@@ -31,6 +31,7 @@ import SubjectCommentList from './SubjectCommentList';
 import { SubjectCommentRepository } from 'temp/SubjectCommentRepository';
 import { TeacherCommentRepository } from 'temp/TeacherCommentRepository';
 import { EditRequestRepository } from 'temp/EditRequestRepository';
+import { UserRepository } from 'temp/UserRepository';
 
 export type CommentModalProps = {
   subjectUuid: string;
@@ -43,6 +44,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [teacherUuid, setTeacherUuid] = useState('');
+  const [userUuid, setUserUuid] = useState('');
   const [error, setError] = useState('');
 
   const getTeacherUuid = async () => {
@@ -52,8 +54,16 @@ const CommentModal: React.FC<CommentModalProps> = ({
       setTeacherUuid(res.teacher.uuid);
     } catch {}
   };
+  const getUserUuid = async () => {
+    try {
+      const res = await UserRepository.get();
+      if (!res) return;
+      setUserUuid(res.uuid);
+    } catch {}
+  };
   useEffect(() => {
     getTeacherUuid();
+    getUserUuid();
   }, []);
 
   const handleCommentSubmit = async (
@@ -137,12 +147,14 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 <TabPanel>
                   <SubjectCommentList
                     subjectUuid={subjectUuid}
+                    userUuid={userUuid}
                   ></SubjectCommentList>
                 </TabPanel>
                 <TabPanel>
                   {teacherUuid && (
                     <TeacherCommentList
                       teacherUuid={teacherUuid}
+                      userUuid={userUuid}
                     ></TeacherCommentList>
                   )}
                   {!teacherUuid && (
@@ -152,6 +164,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 <TabPanel>
                   <EditRequestList
                     subjectUuid={subjectUuid}
+                    userUuid={userUuid}
                     evaluationUuids={evaluations.map(e => e.uuid)}
                   ></EditRequestList>
                 </TabPanel>

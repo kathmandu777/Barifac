@@ -14,23 +14,37 @@ import {
   TeacherComment as TeacherCommentElement,
   TeacherCommentRepository,
 } from 'temp/TeacherCommentRepository';
+import { DeleteIcon } from '@chakra-ui/icons';
 
 export type TeacherCommentListProps = {
   teacherUuid: string;
+  userUuid: string;
 };
 
 type TeacherCommentProps = {
   comment: TeacherCommentElement;
+  own: boolean;
+  onDelete: VoidFunction;
 } & StackProps;
 
 const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
   teacherUuid,
+  userUuid,
 }) => {
   const [teacherComments, setTeacherComments] = useState<
     TeacherCommentElement[]
   >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const handleDeleteTeacherComment = async (uuid: string) => {
+    try {
+      await TeacherCommentRepository.delete(uuid);
+      getTeacherComments();
+    } catch {
+      setError('削除に失敗しました');
+    }
+  };
 
   const getTeacherComments = async () => {
     setLoading(true);
@@ -62,7 +76,13 @@ const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
         console.log(e);
         return (
           <Box key={e.uuid}>
-            <TeacherCommentElement comment={e}></TeacherCommentElement>
+            <TeacherCommentElement
+              comment={e}
+              own={e.user.uuid == userUuid}
+              onDelete={() => {
+                handleDeleteTeacherComment(e.uuid);
+              }}
+            ></TeacherCommentElement>
             <Divider mb='10px' mt='10px' />
           </Box>
         );
@@ -73,6 +93,8 @@ const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
 
 const TeacherCommentElement: React.FC<TeacherCommentProps> = ({
   comment,
+  own,
+  onDelete,
   ...props
 }) => {
   return (
@@ -80,6 +102,7 @@ const TeacherCommentElement: React.FC<TeacherCommentProps> = ({
       <Stack alignItems='center' direction='row'>
         <Avatar size='xs' />
         <Text fontWeight='semibold'>{comment.user.username}</Text>
+        {own && <DeleteIcon onClick={onDelete} />}
       </Stack>
       <Text>{comment.comment}</Text>
     </Stack>

@@ -11,19 +11,24 @@ import {
 } from '@chakra-ui/react';
 
 import { EditRequest, EditRequestRepository } from 'temp/EditRequestRepository';
+import { DeleteIcon } from '@chakra-ui/icons';
 
 export type EditRequestListProps = {
   subjectUuid: string;
   evaluationUuids: string[];
+  userUuid: string;
 };
 
 type EditRequestProps = {
   comment: EditRequest;
+  own: boolean;
+  onDelete: VoidFunction;
 } & StackProps;
 
 const EditRequestList: React.FC<EditRequestListProps> = ({
   subjectUuid,
   evaluationUuids,
+  userUuid,
 }) => {
   const [editRequests, setEditRequests] = useState<EditRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +69,15 @@ const EditRequestList: React.FC<EditRequestListProps> = ({
     setLoading(false);
   };
 
+  const handleDeleteEditRequest = async (uuid: string) => {
+    try {
+      await EditRequestRepository.delete(uuid);
+      getEditRequests();
+    } catch {
+      setError('削除に失敗しました');
+    }
+  };
+
   useEffect(() => {
     getEditRequests();
   }, []);
@@ -76,7 +90,13 @@ const EditRequestList: React.FC<EditRequestListProps> = ({
       {editRequests.map(e => {
         return (
           <Box key={e.uuid}>
-            <EditRequestElement comment={e}></EditRequestElement>
+            <EditRequestElement
+              comment={e}
+              own={userUuid == e.user.uuid}
+              onDelete={() => {
+                handleDeleteEditRequest(e.uuid);
+              }}
+            ></EditRequestElement>
             <Divider mb='10px' mt='10px' />
           </Box>
         );
@@ -87,6 +107,8 @@ const EditRequestList: React.FC<EditRequestListProps> = ({
 
 const EditRequestElement: React.FC<EditRequestProps> = ({
   comment,
+  own,
+  onDelete,
   ...props
 }) => {
   return (
@@ -94,6 +116,7 @@ const EditRequestElement: React.FC<EditRequestProps> = ({
       <Stack alignItems='center' direction='row'>
         <Avatar size='xs' />
         <Text fontWeight='semibold'>{comment.user.username}</Text>
+        {own && <DeleteIcon onClick={onDelete} />}
       </Stack>
       <Text>{comment.comment}</Text>
       {comment.evaluation && (
