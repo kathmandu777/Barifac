@@ -12,7 +12,6 @@ import { Button, Flex } from '@chakra-ui/react';
 import { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
 import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
-import { AttendSubjectReadableFactory } from 'domains/AttendSubjectReadableFactory';
 import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
 import { useState, useEffect } from 'react';
 
