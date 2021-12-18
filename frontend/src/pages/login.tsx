@@ -17,11 +17,11 @@ const Login: NextPage = () => {
   // 動作確認（テスト書け）
   const redirectIfMissUserInfo = async () => {
     const user = await UserRepository.getMe();
-    {
-      console.log(user);
-      user && (!user.grade || !user.school || !user.department)
-        ? router.replace('/user/info')
-        : router.replace('/');
+    if (user) {
+      if (!user.grade || !user.school || !user.department) {
+        router.replace('/user/info');
+      }
+      router.replace('/');
     }
   };
 
