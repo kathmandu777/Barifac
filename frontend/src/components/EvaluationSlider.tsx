@@ -39,7 +39,7 @@ const EvaluationSlider: React.FC<EvaluationSliderProps> = ({
       </Flex>
       <Flex w='full'>
         <Text lineHeight={6} color='whiteAlpha.900'>
-          {score}/ 100
+          {Math.round(score)}/ 100
         </Text>
         <Slider defaultValue={score} onChange={onChange}>
           <SliderTrack>
