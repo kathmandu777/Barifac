@@ -116,6 +116,7 @@ const Edit = () => {
       if (attendSubjectRepo === undefined) {
         throw new Error('Cannot get attend subject infomation!');
       }
+      setSubject(attendSubjectRepo);
     } catch (e: unknown) {
       if (e instanceof Error) {
         setErr(e.message);
