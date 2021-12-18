@@ -15,13 +15,9 @@ import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadab
 
 export type SubjectNameListProps = {
   subjectName: string;
-  //index: number;
-  //list: AttendSubjectReadableInterface[];
-  //hook: Dispatch<SetStateAction<AttendSubjectReadableInterface[]>>;
   flag: boolean;
   hook: React.Dispatch<React.SetStateAction<boolean>>;
   uuid: string;
-  update: () => Promise<void>;
 };
 
 const SubjectNameList: React.FC<SubjectNameListProps> = props => {
@@ -35,12 +31,9 @@ const SubjectNameList: React.FC<SubjectNameListProps> = props => {
           </Text>
           <Spacer />
           <DeleteSubject
-            //index={props.index}
-            //list={props.list}
             flag={props.flag}
             hook={props.hook}
             uuid={props.uuid}
-            update={props.update}
           />
         </HStack>
       </Stack>

@@ -25,9 +25,6 @@ import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadab
 import { Evaluations } from 'repositories/AttendSubjectReadableRepository';
 
 export type SubjectListProps = {
-  //subjectID: string;
-  //subjectName: string;
-  //evaluations: Evaluations;
   subject: AttendSubjectReadableInterface;
 };
 

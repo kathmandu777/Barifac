@@ -10,7 +10,6 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react';
-//import { SUBJECTS } from '..';
 import SubjectNameList from '../../components/SubjectNameList';
 import { useRef, useState, useEffect } from 'react';
 import { AddIcon } from '@chakra-ui/icons';
@@ -37,11 +36,8 @@ import { Dispatch } from 'react';
 export const GRADELIST = [1, 2, 3, 4, 5];
 
 const Edit = () => {
-  const [loading, setLoading] = useState(true);
-  const [isUpdating, setUpdate] = useState(false);
-  useEffect(() => {
-    getAllSubject();
-  }, [isUpdating]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isUpdating, setUpdate] = useState<boolean>(false);
 
   const getAllSubject = async () => {
     try {
@@ -90,7 +86,6 @@ const Edit = () => {
       setLoading(false);
     } catch (e: unknown) {
       if (e instanceof Error) {
-        console.log(e);
         setErr(e.message);
       }
     }
@@ -100,16 +95,37 @@ const Edit = () => {
     getAllSubject();
   }, []);
 
-  // 履修科目一覧の取得
+  //  useEffect(() => {
+  //    AttendSubjectReadableRepository.gets()
+  //      .then(lis => {
+  //        setSubject(lis);
+  //      })
+  //      .catch(err => {
+  //        setSubject([]);
+  //      });
+  //  }, []);
+
   useEffect(() => {
-    AttendSubjectReadableRepository.gets()
-      .then(lis => {
-        setSubject(lis);
-      })
-      .catch(err => {
-        setSubject([]);
-      });
+    getAttendSubject();
   }, []);
+
+  // 履修科目一覧の取得
+  const getAttendSubject = async () => {
+    try {
+      const attendSubjectRepo = await AttendSubjectReadableRepository.gets();
+      if (attendSubjectRepo === undefined) {
+        throw new Error('Cannot get attend subject infomation!');
+      }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setErr(e.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getAttendSubject();
+  }, [isUpdating]);
 
   const [userInfo, setUser] = useState<UserInterface>();
   const [currentTerm, setTerm] = useState<TermInterface[]>([]);
@@ -121,15 +137,6 @@ const Edit = () => {
   >([]);
 
   const addAllSubject = () => {
-    //const tempList = editedSubject.slice(0, editedSubject.length);
-    //Array.prototype.push.apply(
-    //  tempList,
-    //  allSubject[userInfo === undefined ? 1 : userInfo.grade - 1],
-    //);
-    //setSubject(tempList);
-    console.log(allSubject);
-    console.log(userInfo!.grade - 1);
-    console.log(allSubject[userInfo!.grade - 1]);
     for (const s of allSubject[userInfo!.grade - 1]) {
       const subjectRepo = AttendSubjectReadableRepository.create({
         target_value: defaultTargetValue,
@@ -165,12 +172,9 @@ const Edit = () => {
             return (
               <SubjectNameList
                 subjectName={sub.subject_name}
-                // index={index}
-                //list={editedSubject}
                 flag={isUpdating}
                 hook={setUpdate}
                 uuid={sub.uuid}
-                //update={getAllSubject}
                 key={index}
               />
             );

@@ -43,18 +43,6 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
   const finalRef = React.useRef(null);
 
   const onAdd = () => {
-    // const tempList = props.list.slice(0, props.list.length);
-    // const valueList = initialRef.current!.value.split(',');
-    // if (valueList.length == 1) {
-    //   return;
-    // }
-    // const pushedSubject: SubjectListProps = {
-    //   subjectID: valueList[0],
-    //   subjectName: valueList[1],
-    //   score: 0,
-    // };
-    // tempList.push(pushedSubject);
-    // props.hook(tempList);
     const subjectRepo = AttendSubjectReadableRepository.create({
       target_value: defaultTargetValue,
       target_score: defaultTargetScore,
@@ -66,7 +54,6 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
     } else {
       props.hook(!props.flag);
     }
-    console.log(props.flag);
   };
 
   const initialRef2 = React.useRef<HTMLSelectElement>(null);
