@@ -32,7 +32,7 @@ const UserPage: NextPage = () => {
     const user = await UserRepository.getMe();
     if (!user) {
       alert('ログインしてください');
-      router.push('login/');
+      router.push('/login');
       return;
     }
     setRequestBody({
