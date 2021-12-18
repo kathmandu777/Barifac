@@ -19,9 +19,9 @@ const Login: NextPage = () => {
     const user = await UserRepository.getMe();
     {
       console.log(user);
-      user &&
-        (!user.grade || !user.school || !user.department) &&
-        router.replace('/user/info');
+      user && (!user.grade || !user.school || !user.department)
+        ? router.replace('/user/info')
+        : router.replace('/');
     }
   };
 
