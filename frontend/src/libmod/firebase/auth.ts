@@ -16,8 +16,8 @@ export const login = async () => {
     const credential = await signInWithPopup(auth, provider);
     const idToken = await credential.user.getIdToken(true);
     await SessionService.signin(idToken);
-  } catch {
-    console.error('Token Error');
+  } catch (e) {
+    console.error(e);
   }
 };
 

@@ -62,22 +62,22 @@ export default class RestClient {
 
   private get requestConfig(): AxiosRequestConfig {
     return {
-      baseURL: 'http://localhost:8000', //process.env.API_ORIGIN,
+      baseURL: process.env.API_ORIGIN, //'https://api.barifac.tk/', //
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.token}`,
       },
-      withCredentials: true,
+      withCredentials: false,
     };
   }
 
   private get formRequestConfig(): AxiosRequestConfig {
     return {
-      baseURL: 'http://localhost:8000', // process.env.API_ORIGIN,
+      baseURL: process.env.API_ORIGIN, //'https://api.barifac.tk/', //
       headers: {
         Authorization: this.token ? `Bearer ${this.token}` : 'null',
       },
-      withCredentials: true,
+      withCredentials: false,
     };
   }
 }
