@@ -1,5 +1,5 @@
 import { authClient } from 'infras/RestClient';
-import { UserFactory, UserObject, UserUpdateRequest } from 'domains';
+import { UserFactory, UserObject } from 'domains';
 
 interface UserUpdateRequest {
   username: string;
