@@ -16,13 +16,13 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    async () => {
+    (async () => {
       const user = UserRepository.getMe();
       if (!SessionService.isLoggedin() || !user) {
         alert('ログインし直してください');
         return router.push('/login');
       }
-    };
+    })();
     AttendSubjectReadableRepository.gets()
       .then(lis => {
         setSubjects(lis);
