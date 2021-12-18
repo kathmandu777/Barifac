@@ -29,8 +29,11 @@ const DeleteSubject: React.FC<DeleteSubjectProp> = props => {
     setIsOpen(false);
     const subjectRepo = AttendSubjectReadableRepository.delete(props.uuid);
     if (subjectRepo === undefined) {
+      //TODO: アラート
+      console.log('科目を削除できませんでした');
+    } else {
+      props.hook(!props.flag);
     }
-    props.hook(!props.flag);
   };
 
   return (
