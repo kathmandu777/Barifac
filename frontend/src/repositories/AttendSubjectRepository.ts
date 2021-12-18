@@ -1,5 +1,6 @@
 import { authClient } from 'infras/RestClient';
 import {
+  AttendSubject,
   AttendSubjectFactory,
   AttendSubjectObject,
   User,
@@ -18,7 +19,7 @@ interface AttendSubjectUpdateRequest {
 export class AttendSubjectRepository {
   static async gets() {
     const authClientObject = authClient();
-    if (!authClientObject) return;
+    if (!authClientObject) return [];
     const res = await authClientObject.get<AttendSubjectObject[]>(
       '/api/v1/attend_subject',
     );
@@ -63,6 +64,6 @@ export class AttendSubjectRepository {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.delete(`api/v1/attend_subjects/${uuid}`);
-    return res.data.text;
+    return res.data;
   }
 }

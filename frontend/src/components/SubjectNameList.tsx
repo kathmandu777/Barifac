@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Divider,
   Stack,
@@ -10,12 +11,13 @@ import {
 import { useState, SetStateAction, Dispatch } from 'react';
 import DeleteSubject from './DeleteSubject';
 import { SubjectListProps } from './SubjectList';
+import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
 
 export type SubjectNameListProps = {
   subjectName: string;
-  index: number;
-  list: SubjectListProps[];
-  hook: Dispatch<SetStateAction<SubjectListProps[]>>;
+  flag: boolean;
+  hook: React.Dispatch<React.SetStateAction<boolean>>;
+  uuid: string;
 };
 
 const SubjectNameList: React.FC<SubjectNameListProps> = props => {
@@ -29,9 +31,9 @@ const SubjectNameList: React.FC<SubjectNameListProps> = props => {
           </Text>
           <Spacer />
           <DeleteSubject
-            index={props.index}
-            list={props.list}
+            flag={props.flag}
             hook={props.hook}
+            uuid={props.uuid}
           />
         </HStack>
       </Stack>

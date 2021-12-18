@@ -18,32 +18,44 @@ import SubjectList, { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
 import { SelectProps } from '@chakra-ui/react';
 import { GRADELIST } from '../pages/edit';
+import { SubjectInterface } from 'repositories';
+import {
+  AttendSubjectReadableRepository,
+  AttendSubjectReadableInterface,
+} from 'repositories/AttendSubjectReadableRepository';
+import { useState, useEffect } from 'react';
 
 export type AddSubjectProps = {
-  gotlist: SubjectListProps[][];
-  list: SubjectListProps[];
-  hook: Dispatch<SetStateAction<SubjectListProps[]>>;
+  gotlist: SubjectInterface[][];
+  //list: AttendSubjectReadableInterface[];
+  flag: boolean;
+  hook: Dispatch<SetStateAction<boolean>>;
+  update: () => Promise<void>;
 };
+
+export const defaultTargetValue = 'A';
+export const defaultTargetScore = 80;
 
 const AddSubject: React.FC<AddSubjectProps> = props => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const initialRef = React.useRef<HTMLSelectElement>(null);
   const finalRef = React.useRef(null);
+
   const onAdd = () => {
-    const tempList = props.list.slice(0, props.list.length);
-    const valueList = initialRef.current!.value.split(',');
-    if (valueList.length == 1) {
-      return;
+    const subjectRepo = AttendSubjectReadableRepository.create({
+      target_value: defaultTargetValue,
+      target_score: defaultTargetScore,
+      subject_uuid: initialRef.current!.value,
+    });
+    if (subjectRepo == undefined) {
+      // TODO: アラート
+      console.log('科目を追加できませんでした');
+    } else {
+      props.hook(!props.flag);
     }
-    const pushedSubject: SubjectListProps = {
-      subjectID: valueList[0],
-      subjectName: valueList[1],
-      score: 0,
-    };
-    tempList.push(pushedSubject);
-    props.hook(tempList);
   };
+
   const initialRef2 = React.useRef<HTMLSelectElement>(null);
   const [selectedGrade, changeGrade] = React.useState(0);
   const getGrade = () => {
@@ -85,11 +97,8 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
               <Select ref={initialRef}>
                 {props.gotlist[selectedGrade].map(sub => {
                   return (
-                    <option
-                      key={sub.subjectID}
-                      value={[sub.subjectID, sub.subjectName]}
-                    >
-                      {sub.subjectName}
+                    <option key={sub.uuid} value={sub.uuid}>
+                      {sub.name} ({sub.teacher.name})
                     </option>
                   );
                 })}

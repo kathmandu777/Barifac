@@ -9,14 +9,16 @@ import {
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Button, Flex } from '@chakra-ui/react';
-import { SUBJECTS } from '../pages';
 import { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
+import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
+import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
+import { useState, useEffect } from 'react';
 
 export type DeleteSubjectProp = {
-  index: number;
-  list: SubjectListProps[];
-  hook: Dispatch<SetStateAction<SubjectListProps[]>>;
+  uuid: string;
+  flag: boolean;
+  hook: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DeleteSubject: React.FC<DeleteSubjectProp> = props => {
@@ -24,12 +26,11 @@ const DeleteSubject: React.FC<DeleteSubjectProp> = props => {
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef(null);
   const onDelete = () => {
-    // NOTE: API に置き換えるときはエラー処理必要
     setIsOpen(false);
-    const tempList = props.list.slice(0, props.list.length);
-    tempList.splice(props.index, 1);
-    //props.hook(props.list.splice(props.index, 1));
-    props.hook(tempList);
+    const subjectRepo = AttendSubjectReadableRepository.delete(props.uuid);
+    if (subjectRepo === undefined) {
+    }
+    props.hook(!props.flag);
   };
 
   return (
