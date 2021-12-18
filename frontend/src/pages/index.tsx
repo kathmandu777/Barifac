@@ -1,19 +1,28 @@
 import React from 'react';
 import { Divider, VStack, Center, Heading } from '@chakra-ui/layout';
-import SubjectList, { SubjectListProps } from '../components/SubjectList';
+import SubjectList from '../components/SubjectList';
 import EditButton from '../components/EditButton';
-import { AttendSubject } from 'domains';
-import { AttendSubjectRepository } from 'repositories';
-import { AttendSubjectReadable } from 'domains/AttendSubjectReadable';
 import { useEffect, useState } from 'react';
 import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
 import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
+import { UserRepository } from 'repositories';
+import { SessionService } from 'services/SessionService';
+import { useRouter } from 'next/router';
 
 const Home = () => {
   const [SUBJECTS, setSubjects] = useState<AttendSubjectReadableInterface[]>(
     [],
   );
+  const router = useRouter();
+
   useEffect(() => {
+    async () => {
+      const user = UserRepository.getMe();
+      if (!SessionService.isLoggedin() || !user) {
+        alert('ログインし直してください');
+        return router.push('/login');
+      }
+    };
     AttendSubjectReadableRepository.gets()
       .then(lis => {
         setSubjects(lis);
@@ -39,12 +48,7 @@ const Home = () => {
         alignItems='flex-start'
       >
         {SUBJECTS.map((sub, index) => {
-          return (
-            <SubjectList
-              subject={sub}
-              key={index}
-            />
-          );
+          return <SubjectList subject={sub} key={index} />;
         })}
         <Divider borderColor='gray.700' />
       </VStack>
