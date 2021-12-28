@@ -24,19 +24,19 @@ api_v1_router.include_router(
 api_v1_router.include_router(teacher_router, prefix="/teachers", tags=["teachers"])
 api_v1_router.include_router(term_router, prefix="/terms", tags=["terms"])
 api_v1_router.include_router(
-    attend_subject_router, prefix="/attend_subjects", tags=["attend_subjects"]
+    attend_subject_router, prefix="/attend-subjects", tags=["attend subjects"]
 )
 api_v1_router.include_router(subject_router, prefix="/subjects", tags=["subjects"])
 api_v1_router.include_router(
-    subject_comment_router, prefix="/subjects_comments", tags=["subject_comments"]
+    subject_comment_router, prefix="/subject-comments", tags=["subject comments"]
 )
 api_v1_router.include_router(
     evaluation_router, prefix="/evaluations", tags=["evaluations"]
 )
 api_v1_router.include_router(
-    teacher_comment_router, prefix="/teacher_comment", tags=["teacher_comments"]
+    teacher_comment_router, prefix="/teacher-comments", tags=["teacher comments"]
 )
 api_v1_router.include_router(score_router, prefix="/scores", tags=["scores"])
 api_v1_router.include_router(
-    edit_request_router, prefix="/edit_requests", tags=["edit_requests"]
+    edit_request_router, prefix="/edit-requests", tags=["edit requests"]
 )
