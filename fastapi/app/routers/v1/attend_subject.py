@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import AttendSubjectAPI
@@ -9,6 +9,7 @@ from app.schemas import (
     ReadAttendSubjectSchema,
     UpdateAttendSubjectSchema,
 )
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
@@ -17,12 +18,12 @@ attend_subject_router = APIRouter()
 
 @attend_subject_router.get(
     "/",
-    response_model=List[ReadAttendSubjectSchema],
+    response_model=Page[ReadAttendSubjectSchema],
     dependencies=[Depends(login_required)],
 )
 async def gets(
     request: Request, term_uuid: Optional[UUID] = None
-) -> List[AttendSubject]:
+) -> Page[AttendSubject]:
     return AttendSubjectAPI.gets(request, term_uuid)
 
 

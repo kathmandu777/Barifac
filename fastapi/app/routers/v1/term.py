@@ -1,22 +1,23 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import TermAPI
 from app.dependencies import admin_required
 from app.models import SemesterEnum, Term
 from app.schemas import CreateTermSchema, ReadTermSchema, UpdateTermSchema
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
 term_router = APIRouter()
 
 
-@term_router.get("/", response_model=List[ReadTermSchema])
+@term_router.get("/", response_model=Page[ReadTermSchema])
 async def gets(
     request: Request,
     academic_year: Optional[int] = None,
     semester: Optional[SemesterEnum] = None,
-) -> List[Term]:
+) -> Page[Term]:
     return TermAPI.gets(request, academic_year, semester)
 
 

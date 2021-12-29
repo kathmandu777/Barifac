@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import EvaluationAPI
@@ -9,16 +9,17 @@ from app.schemas import (
     ReadEvaluationSchema,
     UpdateEvaluationSchema,
 )
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
 evaluation_router = APIRouter()
 
 
-@evaluation_router.get("/", response_model=List[ReadEvaluationSchema])
+@evaluation_router.get("/", response_model=Page[ReadEvaluationSchema])
 async def gets(
     request: Request, subject_uuid: Optional[UUID] = None
-) -> List[Evaluation]:
+) -> Page[Evaluation]:
     return EvaluationAPI.gets(request, subject_uuid)
 
 

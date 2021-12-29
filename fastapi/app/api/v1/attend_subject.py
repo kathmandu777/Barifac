@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.core.exceptions import (
@@ -9,18 +9,21 @@ from app.core.exceptions import (
 from app.crud import AttendSubjectCRUD, EvaluationCRUD, ScoreCRUD
 from app.models import AttendSubject
 from app.schemas import CreateAttendSubjectSchema, UpdateAttendSubjectSchema
+from fastapi_pagination import Page, paginate
 
 from fastapi import Request
 
 
 class AttendSubjectAPI:
     @classmethod
-    def gets(cls, request: Request, term_uuid: Optional[UUID]) -> List[AttendSubject]:
+    def gets(cls, request: Request, term_uuid: Optional[UUID]) -> Page[AttendSubject]:
         if term_uuid:
             return AttendSubjectCRUD(
                 request.state.db_session
             ).gets_by_user_and_term_uuid(request.user, term_uuid)
-        return AttendSubjectCRUD(request.state.db_session).gets_by_user(request.user)
+        return paginate(
+            AttendSubjectCRUD(request.state.db_session).gets_by_user(request.user)
+        )
 
     @classmethod
     def gets_readable_data(cls, request: Request, term_uuid: Optional[UUID]):

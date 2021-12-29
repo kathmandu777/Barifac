@@ -1,21 +1,22 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.crud import EvaluationCRUD
 from app.models import Evaluation
 from app.schemas import CreateEvaluationSchema, UpdateEvaluationSchema
+from fastapi_pagination import Page, paginate
 
 from fastapi import Request
 
 
 class EvaluationAPI:
     @classmethod
-    def gets(cls, request: Request, subject_uuid: Optional[UUID]) -> List[Evaluation]:
+    def gets(cls, request: Request, subject_uuid: Optional[UUID]) -> Page[Evaluation]:
         if subject_uuid:
             return EvaluationCRUD(request.state.db_session).gets_by_subject_uuid(
                 subject_uuid
             )
-        return EvaluationCRUD(request.state.db_session).gets()
+        return paginate(EvaluationCRUD(request.state.db_session).gets())
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[Evaluation]:

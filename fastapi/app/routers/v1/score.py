@@ -1,10 +1,11 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import ScoreAPI
 from app.dependencies import login_required
 from app.models import Score
 from app.schemas import CreateScoreSchema, ReadScoreSchema, UpdateScoreSchema
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
@@ -13,14 +14,14 @@ score_router = APIRouter()
 
 @score_router.get(
     "/",
-    response_model=List[ReadScoreSchema],
+    response_model=Page[ReadScoreSchema],
     dependencies=[Depends(login_required)],
 )
 async def gets(
     request: Request,
     attend_subject_uuid: Optional[UUID] = None,
     evaluation_uuid: Optional[UUID] = None,
-) -> List[Score]:
+) -> Page[Score]:
     return ScoreAPI.gets(request, attend_subject_uuid, evaluation_uuid)
 
 

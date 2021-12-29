@@ -1,17 +1,18 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import SubjectAPI
 from app.dependencies import admin_required
 from app.models import Subject
 from app.schemas import CreateSubjectSchema, ReadSubjectSchema, UpdateSubjectSchema
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
 subject_router = APIRouter()
 
 
-@subject_router.get("/", response_model=List[ReadSubjectSchema])
+@subject_router.get("/", response_model=Page[ReadSubjectSchema])
 async def gets(
     request: Request,
     school_uuid: Optional[UUID] = None,
@@ -20,7 +21,7 @@ async def gets(
     target_grade: Optional[int] = None,
     category: Optional[str] = None,
     type: Optional[str] = None,
-) -> List[Subject]:
+) -> Page[Subject]:
     return SubjectAPI.gets(
         request, school_uuid, department_uuid, term_uuid, target_grade, category, type
     )

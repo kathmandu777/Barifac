@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.core.exceptions import (
@@ -9,6 +9,7 @@ from app.core.exceptions import (
 from app.crud import AttendSubjectCRUD, EvaluationCRUD, ScoreCRUD
 from app.models import AttendSubject, Evaluation, Score
 from app.schemas import CreateScoreSchema, UpdateScoreSchema
+from fastapi_pagination import Page, paginate
 from sqlalchemy import and_
 
 from fastapi import Request
@@ -21,14 +22,16 @@ class ScoreAPI:
         request: Request,
         attend_subject_uuid: Optional[UUID],
         evaluation_uuid: Optional[UUID],
-    ) -> List[Score]:
+    ) -> Page[Score]:
         q = True
         if attend_subject_uuid:
             q = and_(q, Score.attend_subject_uuid == attend_subject_uuid)
         if evaluation_uuid:
             q = and_(q, Score.evaluation_uuid == evaluation_uuid)
         q = and_(q, AttendSubject.user_uuid == request.user.uuid)
-        return ScoreCRUD(request.state.db_session).gets_from_joined_attend_subjects(q)
+        return paginate(
+            ScoreCRUD(request.state.db_session).gets_from_joined_attend_subjects(q)
+        )
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Score:

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import EditRequestAPI
@@ -9,19 +9,20 @@ from app.schemas import (
     ReadEditRequestSchema,
     UpdateEditRequestSchema,
 )
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
 edit_request_router = APIRouter()
 
 
-@edit_request_router.get("/", response_model=List[ReadEditRequestSchema])
+@edit_request_router.get("/", response_model=Page[ReadEditRequestSchema])
 async def gets(
     request: Request,
     user_uuid: Optional[UUID] = None,
     subject_uuid: Optional[UUID] = None,
     evaluation_uuid: Optional[UUID] = None,
-) -> List[EditRequest]:
+) -> Page[EditRequest]:
     return EditRequestAPI.gets(request, user_uuid, subject_uuid, evaluation_uuid)
 
 

@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.crud import SubjectCRUD
 from app.models import Subject
 from app.schemas import CreateSubjectSchema, UpdateSubjectSchema
+from fastapi_pagination import Page, paginate
 from sqlalchemy import and_
 
 from fastapi import Request
@@ -20,7 +21,7 @@ class SubjectAPI:
         target_grade: Optional[int],
         category: Optional[str],
         type: Optional[str],
-    ) -> List[Subject]:
+    ) -> Page[Subject]:
         q = True
         if school_uuid:
             q = and_(q, Subject.school_uuid == school_uuid)
@@ -34,7 +35,7 @@ class SubjectAPI:
             q = and_(q, (Subject.category == category))
         if type:
             q = and_(q, (Subject.type == type))
-        return SubjectCRUD(request.state.db_session).gets(q)
+        return paginate(SubjectCRUD(request.state.db_session).gets(q))
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[Subject]:

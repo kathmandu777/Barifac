@@ -1,17 +1,18 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.crud import SchoolCRUD
 from app.models import School
 from app.schemas import CreateSchoolSchema, UpdateSchoolSchema
+from fastapi_pagination import Page, paginate
 
 from fastapi import Request
 
 
 class SchoolAPI:
     @classmethod
-    def gets(cls, request: Request) -> List[School]:
-        return SchoolCRUD(request.state.db_session).gets()
+    def gets(cls, request: Request) -> Page[School]:
+        return paginate(SchoolCRUD(request.state.db_session).gets())
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[School]:

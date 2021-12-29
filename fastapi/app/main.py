@@ -14,6 +14,7 @@ from app.middlwares import (
 )
 from app.routers.monitoring import monitoring_router
 from app.routers.v1 import api_v1_router
+from fastapi_pagination import add_pagination
 from pytz import timezone
 from starlette.middleware.authentication import AuthenticationMiddleware
 
@@ -48,6 +49,8 @@ router = APIRouter()
 router.include_router(monitoring_router, tags=["monitoring"])
 router.include_router(api_v1_router, prefix="/api/v1", tags=["api/v1"])
 app.include_router(router)
+
+add_pagination(app)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Barifac API Server")
