@@ -66,6 +66,8 @@ class AttendSubjectAPI:
                     "target_score": attend_subject.target_score,
                     "subject_uuid": attend_subject.subject_uuid,
                     "subject_name": attend_subject.subject.name,
+                    "teacher_uuid": attend_subject.subject.teacher.uuid,
+                    "teacher_name": attend_subject.subject.teacher.name,
                     "evaluations": evaluations_data,
                 }
             )
@@ -117,6 +119,8 @@ class AttendSubjectAPI:
             "target_score": attend_subject.target_score,
             "subject_uuid": attend_subject.subject_uuid,
             "subject_name": attend_subject.subject.name,
+            "teacher_uuid": attend_subject.subject.teacher.uuid,
+            "teacher_name": attend_subject.subject.teacher.name,
             "evaluations": evaluations_data,
         }
 
