@@ -41,7 +41,7 @@ export class SubjectRepository {
   static async gets(
     school: string,
     department: string,
-    term: string,
+    category: string,
     grade: number,
   ) {
     const authClientObject = authClient();
@@ -50,7 +50,7 @@ export class SubjectRepository {
     const department3 = 'bc7f927c-215b-46fe-b777-4f53c3d13c8b';
     const res = await authClientObject.get<SubjectInterface[]>(
       //`/api/v1/subjects/?school_uuid=${school}&department_uuid=${department}&term_uuid${term}&target_grade=${grade}`,
-      `/api/v1/subjects/?school_uuid=${school}&term_uuid${term}&target_grade=${grade}`,
+      `/api/v1/subjects/?school_uuid=${school}&category${category}&target_grade=${grade}`,
     );
     return res.data;
   }

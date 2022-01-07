@@ -4,17 +4,12 @@ import {
   Divider,
   Heading,
   Center,
-  Flex,
   Button,
-  Spacer,
-  Link,
   Text,
 } from '@chakra-ui/react';
 import SubjectNameList from '../../components/SubjectNameList';
-import { useRef, useState, useEffect } from 'react';
-import { AddIcon } from '@chakra-ui/icons';
+import { useState, useEffect } from 'react';
 import AddSubject from '../../components/AddSubject';
-import { SubjectListProps } from '../../components/SubjectList';
 import {
   AttendSubjectReadableRepository,
   AttendSubjectReadableInterface,
@@ -25,13 +20,11 @@ import {
   SubjectRepository,
   SubjectInterface,
   TermRepository,
-  TermInterface,
 } from 'repositories';
 import {
   defaultTargetValue,
   defaultTargetScore,
 } from '../../components/AddSubject';
-import { Dispatch } from 'react';
 
 export const GRADELIST = [1, 2, 3, 4, 5];
 
@@ -62,21 +55,27 @@ const Edit = () => {
       if (termRepo === undefined) {
         throw new Error('Cannot get term infomation!');
       }
-      setTerm(termRepo);
+      //setTerm(termRepo);
 
       // 学年毎の開講科目の取得
+      const category = ['一般', '専門'];
       const subjectRepos: SubjectInterface[][] = [];
+      let oneGradeSubjectRepo: SubjectInterface[] = [];
       for (let i = 1; i <= 5; i++) {
-        const subjectRepo = await SubjectRepository.gets(
-          userRepo.school.uuid,
-          userRepo.department.uuid,
-          termRepo[0].uuid,
-          i,
-        );
-        if (subjectRepo === undefined) {
-          throw new Error('Cannot get subject infomation!');
+        for (let j = 1; j < 2; j++) {
+          const tempSubjectRepo = await SubjectRepository.gets(
+            userRepo.school.uuid,
+            userRepo.department.uuid,
+            category[j],
+            i,
+          );
+          //const pretempSubjectRepo = tempSubjectRepo;
+          if (tempSubjectRepo === undefined || tempSubjectRepo === null) {
+            throw new Error('Cannot get subjects');
+          }
+          oneGradeSubjectRepo = oneGradeSubjectRepo.concat(tempSubjectRepo!);
         }
-        subjectRepos.push(subjectRepo);
+        subjectRepos.push(oneGradeSubjectRepo);
       }
       if (subjectRepos === undefined) {
         throw new Error('Cannot get subjects information!');
@@ -129,7 +128,7 @@ const Edit = () => {
   }, [isUpdating]);
 
   const [userInfo, setUser] = useState<UserInterface>();
-  const [currentTerm, setTerm] = useState<TermInterface[]>([]);
+  //const [currentTerm, setTerm] = useState<TermInterface[]>([]);
   const [allSubject, setAllSubject] = useState<SubjectInterface[][]>([]);
   const [errMsg, setErr] = useState<string>('');
 

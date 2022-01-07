@@ -1,17 +1,6 @@
 import React from 'react';
-import {
-  Divider,
-  Stack,
-  HStack,
-  Circle,
-  Text,
-  Spacer,
-  Link,
-} from '@chakra-ui/react';
-import { useState, SetStateAction, Dispatch } from 'react';
+import { Divider, Stack, HStack, Text, Spacer } from '@chakra-ui/react';
 import DeleteSubject from './DeleteSubject';
-import { SubjectListProps } from './SubjectList';
-import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
 
 export type SubjectNameListProps = {
   subjectName: string;
