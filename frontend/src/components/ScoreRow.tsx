@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Input, Text } from '@chakra-ui/react';
 
-import DeleteConfirmDialog from 'components/DeleteConfirmDialog';
+import { DeleteConfirmDialog } from 'components/ConfirmDialog';
 
 type ScoreRowProps = {
   index: number;
