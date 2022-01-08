@@ -43,13 +43,17 @@ const Edit = () => {
 
       // term の取得
       const today = new Date();
-      const year = today.getFullYear();
+      let year = today.getFullYear();
       const month = today.getMonth();
       let semester;
       if (4 <= month && month <= 9) {
         semester = '前期';
       } else {
         semester = '後期';
+      }
+      if (semester === '後期' && 1 <= month) {
+        // year を年度にする
+        year--;
       }
       const termRepo = await TermRepository.gets(year, semester);
       if (termRepo === undefined || termRepo!.length === 0) {
