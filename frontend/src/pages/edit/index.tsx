@@ -43,7 +43,7 @@ const Edit = () => {
 
       // term の取得
       const today = new Date();
-      let year = today.getFullYear();
+      let year = today.getFullYear() + 1;
       const month = today.getMonth();
       let semester;
       if (4 <= month && month <= 9) {
