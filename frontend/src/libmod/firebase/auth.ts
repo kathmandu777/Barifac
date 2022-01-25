@@ -26,6 +26,8 @@ export const logout = (): Promise<void> => {
     const auth = getAuth(firebaseApp);
     signOut(auth)
       .then(() => resolve())
+      .then(() => SessionService.signout())
+      .then(() => window.location.reload())
       .catch(error => reject(error));
   });
 };

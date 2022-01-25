@@ -11,6 +11,8 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useAuthContext } from 'context/AuthContext';
+import { logout } from 'libmod/firebase/auth';
+import { SignOutConfirmDialog } from './ConfirmDialog';
 
 const Header = () => {
   const { uid } = useAuthContext();
@@ -33,6 +35,7 @@ const Header = () => {
                   <MenuItem>
                     <Link href='/user/info'>ユーザー情報</Link>
                   </MenuItem>
+                  <SignOutConfirmDialog onOk={logout} />
                 </MenuList>
               </Menu>
             </Flex>
