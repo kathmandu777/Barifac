@@ -14,16 +14,10 @@ import {
   Select,
   ModalFooter,
 } from '@chakra-ui/react';
-import SubjectList, { SubjectListProps } from './SubjectList';
 import { Dispatch, SetStateAction } from 'react';
-import { SelectProps } from '@chakra-ui/react';
 import { GRADELIST } from '../pages/edit';
 import { SubjectInterface } from 'repositories';
-import {
-  AttendSubjectReadableRepository,
-  AttendSubjectReadableInterface,
-} from 'repositories/AttendSubjectReadableRepository';
-import { useState, useEffect } from 'react';
+import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
 
 export type AddSubjectProps = {
   gotlist: SubjectInterface[][];

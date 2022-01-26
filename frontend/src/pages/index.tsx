@@ -28,6 +28,7 @@ const Home = () => {
         setSubjects(lis);
       })
       .catch(err => {
+        console.log(err);
         setSubjects([]);
       });
   }, []);

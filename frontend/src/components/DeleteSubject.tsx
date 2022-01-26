@@ -8,12 +8,8 @@ import {
   AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { Button, Flex } from '@chakra-ui/react';
-import { SubjectListProps } from './SubjectList';
-import { Dispatch, SetStateAction } from 'react';
-import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
+import { Button } from '@chakra-ui/react';
 import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
-import { useState, useEffect } from 'react';
 
 export type DeleteSubjectProp = {
   uuid: string;

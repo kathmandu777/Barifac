@@ -6,23 +6,10 @@ import {
   Stack,
   Text,
   Circle,
-  VStack,
   Spacer,
 } from '@chakra-ui/layout';
-import {
-  ArrowForwardIcon,
-  AddIcon,
-  DeleteIcon,
-  CloseIcon,
-} from '@chakra-ui/icons';
-import DeleteSubject from './DeleteSubject';
-import { Evaluation } from 'domains';
-import {
-  AttendSubjectReadable,
-  EvaluationReadable,
-} from 'domains/AttendSubjectReadable';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
-import { Evaluations } from 'repositories/AttendSubjectReadableRepository';
 
 export type SubjectListProps = {
   subject: AttendSubjectReadableInterface;
