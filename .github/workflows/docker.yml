@@ -1,0 +1,16 @@
+name: docker
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build & Up
+        run: docker-compose up -d
+      - name: Poetry install in fastapi container
+        run: docker-compose run fastapi poetry install
+      - name: DB migrate in fastapi container
+        run: docker-compose run fastapi poetry run alembic upgrade head
