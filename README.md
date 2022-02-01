@@ -1,5 +1,7 @@
 # barifac
 
+[![docker](https://github.com/youngeek-0410/barifac/actions/workflows/docker.yml/badge.svg)](https://github.com/youngeek-0410/barifac/actions/workflows/docker.yml)
+
 高専生のための単位計算サービス
 
 ## Setup Procedure
