@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@chakra-ui/button';
-import { login } from 'libmod/firebase/auth';
+import { login, sendRedirectResult } from 'libmod/firebase/auth';
 import { Heading, VStack } from '@chakra-ui/layout';
 import { NextPage } from 'next';
 import { UserRepository } from 'repositories/UserRepository';
 import router from 'next/router';
 
 const Login: NextPage = () => {
-  // kuso
-  const [update, setUpdate] = useState<boolean>(false);
-
-  const updateRendering = async () => {
-    await login();
-    setUpdate(!update);
-  };
   // 動作確認（テスト書け）
   const redirectIfMissUserInfo = async () => {
+    await sendRedirectResult();
     const user = await UserRepository.getMe();
     if (user) {
       if (!user.grade || !user.school || !user.department) {
@@ -27,7 +21,8 @@ const Login: NextPage = () => {
 
   useEffect(() => {
     redirectIfMissUserInfo();
-  }, [update]);
+  }, []);
+
   return (
     <VStack spacing={10} mt={300}>
       <Heading as='h1' size='xl' color='blue.400' fontWeight='bold'>
@@ -39,7 +34,7 @@ const Login: NextPage = () => {
         borderRadius={20}
         size='md'
         mr={10}
-        onClick={updateRendering}
+        onClick={login}
       >
         サインイン
       </Button>
