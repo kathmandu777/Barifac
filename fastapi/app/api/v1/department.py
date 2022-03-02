@@ -13,9 +13,9 @@ class DepartmentAPI:
     @classmethod
     def gets(cls, request: Request, school_uuid: Optional[UUID]) -> Page[Department]:
         if school_uuid:
-            return DepartmentCRUD(request.state.db_session).gets_by_school_uuid(
+            return paginate(DepartmentCRUD(request.state.db_session).gets_by_school_uuid(
                 school_uuid
-            )
+            ))
         return paginate(DepartmentCRUD(request.state.db_session).gets())
 
     @classmethod
