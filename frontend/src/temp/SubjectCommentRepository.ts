@@ -48,14 +48,18 @@ export interface UpdateSubjectCommentRequest {
   subject_uuid: string;
 }
 
+interface SubjectCommentPage {
+  items: SubjectComment[];
+}
+
 export class SubjectCommentRepository {
-  static async getsBySubject(subjectUuid: string) {
+  static async getsBySubject(subjectUuid: string, page: number) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<SubjectComment[]>(
-      `/api/v1/subjects_comments?subject_uuid=${subjectUuid}`,
+    const res = await authClientObject.get<SubjectCommentPage>(
+      `/api/v1/subjects_comments?subject_uuid=${subjectUuid}&page=${page}`,
     );
-    return res.data;
+    return res.data.items;
   }
   static async create(data: CreateSubjectCommentRequest) {
     const authClientObject = authClient();

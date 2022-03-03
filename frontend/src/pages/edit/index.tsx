@@ -58,28 +58,38 @@ const Edit = () => {
       } else {
         semester = '後期';
       }
-      const termRepo = await TermRepository.gets(year, semester);
-      if (termRepo === undefined) {
-        throw new Error('Cannot get term infomation!');
+      const termRepo: TermInterface[] = [];
+      let page = 1;
+      while (1) {
+        const res = await TermRepository.gets(year, semester, page);
+        if (!res) throw new Error('Cannot get term infomation!');
+        if (res.length === 0) break;
+        termRepo.push(...res);
+        page++;
       }
       setTerm(termRepo);
 
       // 学年毎の開講科目の取得
       const subjectRepos: SubjectInterface[][] = [];
       for (let i = 1; i <= 5; i++) {
-        const subjectRepo = await SubjectRepository.gets(
-          userRepo.school.uuid,
-          userRepo.department.uuid,
-          termRepo[0].uuid,
-          i,
-        );
-        if (subjectRepo === undefined) {
-          throw new Error('Cannot get subject infomation!');
+        const subjectResponse: SubjectInterface[] = [];
+        let page = 1;
+        while (1) {
+          const res = await SubjectRepository.gets(
+            userRepo.school.uuid,
+            userRepo.department.uuid,
+            termRepo[0].uuid,
+            i,
+            page,
+          );
+          if (res === undefined) {
+            throw new Error('Cannot get subject infomation!');
+          }
+          if (res.length === 0) break;
+          subjectResponse.push(...res);
+          page++;
         }
-        subjectRepos.push(subjectRepo);
-      }
-      if (subjectRepos === undefined) {
-        throw new Error('Cannot get subjects information!');
+        subjectRepos.push(subjectResponse);
       }
       setAllSubject(subjectRepos);
       setErr('');

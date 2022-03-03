@@ -29,14 +29,18 @@ export interface UpdateTeacherCommentRequest {
   teacher_uuid: string;
 }
 
+interface TeacherCommentPage {
+  items: TeacherComment[];
+}
+
 export class TeacherCommentRepository {
-  static async getsByTeacher(teacherUuid: string) {
+  static async getsByTeacher(teacherUuid: string, page: number) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<TeacherComment[]>(
-      `/api/v1/teacher_comment?teacher_uuid=${teacherUuid}`,
+    const res = await authClientObject.get<TeacherCommentPage>(
+      `/api/v1/teacher_comment?teacher_uuid=${teacherUuid}&page=${page}`,
     );
-    return res.data;
+    return res.data.items;
   }
   static async create(data: CreateTeacherCommentRequest) {
     const authClientObject = authClient();

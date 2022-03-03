@@ -12,15 +12,19 @@ export interface TermInterface {
   uuid: string;
 }
 
+interface TermPage {
+  items: TermObject[];
+}
+
 export class TermRepository {
-  static async gets(year: number, semester: string) {
+  static async gets(year: number, semester: string, page: number) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<TermInterface[]>(
-      `/api/v1/terms/?academic_year=${year}&semester=${semester}`,
+    const res = await authClientObject.get<TermPage>(
+      `/api/v1/terms/?academic_year=${year}&semester=${semester}&page=${page}`,
     );
     //return res.data.map(term => TermFactory.createFromResponseObject(term));
-    return res.data;
+    return res.data.items;
   }
   static async get(uuid: string) {
     const authClientObject = authClient();

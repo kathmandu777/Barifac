@@ -22,11 +22,28 @@ import {
 const UserPage: NextPage = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isDisabledDep, setIsDisabledDep] = useState<boolean>(false);
-  const [selectedDepartents, setSelectedDepartments] = useState<Department[]>();
-  const [schools, setSchools] = useState<School[]>();
+  const [selectedDepartents, setSelectedDepartments] = useState<Department[]>(
+    [],
+  );
+  const [schools, setSchools] = useState<School[]>([]);
   const [requestBody, setRequestBody] = useState<UserUpdateRequest>(
     UserUpdateRequestFactory.createEmpty(),
   );
+
+  const loadSchools = async () => {
+    let page = 1;
+    const schoolResponse: School[] = [];
+    while (1) {
+      const res = await SchoolRepository.gets(page);
+      if (!res) return;
+      if (res.length === 0) {
+        break;
+      }
+      schoolResponse.push(...res);
+      page++;
+    }
+    setSchools(schoolResponse);
+  };
 
   const fetchData = async () => {
     const user = await UserRepository.getMe();
@@ -41,7 +58,7 @@ const UserPage: NextPage = () => {
       email: user.email,
       uid: user.uid,
     });
-    setSchools(await SchoolRepository.gets());
+    loadSchools();
   };
 
   useEffect(() => {
@@ -70,7 +87,17 @@ const UserPage: NextPage = () => {
     setIsDisabledDep(true);
     // School に対応する Department をすべて取得
     try {
-      setSelectedDepartments(await DepartmentRepository.gets(e.target.value));
+      setSelectedDepartments([]);
+      let page = 1;
+      const responseDepartments: Department[] = [];
+      while (1) {
+        const res = await DepartmentRepository.gets(e.target.value, page);
+        if (!res) return;
+        if (res.length === 0) break;
+        responseDepartments.push(...res);
+        page++;
+      }
+      setSelectedDepartments(responseDepartments);
       setRequestBody({ ...requestBody, school_uuid: e.target.value });
     } catch {
       return;

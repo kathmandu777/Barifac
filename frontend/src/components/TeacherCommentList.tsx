@@ -16,6 +16,8 @@ import {
 } from 'temp/TeacherCommentRepository';
 import { DeleteIcon } from '@chakra-ui/icons';
 
+import { useInView } from 'react-intersection-observer';
+
 export type TeacherCommentListProps = {
   teacherUuid: string;
   userUuid: string;
@@ -34,40 +36,44 @@ const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
   const [teacherComments, setTeacherComments] = useState<
     TeacherCommentElement[]
   >([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const { ref, inView } = useInView();
+  const [page, setPage] = useState(1);
 
   const handleDeleteTeacherComment = async (uuid: string) => {
     try {
       await TeacherCommentRepository.delete(uuid);
-      getTeacherComments();
     } catch {
       setError('削除に失敗しました');
     }
   };
 
-  const getTeacherComments = async () => {
+  const loadMore = async (page: number) => {
     setLoading(true);
-    try {
-      const res = await TeacherCommentRepository.getsByTeacher(teacherUuid);
-      if (res) {
-        setTeacherComments(res);
-      }
-    } catch (e) {
-      setError('コメントの取得に失敗しました');
+    const res = await TeacherCommentRepository.getsByTeacher(teacherUuid, page);
+    if (!res) {
       setLoading(false);
+      setError('コメントの取得に失敗しました');
+      setHasMore(false);
       return;
     }
     setLoading(false);
+    if (res.length === 0) {
+      setHasMore(false);
+    } else {
+      setTeacherComments([...teacherComments, ...res]);
+      setPage(current => current + 1);
+    }
   };
 
   useEffect(() => {
-    getTeacherComments();
-  }, []);
+    if (inView && hasMore) {
+      loadMore(page);
+    }
+  }, [inView]);
 
-  if (loading) {
-    return <Spinner />;
-  }
   return (
     <Box w='100%'>
       {error && <Text color='tomato'>{error}</Text>}
@@ -85,6 +91,8 @@ const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
           </Box>
         );
       })}
+      {loading && <Spinner />}
+      <div ref={ref}></div>
     </Box>
   );
 };
