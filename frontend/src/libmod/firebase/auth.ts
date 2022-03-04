@@ -1,10 +1,11 @@
 import firebaseApp from './firebase';
 import {
   getAuth,
-  signInWithPopup,
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged as onFirebaseAuthStateChanged,
+  signInWithRedirect,
+  getRedirectResult,
 } from 'firebase/auth';
 import { SessionService } from 'services/SessionService';
 
@@ -13,9 +14,20 @@ const provider = new GoogleAuthProvider();
 export const login = async () => {
   const auth = getAuth(firebaseApp);
   try {
-    const credential = await signInWithPopup(auth, provider);
-    const idToken = await credential.user.getIdToken(true);
-    await SessionService.signin(idToken);
+    await signInWithRedirect(auth, provider);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const sendRedirectResult = async () => {
+  const auth = getAuth(firebaseApp);
+  try {
+    const result = await getRedirectResult(auth);
+    if (result) {
+      const idToken = await result.user.getIdToken(true);
+      await SessionService.signin(idToken);
+    }
   } catch (e) {
     console.error(e);
   }
