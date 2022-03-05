@@ -95,4 +95,7 @@ if __name__ == "__main__":
         elif args.only_add_schools:
             add_schools()
         else:
-            add_all_data()
+            if args.school_name:
+                add_all_data(args.school_name)
+            else:
+                add_all_data()

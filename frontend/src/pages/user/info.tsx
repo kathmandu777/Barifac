@@ -134,7 +134,7 @@ const UserPage: NextPage = () => {
             <FormControl id='school' isRequired>
               <FormLabel color='whiteAlpha.900'>学校名</FormLabel>
               <Select
-                color='whiteAlpha.900'
+                color='gray.400'
                 onChange={handleSchoolChange}
                 isRequired
                 placeholder='学校名を選択してください'
@@ -150,7 +150,7 @@ const UserPage: NextPage = () => {
             <FormControl id='school' isRequired>
               <FormLabel color='whiteAlpha.900'>学年</FormLabel>
               <Select
-                color='whiteAlpha.900'
+                color='gray.400'
                 isRequired
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                   setRequestBody({
@@ -170,7 +170,7 @@ const UserPage: NextPage = () => {
             <FormControl id='Department' isRequired>
               <FormLabel color='whiteAlpha.900'>学科名</FormLabel>
               <Select
-                color='whiteAlpha.900'
+                color='gray.400'
                 isDisabled={isDisabledDep}
                 isRequired
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>

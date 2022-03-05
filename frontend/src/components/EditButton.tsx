@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Text, IconButton } from '@chakra-ui/react';
+import { Link, IconButton } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 
 const EditButton: React.FC = () => {

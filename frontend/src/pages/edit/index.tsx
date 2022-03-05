@@ -4,17 +4,12 @@ import {
   Divider,
   Heading,
   Center,
-  Flex,
   Button,
-  Spacer,
-  Link,
   Text,
 } from '@chakra-ui/react';
 import SubjectNameList from '../../components/SubjectNameList';
-import { useRef, useState, useEffect } from 'react';
-import { AddIcon } from '@chakra-ui/icons';
+import { useState, useEffect } from 'react';
 import AddSubject from '../../components/AddSubject';
-import { SubjectListProps } from '../../components/SubjectList';
 import {
   AttendSubjectReadableRepository,
   AttendSubjectReadableInterface,
@@ -25,13 +20,11 @@ import {
   SubjectRepository,
   SubjectInterface,
   TermRepository,
-  TermInterface,
 } from 'repositories';
 import {
   defaultTargetValue,
   defaultTargetScore,
 } from '../../components/AddSubject';
-import { Dispatch } from 'react';
 
 export const GRADELIST = [1, 2, 3, 4, 5];
 
@@ -50,13 +43,17 @@ const Edit = () => {
 
       // term の取得
       const today = new Date();
-      const year = today.getFullYear();
+      let year = today.getFullYear() + 1;
       const month = today.getMonth();
       let semester;
       if (4 <= month && month <= 9) {
         semester = '前期';
       } else {
         semester = '後期';
+      }
+      if (semester === '後期' && 1 <= month) {
+        // year を年度にする
+        year--;
       }
       const termRepo: TermInterface[] = [];
       let page = 1;
@@ -67,29 +64,35 @@ const Edit = () => {
         termRepo.push(...res);
         page++;
       }
-      setTerm(termRepo);
+      //setTerm(termRepo);
 
       // 学年毎の開講科目の取得
+      const category = ['一般', '専門'];
       const subjectRepos: SubjectInterface[][] = [];
       for (let i = 1; i <= 5; i++) {
-        const subjectResponse: SubjectInterface[] = [];
-        let page = 1;
-        while (1) {
-          const res = await SubjectRepository.gets(
-            userRepo.school.uuid,
-            userRepo.department.uuid,
-            termRepo[0].uuid,
-            i,
-            page,
-          );
-          if (res === undefined) {
-            throw new Error('Cannot get subject infomation!');
+        let oneGradeSubjectRepo: SubjectInterface[] = [];
+        for (let j = 0; j < 2; j++) {
+          const subjectResponse: SubjectInterface[] = [];
+          let page = 1;
+          while (1) {
+            const res = await SubjectRepository.gets(
+              userRepo.school.uuid,
+              userRepo.department.uuid,
+              termRepo[0].uuid,
+              category[j]
+              i,
+              page,
+            );
+            if (res === undefined) {
+              throw new Error('Cannot get subject infomation!');
+            }
+            if (res.length === 0) break;
+            subjectResponse.push(...res);
+            page++;
           }
-          if (res.length === 0) break;
-          subjectResponse.push(...res);
-          page++;
+          oneGradeSubjectRepo = oneGradeSubjectRepo.concat(...subjectResponse);
         }
-        subjectRepos.push(subjectResponse);
+        subjectRepos.push(oneGradeSubjectRepo);
       }
       setAllSubject(subjectRepos);
       setErr('');
@@ -123,7 +126,7 @@ const Edit = () => {
   const getAttendSubject = async () => {
     try {
       const attendSubjectRepo = await AttendSubjectReadableRepository.gets();
-      if (attendSubjectRepo === undefined) {
+      if (attendSubjectRepo === undefined || attendSubjectRepo.length === 0) {
         throw new Error('Cannot get attend subject infomation!');
       }
       setSubject(attendSubjectRepo);
@@ -139,7 +142,7 @@ const Edit = () => {
   }, [isUpdating]);
 
   const [userInfo, setUser] = useState<UserInterface>();
-  const [currentTerm, setTerm] = useState<TermInterface[]>([]);
+  //const [currentTerm, setTerm] = useState<TermInterface[]>([]);
   const [allSubject, setAllSubject] = useState<SubjectInterface[][]>([]);
   const [errMsg, setErr] = useState<string>('');
 
@@ -148,7 +151,7 @@ const Edit = () => {
   >([]);
 
   const addAllSubject = () => {
-    for (const s of allSubject[userInfo!.grade - 1]) {
+    for (const s of allSubject[userInfo!.grade]) {
       const subjectRepo = AttendSubjectReadableRepository.create({
         target_value: defaultTargetValue,
         target_score: defaultTargetScore,

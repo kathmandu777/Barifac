@@ -1,48 +1,65 @@
 # barifac
 
+[![docker](https://github.com/youngeek-0410/barifac/actions/workflows/docker.yml/badge.svg)](https://github.com/youngeek-0410/barifac/actions/workflows/docker.yml)
+
 高専生のための単位計算サービス
 
-## 実行までの手順
+## Setup Procedure
 
-### 初回
+初回は以下の手順を全て行う。  
+次回以降は、基本的に"Server Startup"のみを行う。(ただし、依存関係や DB に変更があった場合は、適宜"Container Setup"の対応する手順を行う)
 
-(dockerとdocker-composeインストール済みが前提)
+### Initialize
 
-1. `git clone git@github.com:kathmandu777/barifac.git`
+1. clone this repository
 1. `cd barifac`
-1. `source env.sh`
-1. 環境変数ファイルを追加（slackでもらう）
-   1. `fastapi/`内に`fastapi.env`を追加
-   1. `postgres/`内に`postgres.env`を追加
-1. docker起動
+1. `npm install`
+1. python の仮想環境を作成
+   1. `python -m venv venv`
+   1. `source venv/bin/activate`
+   1. `pip install -r requirements.txt`
+1. 環境変数ファイルを追加 (tmpl を参考に作成し、足りない情報は slack で確認)
+   - add fastapi/fastapi.env
+1. firebase の credentials.json を追加 (Slack などで共有してもらう)
+   - add fastapi/firebase_credentials.json
 
-   ```bash
-   build
-   docker-compose run --entrypoint "poetry install" fastapi
-   up
-   ```
+### Container Setup
 
-1. <http://localhost:8000/> にアクセス
-1. {"detail":"Not Found"}と表示されたら成功
-1. Ctrl + C でdocker停止
+1. コンテナ ボリューム ネットワーク作成・起動
 
-### 初回以降の起動
-
-(env.shが読み込まれている状態で)
-
-```bash
-up
+```sh
+docker-compose up -d
 ```
 
-## linter/formatter初期設定
+2. 依存パッケージのインストール
 
-commit時にlinter/formatterが自動的に走るように設定をする。
+```sh
+docker-compose run fastapi poetry install
+```
 
-1. pythonの環境をlocalに構築(OS,宗教によって環境構築の仕方が異なるので割愛)
-1. node, npmの環境をlocalに構築(OS,宗教によって環境構築の仕方が異なるので割愛)
-    - このプロジェクトではyarnではなnpmを用いる。深い理由はない。
-1. root(README.mdと同階層)で`npm install`で必要なパッケージをインストール
-    - `package-lock.json`は自分で編集してはいけないファイルであり、git管理をする必要があります。編集・消去しないでcommitしてください。
-1. root(README.mdと同階層)で`pip install -r requirements.txt`で必要なパッケージをインストール
+3. DB migrate
 
-linter/formatterはstaged fileのみに走ります。linter/formatterを走らせたくない場合は、`--no-verify`をcommit時にオプションで指定してください。
+```sh
+docker-compose run fastapi poetry run alembic upgrade head
+```
+
+### Server Startup
+
+```sh
+docker-compose run -p 8000:8000 fastapi ./scripts/server
+```
+
+(実行権限がなければ `sudo chmod +x ./fastapi/scripts/server` で付与する)
+
+## linter/formatter 初期設定
+
+commit 時に linter/formatter が自動的に走るように設定をする。
+
+1. python の環境を local に構築(OS,宗教によって環境構築の仕方が異なるので割愛)
+1. node, npm の環境を local に構築(OS,宗教によって環境構築の仕方が異なるので割愛)
+   - このプロジェクトでは yarn ではな npm を用いる。深い理由はない。
+1. root(README.md と同階層)で`npm install`で必要なパッケージをインストール
+   - `package-lock.json`は自分で編集してはいけないファイルであり、git 管理をする必要があります。編集・消去しないで commit してください。
+1. root(README.md と同階層)で`pip install -r requirements.txt`で必要なパッケージをインストール
+
+linter/formatter は staged file のみに走ります。linter/formatter を走らせたくない場合は、`--no-verify`を commit 時にオプションで指定してください。

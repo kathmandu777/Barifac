@@ -1,3 +1,4 @@
+from app.core.settings import get_env
 from pydantic import BaseModel
 
 
@@ -12,7 +13,7 @@ class LogConfig(BaseModel):
     LOG_HANDLER_LEVEL_FILE: str = "DEBUG"
     LOG_FILE_MAX_BYTES: int = 1024 * 1024
     LOG_FILE_BACKUP_COUNT: int = 5
-    LOG_HANDLER_FILE_PATH: str = "/fastapi.log"
+    LOG_HANDLER_FILE_PATH: str = get_env().log_handler_file_path
     LOG_LOGGER_LEVEL: str = "DEBUG"
 
     # Logging config

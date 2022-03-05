@@ -10,7 +10,7 @@ class User(BaseModelMixin):
 
     MAX_LENGTH_USERNAME = 256
     MIN_LENGTH_USERNAME = 3
-    username = Column(VARCHAR(MAX_LENGTH_USERNAME), unique=True, nullable=False)
+    username = Column(VARCHAR(MAX_LENGTH_USERNAME), unique=False, nullable=False)
     email = Column(String, unique=True, nullable=False)
 
     MAX_LENGTH_UID = 128

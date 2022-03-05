@@ -46,18 +46,23 @@ export class SubjectRepository {
     school: string,
     department: string,
     term: string,
+    category: string,
     grade: number,
     page: number,
   ) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const department2 = '471bfab6-e473-491b-b55e-08f461079b29';
-    const department3 = 'bc7f927c-215b-46fe-b777-4f53c3d13c8b';
-    const res = await authClientObject.get<SubjectPage>(
-      //`/api/v1/subjects/?school_uuid=${school}&department_uuid=${department}&term_uuid${term}&target_grade=${grade}`,
-      `/api/v1/subjects/?school_uuid=${school}&term_uuid${term}&target_grade=${grade}&page=${page}`,
-    );
-    return res.data.items;
+    if (category === '一般') {
+      const res = await authClientObject.get<SubjectPage>(
+        `/api/v1/subjects/?school_uuid=${school}&term_uuid=${term}&category=${category}&target_grade=${grade}&page=${page}`,
+      );
+      return res.data.items;
+    } else if (category === '専門') {
+      const res = await authClientObject.get<SubjectPage>(
+        `/api/v1/subjects/?school_uuid=${school}&department_uuid=${department}&term_uuid=${term}&category=${category}&target_grade=${grade}&page=${page}`,
+      );
+      return res.data.items;
+    }
   }
   static async get(uuid: string) {
     const authClientObject = authClient();

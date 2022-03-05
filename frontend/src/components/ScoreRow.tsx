@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, Flex, Input, Text } from '@chakra-ui/react';
+import { Flex, Input, Text } from '@chakra-ui/react';
+
+import { DeleteConfirmDialog } from 'components/ConfirmDialog';
 
 type ScoreRowProps = {
   index: number;
@@ -21,40 +23,37 @@ export const ScoreRow: React.FC<ScoreRowProps> = ({
   onChangeGotScore,
 }) => {
   return (
-    <Flex w='full' justifyContent='space-between'>
-      <Flex>
-        <Text color='whiteAlpha.900' lineHeight='full' w='2em'>
-          {index}.
-        </Text>
-        <Input
-          w='5rem'
-          bg='white'
-          color='black'
-          defaultValue={gotScore}
-          onChange={onChangeGotScore}
-          type='number'
-        ></Input>
+    <>
+      <Flex w='full' justifyContent='space-between'>
+        <Flex>
+          <Text color='whiteAlpha.900' lineHeight='full' w='2em'>
+            {index}.
+          </Text>
+          <Input
+            w='5rem'
+            bg='white'
+            color='black'
+            defaultValue={gotScore}
+            onChange={onChangeGotScore}
+            type='number'
+          ></Input>
+        </Flex>
+        <Flex>
+          <Input
+            w='5rem'
+            bg='white'
+            color='black'
+            defaultValue={maxScore}
+            onChange={onChangeMaxScore}
+            type='number'
+          ></Input>
+          <DeleteConfirmDialog
+            onOk={onDelete}
+            dialogHeader='得点の削除'
+            dialogBody='削除しますか？'
+          ></DeleteConfirmDialog>
+        </Flex>
       </Flex>
-      <Flex>
-        <Input
-          w='5rem'
-          bg='white'
-          color='black'
-          defaultValue={maxScore}
-          onChange={onChangeMaxScore}
-          type='number'
-        ></Input>
-        <Button
-          bg='whiteAlpha.200'
-          color='whiteAlpha.800'
-          rounded='full'
-          ml={2}
-          mr={2}
-          onClick={onDelete}
-        >
-          削除
-        </Button>
-      </Flex>
-    </Flex>
+    </>
   );
 };
