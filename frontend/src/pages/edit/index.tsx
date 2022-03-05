@@ -20,6 +20,7 @@ import {
   SubjectRepository,
   SubjectInterface,
   TermRepository,
+  TermInterface,
 } from 'repositories';
 import {
   defaultTargetValue,
@@ -79,7 +80,7 @@ const Edit = () => {
               userRepo.school.uuid,
               userRepo.department.uuid,
               termRepo[0].uuid,
-              category[j]
+              category[j],
               i,
               page,
             );
