@@ -12,10 +12,8 @@ import {
 
 import { DeleteIcon } from '@chakra-ui/icons';
 
-import {
-  SubjectComment,
-  SubjectCommentRepository,
-} from 'temp/SubjectCommentRepository';
+import { SubjectCommentRepository } from 'repositories/SubjectCommentRepository';
+import { SubjectComment } from 'domains';
 
 export type SubjectCommentListProps = {
   subjectUuid: string;

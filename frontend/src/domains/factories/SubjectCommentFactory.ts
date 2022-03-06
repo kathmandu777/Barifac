@@ -1,10 +1,15 @@
-import { SubjectFactory, SubjectResponse, UserFactory, UserResponse } from '..';
+import {
+  ReductionUserFactory,
+  ReductionUserResponse,
+  SubjectFactory,
+  SubjectResponse,
+} from '..';
 import { SubjectComment } from '../entities/SubjetComment';
 
 export interface SubjectCommentResponse {
   uuid: string;
   subject: SubjectResponse;
-  user: UserResponse;
+  user: ReductionUserResponse;
   comment: string;
 }
 
@@ -13,7 +18,7 @@ export class SubjectCommentFactory {
     return new SubjectComment(
       res.uuid,
       SubjectFactory.createFromResponse(res.subject),
-      UserFactory.createFromResponse(res.user),
+      ReductionUserFactory.createFromResponse(res.user),
       res.comment,
     );
   }

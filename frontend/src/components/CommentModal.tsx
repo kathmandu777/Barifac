@@ -28,7 +28,7 @@ import CommentSubmitForm, {
 } from './CommentSubmitForm';
 import { SubjectRepository } from 'temp/SubjectRepository';
 import SubjectCommentList from './SubjectCommentList';
-import { SubjectCommentRepository } from 'temp/SubjectCommentRepository';
+import { SubjectCommentRepository } from 'repositories/SubjectCommentRepository';
 import { TeacherCommentRepository } from 'temp/TeacherCommentRepository';
 import { EditRequestRepository } from 'temp/EditRequestRepository';
 import { UserRepository } from 'repositories/UserRepository';
