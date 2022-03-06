@@ -11,10 +11,9 @@ import SubjectNameList from '../../components/SubjectNameList';
 import { useState, useEffect } from 'react';
 import AddSubject from '../../components/AddSubject';
 import { AttendSubjectRepository } from 'repositories/AttendSubjectRepository';
-import { ReadableAttendSubject } from 'domains';
+import { ReadableAttendSubject, User } from 'domains';
 import {
   UserRepository,
-  UserInterface,
   SubjectRepository,
   SubjectInterface,
   TermRepository,
@@ -129,7 +128,7 @@ const Edit = () => {
     getAttendSubject();
   }, [isUpdating]);
 
-  const [userInfo, setUser] = useState<UserInterface>();
+  const [userInfo, setUser] = useState<User>();
   //const [currentTerm, setTerm] = useState<TermInterface[]>([]);
   const [allSubject, setAllSubject] = useState<SubjectInterface[][]>([]);
   const [errMsg, setErr] = useState<string>('');

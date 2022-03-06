@@ -14,3 +14,11 @@ export class User {
     public grade: Grade,
   ) {}
 }
+
+export class ReductionUser {
+  constructor(
+    public uuid: string,
+    public username: string,
+    public grade: Grade,
+  ) {}
+}

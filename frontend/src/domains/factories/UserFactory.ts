@@ -5,6 +5,7 @@ import {
   DepartmentResponse,
   SchoolFactory,
   DepartmentWithoutSchoolFactory,
+  ReductionUser,
 } from '..';
 
 export interface UserResponse {
@@ -16,6 +17,11 @@ export interface UserResponse {
   department: DepartmentResponse;
   grade: Grade;
 }
+
+export type ReductionUserResponse = Pick<
+  UserResponse,
+  'uuid' | 'username' | 'grade'
+>;
 
 export class UserFactory {
   public static createFromResponse(res: UserResponse) {
@@ -32,5 +38,11 @@ export class UserFactory {
       department,
       res.grade,
     );
+  }
+}
+
+export class ReductionUserFactory {
+  public static createFromResponse(res: ReductionUserResponse) {
+    return new ReductionUser(res.uuid, res.username, res.grade);
   }
 }
