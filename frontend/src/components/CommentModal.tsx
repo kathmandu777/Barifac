@@ -29,7 +29,7 @@ import CommentSubmitForm, {
 import { SubjectRepository } from 'temp/SubjectRepository';
 import SubjectCommentList from './SubjectCommentList';
 import { SubjectCommentRepository } from 'temp/SubjectCommentRepository';
-import { TeacherCommentRepository } from 'temp/TeacherCommentRepository';
+import { TeacherCommentRepository } from 'repositories/TeacherCommentRepository';
 import { EditRequestRepository } from 'temp/EditRequestRepository';
 import { UserRepository } from 'repositories/UserRepository';
 

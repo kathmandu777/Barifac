@@ -10,10 +10,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import {
-  TeacherComment as TeacherCommentElement,
-  TeacherCommentRepository,
-} from 'temp/TeacherCommentRepository';
+import { TeacherCommentRepository } from 'repositories/TeacherCommentRepository';
+import { TeacherComment } from 'domains';
 import { DeleteIcon } from '@chakra-ui/icons';
 
 export type TeacherCommentListProps = {
@@ -22,7 +20,7 @@ export type TeacherCommentListProps = {
 };
 
 type TeacherCommentProps = {
-  comment: TeacherCommentElement;
+  comment: TeacherComment;
   own: boolean;
   onDelete: VoidFunction;
 } & StackProps;
@@ -31,9 +29,7 @@ const TeacherCommentList: React.FC<TeacherCommentListProps> = ({
   teacherUuid,
   userUuid,
 }) => {
-  const [teacherComments, setTeacherComments] = useState<
-    TeacherCommentElement[]
-  >([]);
+  const [teacherComments, setTeacherComments] = useState<TeacherComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
