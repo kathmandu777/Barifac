@@ -5,6 +5,7 @@ import {
   SchoolFactory,
   TermFactory,
   DepartmentWithoutSchoolFactory,
+  ReductionSubject,
 } from '..';
 
 export interface SubjectResponse {
@@ -20,6 +21,8 @@ export interface SubjectResponse {
   school: SchoolResponse;
   department: { uuid: string; name: string; syllabus_url: string };
 }
+
+export type ReductionSubjectResponse = Pick<SubjectResponse, 'name' | 'uuid'>;
 
 export class SubjectFactory {
   public static createFromResponse(res: SubjectResponse) {
@@ -41,5 +44,11 @@ export class SubjectFactory {
       school,
       department,
     );
+  }
+}
+
+export class ReductionSubjectFactory {
+  public static createFromResponse(res: ReductionSubjectResponse) {
+    return new ReductionSubject(res.name, res.uuid);
   }
 }

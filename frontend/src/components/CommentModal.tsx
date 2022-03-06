@@ -30,7 +30,7 @@ import { SubjectRepository } from 'temp/SubjectRepository';
 import SubjectCommentList from './SubjectCommentList';
 import { SubjectCommentRepository } from 'temp/SubjectCommentRepository';
 import { TeacherCommentRepository } from 'temp/TeacherCommentRepository';
-import { EditRequestRepository } from 'temp/EditRequestRepository';
+import { EditRequestRepository } from 'repositories/EditRequestRepository';
 import { UserRepository } from 'repositories/UserRepository';
 
 export type CommentModalProps = {

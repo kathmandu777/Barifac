@@ -18,3 +18,12 @@ export class ReadableEvaluation {
     public scores: ReadableScore[],
   ) {}
 }
+
+export class EvaluationWithoutSubject {
+  constructor(
+    public uuid: string,
+    public name: string,
+    public rate: number,
+    public type: string,
+  ) {}
+}

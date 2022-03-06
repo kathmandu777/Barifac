@@ -5,6 +5,7 @@ import {
   ReadableScoreResponse,
   ReadableEvaluation,
   ReadableScoreFactory,
+  EvaluationWithoutSubject,
 } from '..';
 
 export interface EvaluationResponse {
@@ -21,6 +22,11 @@ export interface ReadableEvaluationResponse {
   rate: number;
   scores: ReadableScoreResponse[];
 }
+
+export type EvaluationWithoutSubjectResponse = Omit<
+  EvaluationResponse,
+  'subject'
+>;
 
 export class EvaluationFactory {
   public static createFromResponse(res: EvaluationResponse) {
@@ -43,5 +49,11 @@ export class ReadableEvaluationFactory {
       res.rate,
       scores,
     );
+  }
+}
+
+export class EvaluationWithoutSubjectFactory {
+  public static createFromResponse(res: EvaluationWithoutSubjectResponse) {
+    return new EvaluationWithoutSubject(res.uuid, res.name, res.rate, res.type);
   }
 }

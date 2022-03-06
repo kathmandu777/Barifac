@@ -1,24 +1,8 @@
+import {
+  EditRequestFactory,
+  EditRequestResponse,
+} from 'domains/factories/EditRequestFactory';
 import { authClient } from 'infras/RestClient';
-
-export interface EditRequest {
-  comment: string;
-  uuid: string;
-  user: {
-    username: string;
-    grade: 5;
-    uuid: string;
-  };
-  subject?: {
-    name: string;
-    uuid: string;
-  };
-  evaluation?: {
-    name: string;
-    rate: number;
-    type: string;
-    uuid: string;
-  };
-}
 
 export interface CreateEditRequestRequest {
   comment: string;
@@ -30,33 +14,33 @@ export class EditRequestRepository {
   static async getsBySubject(subjectUuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<EditRequest[]>(
+    const res = await authClientObject.get<EditRequestResponse[]>(
       `/api/v1/edit_requests?subject_uuid=${subjectUuid}`,
     );
-    return res.data;
+    return res.data.map(EditRequestFactory.createFromResponse);
   }
   static async create(data: CreateEditRequestRequest) {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.post<
       CreateEditRequestRequest,
-      EditRequest
+      EditRequestResponse
     >(`/api/v1/edit_requests/`, data);
-    return res.data;
+    return EditRequestFactory.createFromResponse(res.data);
   }
   static async getsByEvaluation(evaluationUuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<EditRequest[]>(
+    const res = await authClientObject.get<EditRequestResponse[]>(
       `/api/v1/edit_requests?evaluation_uuid=${evaluationUuid}`,
     );
-    return res.data;
+    return res.data.map(EditRequestFactory.createFromResponse);
   }
 
   static async delete(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.delete(`/api/v1/edit_requests/${uuid}`);
-    return res.data;
+    return EditRequestFactory.createFromResponse(res.data);
   }
 }

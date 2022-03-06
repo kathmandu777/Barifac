@@ -15,3 +15,7 @@ export class Subject {
     public department: { uuid: string; name: string; syllabusUrl: string },
   ) {}
 }
+
+export class ReductionSubject {
+  constructor(public name: string, public uuid: string) {}
+}
