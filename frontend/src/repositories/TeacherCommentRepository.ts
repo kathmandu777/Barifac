@@ -1,30 +1,12 @@
 import { authClient } from 'infras/RestClient';
+import { TeacherCommentResponse, TeacherCommentFactory } from 'domains';
 
-export interface TeacherComment {
-  comment: string;
-  uuid: string;
-  teacher: {
-    name: string;
-    uuid: string;
-    school: {
-      name: string;
-      syllabus_url: string;
-      uuid: string;
-    };
-  };
-  user: {
-    username: string;
-    grade: number;
-    uuid: string;
-  };
-}
-
-export interface CreateTeacherCommentRequest {
+export interface CreateTeacherCommentRequestParams {
   comment: string;
   teacher_uuid: string;
 }
 
-export interface UpdateTeacherCommentRequest {
+export interface UpdateTeacherCommentRequestParams {
   comment: string;
   teacher_uuid: string;
 }
@@ -33,19 +15,19 @@ export class TeacherCommentRepository {
   static async getsByTeacher(teacherUuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<TeacherComment[]>(
+    const res = await authClientObject.get<TeacherCommentResponse[]>(
       `/api/v1/teacher_comment?teacher_uuid=${teacherUuid}`,
     );
-    return res.data;
+    return res.data.map(TeacherCommentFactory.createFromResponseObject);
   }
-  static async create(data: CreateTeacherCommentRequest) {
+  static async create(data: CreateTeacherCommentRequestParams) {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.post<
-      CreateTeacherCommentRequest,
-      TeacherComment
+      CreateTeacherCommentRequestParams,
+      TeacherCommentResponse
     >(`/api/v1/teacher_comment`, data);
-    return res.data;
+    return TeacherCommentFactory.createFromResponseObject(res.data);
   }
 
   static async delete(uuid: string) {
@@ -54,6 +36,6 @@ export class TeacherCommentRepository {
     const res = await authClientObject.delete(
       `/api/v1/teacher_comment/${uuid}`,
     );
-    return res.data;
+    return TeacherCommentFactory.createFromResponseObject(res.data);
   }
 }

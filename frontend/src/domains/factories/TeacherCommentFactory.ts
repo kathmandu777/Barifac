@@ -1,10 +1,15 @@
-import { TeacherFactory, TeacherResponse, UserFactory, UserResponse } from '..';
+import {
+  ReductionUserFactory,
+  ReductionUserResponse,
+  TeacherFactory,
+  TeacherResponse,
+} from '..';
 import { TeacherComment } from '../entities/TeacherComment';
 
 export interface TeacherCommentResponse {
   uuid: string;
   teacher: TeacherResponse;
-  user: UserResponse;
+  user: ReductionUserResponse;
   comment: string;
 }
 
@@ -13,7 +18,7 @@ export class TeacherCommentFactory {
     return new TeacherComment(
       res.uuid,
       TeacherFactory.createFromResponse(res.teacher),
-      UserFactory.createFromResponse(res.user),
+      ReductionUserFactory.createFromResponse(res.user),
       res.comment,
     );
   }

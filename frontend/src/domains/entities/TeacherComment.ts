@@ -1,10 +1,10 @@
-import { Teacher, User } from '..';
+import { ReductionUser, Teacher } from '..';
 
 export class TeacherComment {
   constructor(
     public uuid: string,
     public teacher: Teacher,
-    public user: User,
+    public user: ReductionUser,
     public comment: string,
   ) {}
 }
