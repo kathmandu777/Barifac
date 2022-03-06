@@ -1,5 +1,5 @@
 import { authClient } from 'infras/RestClient';
-import { SubjectFactory, SubjectObject, Subject, Term } from 'domains';
+import { SubjectFactory, SubjectResponse, Term } from 'domains';
 
 interface SubjectCreateRequest {
   term: Term;
@@ -62,10 +62,10 @@ export class SubjectRepository {
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<SubjectObject>(
+    const res = await authClientObject.get<SubjectResponse>(
       `/api/v1/subjects/${uuid}`,
     );
-    return SubjectFactory.createFromResponseObject(res.data);
+    return SubjectFactory.createFromResponse(res.data);
   }
   public static async create({
     term,
@@ -83,8 +83,8 @@ export class SubjectRepository {
     if (!authClientObject) return;
     const res = await authClientObject.post<
       SubjectCreateRequest,
-      SubjectObject
+      SubjectResponse
     >(`/api/v1/subjects`, params);
-    return SubjectFactory.createFromResponseObject(res.data);
+    return SubjectFactory.createFromResponse(res.data);
   }
 }

@@ -1,4 +1,4 @@
-import { School } from '.';
+import { School } from '..';
 
 export class Teacher {
   constructor(

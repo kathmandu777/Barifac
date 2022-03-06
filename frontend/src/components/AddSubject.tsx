@@ -17,7 +17,7 @@ import {
 import { Dispatch, SetStateAction } from 'react';
 import { GRADELIST } from '../pages/edit';
 import { SubjectInterface } from 'repositories';
-import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
+import { AttendSubjectRepository } from 'repositories/AttendSubjectRepository';
 
 export type AddSubjectProps = {
   gotlist: SubjectInterface[][];
@@ -37,7 +37,7 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
   const finalRef = React.useRef(null);
 
   const onAdd = () => {
-    const subjectRepo = AttendSubjectReadableRepository.create({
+    const subjectRepo = AttendSubjectRepository.create({
       target_value: defaultTargetValue,
       target_score: defaultTargetScore,
       subject_uuid: initialRef.current!.value,

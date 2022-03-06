@@ -1,5 +1,5 @@
 import { authClient } from 'infras/RestClient';
-import { SchoolFactory, SchoolObject } from 'domains';
+import { SchoolFactory, SchoolResponse } from 'domains';
 
 interface SchoolCreateRequest {
   name: string;
@@ -9,18 +9,16 @@ export class SchoolRepository {
   static async gets() {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<SchoolObject[]>(`/api/v1/schools`);
-    return res.data.map(school =>
-      SchoolFactory.createFromResponseObject(school),
-    );
+    const res = await authClientObject.get<SchoolResponse[]>(`/api/v1/schools`);
+    return res.data.map(school => SchoolFactory.createFromResponse(school));
   }
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<SchoolObject>(
+    const res = await authClientObject.get<SchoolResponse>(
       `/api/v1/schools/${uuid}`,
     );
-    return SchoolFactory.createFromResponseObject(res.data);
+    return SchoolFactory.createFromResponse(res.data);
   }
   public static async create({ name }: SchoolCreateRequest) {
     const params = {
@@ -28,10 +26,10 @@ export class SchoolRepository {
     };
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.post<SchoolCreateRequest, SchoolObject>(
-      `/api/v1/schools`,
-      params,
-    );
-    return SchoolFactory.createFromResponseObject(res.data);
+    const res = await authClientObject.post<
+      SchoolCreateRequest,
+      SchoolResponse
+    >(`/api/v1/schools`, params);
+    return SchoolFactory.createFromResponse(res.data);
   }
 }

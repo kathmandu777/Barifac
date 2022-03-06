@@ -1,9 +1,9 @@
-import { Subject, User } from '.';
+import { Teacher, User } from '..';
 
-export class SubjectComment {
+export class TeacherComment {
   constructor(
     public uuid: string,
-    public subject: Subject,
+    public teacher: Teacher,
     public user: User,
     public comment: string,
   ) {}

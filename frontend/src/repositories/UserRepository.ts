@@ -1,5 +1,5 @@
 import { authClient } from 'infras/RestClient';
-import { UserFactory, UserObject } from 'domains';
+import { UserFactory, UserResponse } from 'domains';
 
 interface UserUpdateRequest {
   username: string;
@@ -70,9 +70,9 @@ export class UserRepository {
     if (!authClientObject) return;
     const res = await authClientObject.put<
       Partial<UserUpdateRequest>,
-      UserObject
+      UserResponse
     >('/api/v1/users', params);
-    return UserFactory.createFromResponseObject(res.data);
+    return UserFactory.createFromResponse(res.data);
   }
 
   public static async delete() {

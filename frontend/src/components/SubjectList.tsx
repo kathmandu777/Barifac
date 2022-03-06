@@ -9,10 +9,10 @@ import {
   Spacer,
 } from '@chakra-ui/layout';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
+import { ReadableAttendSubject } from 'domains';
 
 export type SubjectListProps = {
-  subject: AttendSubjectReadableInterface;
+  subject: ReadableAttendSubject;
 };
 
 const SubjectList: React.FC<SubjectListProps> = props => {
@@ -21,7 +21,7 @@ const SubjectList: React.FC<SubjectListProps> = props => {
   //  0,
   //);
   // TODO: スコアの平均点を出す処理と複数のスコアと目標スコアから次のテストで必要なスコアを計算する
-  const aveScore = props.subject.target_value;
+  const aveScore = props.subject.targetValue;
   return (
     <>
       <Divider borderColor='gray.700' />
@@ -33,7 +33,7 @@ const SubjectList: React.FC<SubjectListProps> = props => {
             </Text>
           </Circle>
           <Text fontSize='xl' fontWeight='bold' color='white' noOfLines={1}>
-            {props.subject.subject_name}
+            {props.subject.subjectName}
           </Text>
           <Spacer />
           <Link href={`/score_show/${props.subject.uuid}`}>

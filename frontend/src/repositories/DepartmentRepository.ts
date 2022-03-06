@@ -1,7 +1,7 @@
 import { authClient } from 'infras/RestClient';
-import { DepartmentFactory, DepartmentObject, School } from 'domains';
+import { DepartmentFactory, DepartmentResponse, School } from 'domains';
 
-interface DepartmentCreateRequest {
+interface CreateDepartmentRequest {
   school: School;
   syllabus_url: string;
   name: string;
@@ -11,28 +11,28 @@ export class DepartmentRepository {
   static async gets(schoolUuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<DepartmentObject[]>(
+    const res = await authClientObject.get<DepartmentResponse[]>(
       `/api/v1/departments?school_uuid=${schoolUuid}`,
     );
     return res.data.map(department =>
-      DepartmentFactory.createFromResponseObject(department),
+      DepartmentFactory.createFromResponse(department),
     );
   }
 
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<DepartmentObject>(
+    const res = await authClientObject.get<DepartmentResponse>(
       `/api/v1/departments/${uuid}}`,
     );
-    return DepartmentFactory.createFromResponseObject(res.data);
+    return DepartmentFactory.createFromResponse(res.data);
   }
 
   public static async create({
     school,
     syllabus_url,
     name,
-  }: DepartmentCreateRequest) {
+  }: CreateDepartmentRequest) {
     const params = {
       school,
       syllabus_url,
@@ -41,8 +41,8 @@ export class DepartmentRepository {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.post<
-      DepartmentCreateRequest,
-      DepartmentObject
+      CreateDepartmentRequest,
+      DepartmentResponse
     >(`/api/v1/departments`, params);
     return res.data;
   }

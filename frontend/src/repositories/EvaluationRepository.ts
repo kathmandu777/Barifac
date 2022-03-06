@@ -1,7 +1,7 @@
 import { authClient } from 'infras/RestClient';
 import {
   EvaluationFactory,
-  EvaluationObject,
+  EvaluationResponse,
   Evaluation,
   Subject,
 } from 'domains';
@@ -25,20 +25,20 @@ export class EvaluationRepository {
   static async gets(subjectUuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<EvaluationObject[]>(
+    const res = await authClientObject.get<EvaluationResponse[]>(
       `/api/v1/evaluations?subject_uuid=${subjectUuid}`,
     );
     return res.data.map(evaluation =>
-      EvaluationFactory.createFromResponseObject(evaluation),
+      EvaluationFactory.createFromResponse(evaluation),
     );
   }
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<EvaluationObject>(
+    const res = await authClientObject.get<EvaluationResponse>(
       `/api/v1/evaluations/${uuid}`,
     );
-    return EvaluationFactory.createFromResponseObject(res.data);
+    return EvaluationFactory.createFromResponse(res.data);
   }
 
   public static async create({
@@ -80,9 +80,9 @@ export class EvaluationRepository {
     if (!authClientObject) return;
     const res = await authClientObject.put<
       Partial<EvaluationUpdateRequest>,
-      EvaluationObject
+      EvaluationResponse
     >('/api/v1/evaluations', params);
-    return EvaluationFactory.createFromResponseObject(res.data);
+    return EvaluationFactory.createFromResponse(res.data);
   }
 
   public static async delete(uuid: string) {

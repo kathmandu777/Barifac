@@ -1,4 +1,5 @@
-import { School, Department } from 'domains';
+import { School } from 'domains';
+import { DepartmentWithoutSchool } from './Department';
 
 export type Grade = 1 | 2 | 3 | 4 | 5;
 
@@ -9,7 +10,7 @@ export class User {
     public username: string,
     public email: string,
     public school: School,
-    public department: Department,
+    public department: DepartmentWithoutSchool,
     public grade: Grade,
   ) {}
 }

@@ -1,4 +1,4 @@
-import { AttendSubject, Evaluation } from '.';
+import { AttendSubject, Evaluation } from '..';
 
 export class Score {
   constructor(
@@ -7,6 +7,15 @@ export class Score {
     public evaluation: Evaluation,
     public got_score: number,
     public max_score: number,
+    public memo: string,
+  ) {}
+}
+
+export class ReadableScore {
+  constructor(
+    public scoreUUID: string,
+    public gotScore: number,
+    public maxScore: number,
     public memo: string,
   ) {}
 }
