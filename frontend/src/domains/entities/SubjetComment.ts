@@ -1,10 +1,10 @@
-import { Subject, User } from '..';
+import { ReductionUser, Subject } from '..';
 
 export class SubjectComment {
   constructor(
     public uuid: string,
     public subject: Subject,
-    public user: User,
+    public user: ReductionUser,
     public comment: string,
   ) {}
 }
