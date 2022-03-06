@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
   IconButton,
   Modal,
   ModalBody,
@@ -26,7 +25,7 @@ import CommentSubmitForm, {
   CommentType,
   EditRequestType,
 } from './CommentSubmitForm';
-import { SubjectRepository } from 'temp/SubjectRepository';
+import { SubjectRepository } from 'repositories/SubjectRepository';
 import SubjectCommentList from './SubjectCommentList';
 import { SubjectCommentRepository } from 'temp/SubjectCommentRepository';
 import { TeacherCommentRepository } from 'temp/TeacherCommentRepository';
