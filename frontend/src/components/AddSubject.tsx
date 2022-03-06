@@ -16,11 +16,11 @@ import {
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 import { GRADELIST } from '../pages/edit';
-import { SubjectInterface } from 'repositories';
 import { AttendSubjectRepository } from 'repositories/AttendSubjectRepository';
+import { Subject } from 'domains';
 
 export type AddSubjectProps = {
-  gotlist: SubjectInterface[][];
+  gotlist: Subject[][];
   //list: AttendSubjectReadableInterface[];
   flag: boolean;
   hook: Dispatch<SetStateAction<boolean>>;

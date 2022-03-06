@@ -11,11 +11,10 @@ import SubjectNameList from '../../components/SubjectNameList';
 import { useState, useEffect } from 'react';
 import AddSubject from '../../components/AddSubject';
 import { AttendSubjectRepository } from 'repositories/AttendSubjectRepository';
-import { ReadableAttendSubject, User } from 'domains';
+import { ReadableAttendSubject, User, Subject } from 'domains';
 import {
   UserRepository,
   SubjectRepository,
-  SubjectInterface,
   TermRepository,
 } from 'repositories';
 import {
@@ -60,9 +59,9 @@ const Edit = () => {
 
       // 学年毎の開講科目の取得
       const category = ['一般', '専門'];
-      const subjectRepos: SubjectInterface[][] = [];
+      const subjectRepos: Subject[][] = [];
       for (let i = 1; i <= 5; i++) {
-        let oneGradeSubjectRepo: SubjectInterface[] = [];
+        let oneGradeSubjectRepo: Subject[] = [];
         for (let j = 0; j < 2; j++) {
           const tempSubjectRepo = await SubjectRepository.gets(
             userRepo.school.uuid,
@@ -130,7 +129,7 @@ const Edit = () => {
 
   const [userInfo, setUser] = useState<User>();
   //const [currentTerm, setTerm] = useState<TermInterface[]>([]);
-  const [allSubject, setAllSubject] = useState<SubjectInterface[][]>([]);
+  const [allSubject, setAllSubject] = useState<Subject[][]>([]);
   const [errMsg, setErr] = useState<string>('');
 
   const [editedSubject, setSubject] = useState<ReadableAttendSubject[]>([]);
