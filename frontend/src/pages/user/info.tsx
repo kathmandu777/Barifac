@@ -28,6 +28,11 @@ const UserPage: NextPage = () => {
     UserUpdateRequestFactory.createEmpty(),
   );
 
+  const [username, setUsername] = useState<string>();
+  const [schoolValue, setSchoolValue] = useState<string>('');
+  const [departmentValue, setDepartmentValue] = useState<string>();
+  const [gradeValue, setGradeValue] = useState<number>();
+
   const fetchData = async () => {
     const user = await UserRepository.getMe();
     if (!user) {
@@ -35,11 +40,30 @@ const UserPage: NextPage = () => {
       router.push('/login');
       return;
     }
-    setRequestBody({
-      ...requestBody,
-      username: user.username,
-      email: user.email,
-      uid: user.uid,
+    setUsername(user.username);
+    if (user.school && user.department) {
+      setSchoolValue(user.school.uuid);
+      setDepartmentValue(user.department.uuid);
+      setGradeValue(user.grade);
+      setSelectedDepartments(await DepartmentRepository.gets(user.school.uuid));
+      setRequestBody(prevState => {
+        return {
+          ...prevState,
+          department_uuid: user.department.uuid,
+          grade: user.grade,
+          school_uuid: user.school.uuid,
+        };
+      });
+      setIsDisabledDep(false);
+    }
+
+    setRequestBody(prevState => {
+      return {
+        ...prevState,
+        username: user.username,
+        email: user.email,
+        uid: user.uid,
+      };
     });
     setSchools(await SchoolRepository.gets());
   };
@@ -72,6 +96,7 @@ const UserPage: NextPage = () => {
     try {
       setSelectedDepartments(await DepartmentRepository.gets(e.target.value));
       setRequestBody({ ...requestBody, school_uuid: e.target.value });
+      setSchoolValue(e.target.value);
     } catch {
       return;
     }
@@ -98,6 +123,7 @@ const UserPage: NextPage = () => {
               <Input
                 isRequired
                 color='whiteAlpha.900'
+                defaultValue={username}
                 placeholder='名前を入力してください'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setRequestBody({ ...requestBody, username: e.target.value })
@@ -109,6 +135,7 @@ const UserPage: NextPage = () => {
               <Select
                 color='gray.400'
                 onChange={handleSchoolChange}
+                value={schoolValue}
                 isRequired
                 placeholder='学校名を選択してください'
               >
@@ -124,13 +151,15 @@ const UserPage: NextPage = () => {
               <FormLabel color='whiteAlpha.900'>学年</FormLabel>
               <Select
                 color='gray.400'
+                value={gradeValue}
                 isRequired
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                   setRequestBody({
                     ...requestBody,
                     grade: Number(e.target.value) as Grade,
-                  })
-                }
+                  });
+                  setGradeValue(Number(e.target.value));
+                }}
                 placeholder='学年を選択してください'
               >
                 {[1, 2, 3, 4, 5].map(num => (
@@ -144,14 +173,16 @@ const UserPage: NextPage = () => {
               <FormLabel color='whiteAlpha.900'>学科名</FormLabel>
               <Select
                 color='gray.400'
+                value={departmentValue}
                 isDisabled={isDisabledDep}
                 isRequired
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                   setRequestBody({
                     ...requestBody,
                     department_uuid: e.target.value,
-                  })
-                }
+                  });
+                  setDepartmentValue(e.target.value);
+                }}
                 placeholder='学科名を選択してください'
               >
                 {selectedDepartents &&
