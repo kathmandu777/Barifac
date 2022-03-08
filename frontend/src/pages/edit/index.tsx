@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import {
   VStack,
   Divider,
@@ -7,6 +8,7 @@ import {
   Button,
   Text,
 } from '@chakra-ui/react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 import SubjectNameList from '../../components/SubjectNameList';
 import { useState, useEffect } from 'react';
 import AddSubject from '../../components/AddSubject';
@@ -159,7 +161,10 @@ const Edit = () => {
     return (
       <>
         <Center w='100%'>
-          <Heading as='h2' size='md' color='white' mt='20%'>
+          <Heading as='h2' size='md' color='white' mt='20%' mr='4em'>
+            <Link href={`/`}>
+              <ArrowBackIcon w={5} h={5} color='white' boxSize='2em' mr='2em' />
+            </Link>
             履修科目編集
           </Heading>
         </Center>
