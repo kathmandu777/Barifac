@@ -13,11 +13,16 @@ import {
   FormLabel,
   Select,
   ModalFooter,
+  Stack,
+  Checkbox,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 import { GRADELIST } from '../pages/edit';
 import { SubjectInterface } from 'repositories';
-import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
+import {
+  AttendSubjectReadableRepository,
+  AttendSubjectReadableInterface,
+} from 'repositories/AttendSubjectReadableRepository';
 
 export type AddSubjectProps = {
   gotlist: SubjectInterface[][];
@@ -59,6 +64,21 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
   //  let l = initialRef.current ? initialRef.current!.value : "['','']";
   //  return l.split(',').length == 1;
   //};
+
+  // 履修科目を全て取得し uuid のみのリストにする
+  const [attendAllSubjectsUUID, setAttendAllSubjectsUUID] = React.useState<
+    string[]
+  >([]);
+  // let attendAllSubjects: AttendSubjectReadableInterface[];
+  //let attendAllSubjectsUUID: string[] = [];
+  AttendSubjectReadableRepository.gets()
+    .then(lis => {
+      setAttendAllSubjectsUUID(lis.map(lis => lis.subject_uuid));
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  //console.log(attendAllSubjectsUUID);
   return (
     <>
       <AddIcon w={7} h={7} color='gray.600' onClick={onOpen} />
@@ -97,6 +117,21 @@ const AddSubject: React.FC<AddSubjectProps> = props => {
                   );
                 })}
               </Select>
+              <Stack>
+                {props.gotlist[selectedGrade].map(sub => {
+                  return (
+                    <Checkbox
+                      defaultChecked={attendAllSubjectsUUID.includes(sub.uuid)}
+                      key={sub.uuid}
+                      value={sub.uuid}
+                      //onChange=
+                    >
+                      {attendAllSubjectsUUID.includes(sub.uuid)}
+                      {sub.name} ({sub.teacher.name})
+                    </Checkbox>
+                  );
+                })}
+              </Stack>
             </FormControl>
           </ModalBody>
 
