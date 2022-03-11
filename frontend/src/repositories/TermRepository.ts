@@ -1,5 +1,5 @@
 import { authClient } from 'infras/RestClient';
-import { TermFactory, TermObject } from 'domains';
+import { TermFactory, TermResponse } from 'domains';
 
 interface TermCreateRequest {
   academicYear: number;
@@ -25,8 +25,10 @@ export class TermRepository {
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<TermObject>(`/api/v1/terms/${uuid}`);
-    return TermFactory.createFromResponseObject(res.data);
+    const res = await authClientObject.get<TermResponse>(
+      `/api/v1/terms/${uuid}`,
+    );
+    return TermFactory.createFromResponse(res.data);
   }
   public static async create({ academicYear, semester }: TermCreateRequest) {
     const params = {
@@ -35,10 +37,10 @@ export class TermRepository {
     };
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.post<TermCreateRequest, TermObject>(
+    const res = await authClientObject.post<TermCreateRequest, TermResponse>(
       `/api/v1/terms`,
       params,
     );
-    return TermFactory.createFromResponseObject(res.data);
+    return TermFactory.createFromResponse(res.data);
   }
 }

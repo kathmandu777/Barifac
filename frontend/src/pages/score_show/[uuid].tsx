@@ -27,10 +27,11 @@ import { ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 
 import {
-  ReadableAttendSubject,
   AttendSubjectRepository,
-  UpdateAttendSubjectRequest,
-} from 'temp/AttendSubjectRepository';
+  CreateOrUpdateAttendSubjectParams,
+} from 'repositories/AttendSubjectRepository';
+
+import { ReadableAttendSubject } from 'domains';
 
 import EvaluationSlider from 'components/EvaluationSlider';
 import { SessionService } from 'services/SessionService';
@@ -80,18 +81,18 @@ const ScoreShow = () => {
         setError('データの取得に失敗しました');
         return;
       }
-      setTargetScore(res.target_score);
-      setTargetValue(res.target_value);
+      setTargetScore(res.targetScore);
+      setTargetValue(res.targetValue);
       setAttendSubject(res);
       setSliderValues(
         res.evaluations.map(e => {
-          const maxSum = e.scores.reduce((p, c) => p + c.max_score, 0);
-          const gotSum = e.scores.reduce((p, c) => p + c.got_score, 0);
+          const maxSum = e.scores.reduce((p, c) => p + c.maxScore, 0);
+          const gotSum = e.scores.reduce((p, c) => p + c.gotScore, 0);
           const val = maxSum != 0 ? (gotSum / maxSum) * 100 : 0;
           return {
-            evaluationUuid: e.evaluation_uuid,
+            evaluationUuid: e.evaluationUUID,
             value: val,
-            name: e.evaluation_name,
+            name: e.evaluationName,
             rate: e.rate,
           };
         }),
@@ -133,8 +134,8 @@ const ScoreShow = () => {
 
   const handleAttendSubjectUpdate = async () => {
     if (attendSubject) {
-      const req: UpdateAttendSubjectRequest = {
-        subject_uuid: attendSubject.subject_uuid,
+      const req: CreateOrUpdateAttendSubjectParams = {
+        subject_uuid: attendSubject.subjectUUID,
         target_value: targetValue,
         target_score: targetScore,
       };
@@ -160,7 +161,7 @@ const ScoreShow = () => {
           {error && <Text color='tomato'>{error}</Text>}
           <Flex justifyContent='space-between' w='full'>
             <Heading color='whiteAlpha.900' fontWeight='semibold' size='xl'>
-              {attendSubject.subject_name}
+              {attendSubject.subjectName}
             </Heading>
             <Button onClick={onOpen}>{targetValue}</Button>
           </Flex>
@@ -186,9 +187,9 @@ const ScoreShow = () => {
             );
           })}
           <CommentModal
-            subjectUuid={attendSubject.subject_uuid}
+            subjectUuid={attendSubject.subjectUUID}
             evaluations={attendSubject.evaluations.map(e => {
-              return { name: e.evaluation_name, uuid: e.evaluation_uuid };
+              return { name: e.evaluationName, uuid: e.evaluationUUID };
             })}
           ></CommentModal>
           <Modal isOpen={isOpen} onClose={onClose}>

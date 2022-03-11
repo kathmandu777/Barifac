@@ -12,13 +12,10 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import SubjectNameList from '../../components/SubjectNameList';
 import { useState, useEffect } from 'react';
 import AddSubject from '../../components/AddSubject';
-import {
-  AttendSubjectReadableRepository,
-  AttendSubjectReadableInterface,
-} from 'repositories/AttendSubjectReadableRepository';
+import { AttendSubjectRepository } from 'repositories/AttendSubjectRepository';
+import { ReadableAttendSubject, User } from 'domains';
 import {
   UserRepository,
-  UserInterface,
   SubjectRepository,
   SubjectInterface,
   TermRepository,
@@ -117,7 +114,7 @@ const Edit = () => {
   // 履修科目一覧の取得
   const getAttendSubject = async () => {
     try {
-      const attendSubjectRepo = await AttendSubjectReadableRepository.gets();
+      const attendSubjectRepo = await AttendSubjectRepository.getsReadable();
       if (attendSubjectRepo === undefined || attendSubjectRepo.length === 0) {
         throw new Error('Cannot get attend subject infomation!');
       }
@@ -133,18 +130,16 @@ const Edit = () => {
     getAttendSubject();
   }, [isUpdating]);
 
-  const [userInfo, setUser] = useState<UserInterface>();
+  const [userInfo, setUser] = useState<User>();
   //const [currentTerm, setTerm] = useState<TermInterface[]>([]);
   const [allSubject, setAllSubject] = useState<SubjectInterface[][]>([]);
   const [errMsg, setErr] = useState<string>('');
 
-  const [editedSubject, setSubject] = useState<
-    AttendSubjectReadableInterface[]
-  >([]);
+  const [editedSubject, setSubject] = useState<ReadableAttendSubject[]>([]);
 
   const addAllSubject = () => {
     for (const s of allSubject[userInfo!.grade]) {
-      const subjectRepo = AttendSubjectReadableRepository.create({
+      const subjectRepo = AttendSubjectRepository.create({
         target_value: defaultTargetValue,
         target_score: defaultTargetScore,
         subject_uuid: s.uuid,
@@ -180,7 +175,7 @@ const Edit = () => {
           {editedSubject.map((sub, index) => {
             return (
               <SubjectNameList
-                subjectName={sub.subject_name}
+                subjectName={sub.subjectName}
                 flag={isUpdating}
                 hook={setUpdate}
                 uuid={sub.uuid}

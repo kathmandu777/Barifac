@@ -1,7 +1,7 @@
 export class School {
   constructor(
     public uuid: string,
-    public syllabus_url: string,
+    public syllabusUrl: string,
     public name: string,
   ) {}
 }

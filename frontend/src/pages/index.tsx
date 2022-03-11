@@ -3,16 +3,14 @@ import { Divider, VStack, Center, Heading } from '@chakra-ui/layout';
 import SubjectList from '../components/SubjectList';
 import EditButton from '../components/EditButton';
 import { useEffect, useState } from 'react';
-import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
-import { AttendSubjectReadableInterface } from 'repositories/AttendSubjectReadableRepository';
+import { AttendSubjectRepository } from 'repositories/AttendSubjectRepository';
+import { ReadableAttendSubject } from 'domains';
 import { UserRepository } from 'repositories';
 import { SessionService } from 'services/SessionService';
 import { useRouter } from 'next/router';
 
 const Home = () => {
-  const [SUBJECTS, setSubjects] = useState<AttendSubjectReadableInterface[]>(
-    [],
-  );
+  const [SUBJECTS, setSubjects] = useState<ReadableAttendSubject[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -23,9 +21,9 @@ const Home = () => {
         return router.push('/login');
       }
     })();
-    AttendSubjectReadableRepository.gets()
+    AttendSubjectRepository.getsReadable()
       .then(lis => {
-        setSubjects(lis);
+        if (lis) setSubjects(lis);
       })
       .catch(err => {
         console.log(err);

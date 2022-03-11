@@ -31,7 +31,7 @@ import SubjectCommentList from './SubjectCommentList';
 import { SubjectCommentRepository } from 'temp/SubjectCommentRepository';
 import { TeacherCommentRepository } from 'temp/TeacherCommentRepository';
 import { EditRequestRepository } from 'temp/EditRequestRepository';
-import { UserRepository } from 'temp/UserRepository';
+import { UserRepository } from 'repositories/UserRepository';
 
 export type CommentModalProps = {
   subjectUuid: string;
@@ -56,7 +56,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   };
   const getUserUuid = async () => {
     try {
-      const res = await UserRepository.get();
+      const res = await UserRepository.getMe();
       if (!res) return;
       setUserUuid(res.uuid);
     } catch {}

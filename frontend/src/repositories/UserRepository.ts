@@ -1,7 +1,7 @@
 import { authClient } from 'infras/RestClient';
-import { UserFactory, UserObject } from 'domains';
+import { UserFactory, UserResponse, Grade } from 'domains';
 
-interface UserUpdateRequest {
+interface UpdateUserRequestParams {
   username: string;
   uid: string;
   email: string | undefined;
@@ -10,44 +10,12 @@ interface UserUpdateRequest {
   department_uuid: string;
 }
 
-export type Grade = 1 | 2 | 3 | 4 | 5;
-
-//export class User {
-//  constructor(
-//    public uuid: string,
-//    public uid: string,
-//    public username: string,
-//    public email: string,
-//    public school: School,
-//    public department: Department,
-//    public grade: Grade,
-//  ) {}
-//}
-
-export interface UserInterface {
-  uuid: string;
-  uid: string;
-  username: string;
-  email: string;
-  school: {
-    uuid: string;
-    syllabus_url: string;
-    name: string;
-  };
-  department: {
-    uuid: string;
-    syllabus_url: string;
-    name: string;
-  };
-  grade: Grade;
-}
-
 export class UserRepository {
   static async getMe() {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<UserInterface>('/api/v1/users');
-    return res.data;
+    const res = await authClientObject.get<UserResponse>('/api/v1/users');
+    return UserFactory.createFromResponse(res.data);
   }
 
   public static async update({
@@ -57,7 +25,7 @@ export class UserRepository {
     grade,
     school_uuid,
     department_uuid,
-  }: Partial<UserUpdateRequest>) {
+  }: Partial<UpdateUserRequestParams>) {
     const params = {
       username,
       uid,
@@ -69,10 +37,10 @@ export class UserRepository {
     const authClientObject = authClient();
     if (!authClientObject) return;
     const res = await authClientObject.put<
-      Partial<UserUpdateRequest>,
-      UserObject
+      Partial<UpdateUserRequestParams>,
+      UserResponse
     >('/api/v1/users', params);
-    return UserFactory.createFromResponseObject(res.data);
+    return UserFactory.createFromResponse(res.data);
   }
 
   public static async delete() {

@@ -1,7 +1,7 @@
 import { authClient } from 'infras/RestClient';
 import {
   ScoreFactory,
-  ScoreObject,
+  ScoreResponse,
   ScoreEvalResponseObject,
   ScoreEvalResponseObjectFactory,
   ScoreCreateRequestObject,
@@ -12,7 +12,7 @@ export class ScoreRepository {
   static async gets() {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<ScoreObject[]>('/api/v1/scores');
+    const res = await authClientObject.get<ScoreResponse[]>('/api/v1/scores');
     return res.data.map(score => ScoreFactory.createFromResponseObject(score));
   }
 
@@ -28,7 +28,7 @@ export class ScoreRepository {
   static async get(uuid: string) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<ScoreObject[]>(
+    const res = await authClientObject.get<ScoreResponse[]>(
       `/api/v1/scores/${uuid}`,
     );
     return res.data.map(score => ScoreFactory.createFromResponseObject(score));
@@ -53,7 +53,7 @@ export class ScoreRepository {
     const res = await authClientObject.post<
       ScoreCreateRequestObject,
       // 要対応
-      ScoreObject
+      ScoreResponse
     >(`/api/v1/scores`, params);
     return ScoreFactory.createFromResponseObject(res.data);
   }
@@ -77,7 +77,7 @@ export class ScoreRepository {
     if (!authClientObject) return;
     const res = await authClientObject.put<
       ScoreCreateRequestObject,
-      ScoreObject
+      ScoreResponse
     >(`/api/v1/scores/${uuid}`, params);
     return ScoreFactory.createFromResponseObject(res.data);
   }

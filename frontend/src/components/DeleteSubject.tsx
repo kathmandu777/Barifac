@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Button } from '@chakra-ui/react';
-import { AttendSubjectReadableRepository } from 'repositories/AttendSubjectReadableRepository';
+import { AttendSubjectRepository } from 'repositories/AttendSubjectRepository';
 
 export type DeleteSubjectProp = {
   uuid: string;
@@ -23,7 +23,7 @@ const DeleteSubject: React.FC<DeleteSubjectProp> = props => {
   const cancelRef = React.useRef(null);
   const onDelete = () => {
     setIsOpen(false);
-    const subjectRepo = AttendSubjectReadableRepository.delete(props.uuid);
+    const subjectRepo = AttendSubjectRepository.delete(props.uuid);
     if (subjectRepo === undefined) {
       //TODO: アラート
       console.log('科目を削除できませんでした');
