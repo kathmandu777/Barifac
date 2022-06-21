@@ -1,18 +1,19 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import SchoolAPI
 from app.dependencies import admin_required
 from app.models import School
 from app.schemas import CreateSchoolSchema, ReadSchoolSchema, UpdateSchoolSchema
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
 school_router = APIRouter()
 
 
-@school_router.get("/", response_model=List[ReadSchoolSchema])
-async def gets(request: Request) -> List[School]:
+@school_router.get("/", response_model=Page[ReadSchoolSchema])
+async def gets(request: Request) -> Page[School]:
     return SchoolAPI.gets(request)
 
 

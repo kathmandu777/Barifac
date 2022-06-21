@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import DepartmentAPI
@@ -9,16 +9,17 @@ from app.schemas import (
     ReadDepartmentSchema,
     UpdateDepartmentSchema,
 )
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
 department_router = APIRouter()
 
 
-@department_router.get("/", response_model=List[ReadDepartmentSchema])
+@department_router.get("/", response_model=Page[ReadDepartmentSchema])
 async def gets(
     request: Request, school_uuid: Optional[UUID] = None
-) -> List[Department]:
+) -> Page[Department]:
     return DepartmentAPI.gets(request, school_uuid)
 
 

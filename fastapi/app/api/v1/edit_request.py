@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.core.exceptions import (
@@ -9,6 +9,7 @@ from app.core.exceptions import (
 from app.crud import EditRequestCRUD
 from app.models import EditRequest
 from app.schemas import CreateEditRequestSchema, UpdateEditRequestSchema
+from fastapi_pagination import Page, paginate
 from sqlalchemy import and_
 
 from fastapi import Request
@@ -22,7 +23,7 @@ class EditRequestAPI:
         user_uuid: Optional[UUID] = None,
         subject_uuid: Optional[UUID] = None,
         evaluation_uuid: Optional[UUID] = None,
-    ) -> List[EditRequest]:
+    ) -> Page[EditRequest]:
         q = True
         if user_uuid:
             q = and_(q, EditRequest.user_uuid == user_uuid)
@@ -30,7 +31,7 @@ class EditRequestAPI:
             q = and_(q, EditRequest.subject_uuid == subject_uuid)
         if evaluation_uuid:
             q = and_(q, EditRequest.evaluation_uuid == evaluation_uuid)
-        return EditRequestCRUD(request.state.db_session).gets(q)
+        return paginate(EditRequestCRUD(request.state.db_session).gets(q))
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[EditRequest]:

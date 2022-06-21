@@ -1,21 +1,22 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.crud import DepartmentCRUD
 from app.models import Department
 from app.schemas import CreateDepartmentSchema, UpdateDepartmentSchema
+from fastapi_pagination import Page, paginate
 
 from fastapi import Request
 
 
 class DepartmentAPI:
     @classmethod
-    def gets(cls, request: Request, school_uuid: Optional[UUID]) -> List[Department]:
+    def gets(cls, request: Request, school_uuid: Optional[UUID]) -> Page[Department]:
         if school_uuid:
-            return DepartmentCRUD(request.state.db_session).gets_by_school_uuid(
+            return paginate(DepartmentCRUD(request.state.db_session).gets_by_school_uuid(
                 school_uuid
-            )
-        return DepartmentCRUD(request.state.db_session).gets()
+            ))
+        return paginate(DepartmentCRUD(request.state.db_session).gets())
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[Department]:

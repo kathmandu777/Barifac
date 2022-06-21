@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.api.v1 import SubjectCommentAPI
@@ -9,18 +9,19 @@ from app.schemas import (
     ReadSubjectCommentSchema,
     UpdateSubjectCommentSchema,
 )
+from fastapi_pagination import Page
 
 from fastapi import APIRouter, Depends, Request
 
 subject_comment_router = APIRouter()
 
 
-@subject_comment_router.get("/", response_model=List[ReadSubjectCommentSchema])
+@subject_comment_router.get("/", response_model=Page[ReadSubjectCommentSchema])
 async def gets(
     request: Request,
     subject_uuid: Optional[UUID] = None,
     user_uuid: Optional[UUID] = None,
-) -> List[SubjectComment]:
+) -> Page[SubjectComment]:
     return SubjectCommentAPI.gets(request, subject_uuid, user_uuid)
 
 

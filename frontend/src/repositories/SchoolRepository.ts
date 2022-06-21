@@ -5,12 +5,18 @@ interface SchoolCreateRequest {
   name: string;
 }
 
+interface SchoolPage {
+  items: SchoolObject[];
+}
+
 export class SchoolRepository {
-  static async gets() {
+  static async gets(page: number) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<SchoolObject[]>(`/api/v1/schools`);
-    return res.data.map(school =>
+    const res = await authClientObject.get<SchoolPage>(
+      `/api/v1/schools?page=${page}`,
+    );
+    return res.data.items.map(school =>
       SchoolFactory.createFromResponseObject(school),
     );
   }

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.core.exceptions import (
@@ -9,6 +9,7 @@ from app.core.exceptions import (
 from app.crud import SubjectCommentCRUD, SubjectCRUD
 from app.models import Subject, SubjectComment
 from app.schemas import CreateSubjectCommentSchema, UpdateSubjectCommentSchema
+from fastapi_pagination import Page, paginate
 from sqlalchemy import and_
 
 from fastapi import Request
@@ -21,13 +22,13 @@ class SubjectCommentAPI:
         request: Request,
         subject_uuid: Optional[UUID],
         user_uuid: Optional[UUID],
-    ) -> List[SubjectComment]:
+    ) -> Page[SubjectComment]:
         q = True
         if subject_uuid:
             q = and_(q, SubjectComment.subject_uuid == subject_uuid)
         if user_uuid:
             q = and_(q, (SubjectComment.user_uuid == user_uuid))
-        return SubjectCommentCRUD(request.state.db_session).gets(q)
+        return paginate(SubjectCommentCRUD(request.state.db_session).gets(q))
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[SubjectComment]:

@@ -22,6 +22,7 @@ import {
   SubjectRepository,
   SubjectInterface,
   TermRepository,
+  TermInterface,
 } from 'repositories';
 import {
   defaultTargetValue,
@@ -57,9 +58,14 @@ const Edit = () => {
         // year を年度にする
         year--;
       }
-      const termRepo = await TermRepository.gets(year, semester);
-      if (termRepo === undefined || termRepo!.length === 0) {
-        throw new Error('Cannot get term infomation!');
+      const termRepo: TermInterface[] = [];
+      let page = 1;
+      while (1) {
+        const res = await TermRepository.gets(year, semester, page);
+        if (!res) throw new Error('Cannot get term infomation!');
+        if (res.length === 0) break;
+        termRepo.push(...res);
+        page++;
       }
       //setTerm(termRepo);
 
@@ -69,22 +75,27 @@ const Edit = () => {
       for (let i = 1; i <= 5; i++) {
         let oneGradeSubjectRepo: SubjectInterface[] = [];
         for (let j = 0; j < 2; j++) {
-          const tempSubjectRepo = await SubjectRepository.gets(
-            userRepo.school.uuid,
-            userRepo.department.uuid,
-            termRepo[0].uuid,
-            category[j],
-            i,
-          );
-          if (tempSubjectRepo === undefined || tempSubjectRepo === null) {
-            throw new Error('Cannot get subjects');
+          const subjectResponse: SubjectInterface[] = [];
+          let page = 1;
+          while (1) {
+            const res = await SubjectRepository.gets(
+              userRepo.school.uuid,
+              userRepo.department.uuid,
+              termRepo[0].uuid,
+              category[j],
+              i,
+              page,
+            );
+            if (res === undefined) {
+              throw new Error('Cannot get subject infomation!');
+            }
+            if (res.length === 0) break;
+            subjectResponse.push(...res);
+            page++;
           }
-          oneGradeSubjectRepo = oneGradeSubjectRepo.concat(tempSubjectRepo!);
+          oneGradeSubjectRepo = oneGradeSubjectRepo.concat(...subjectResponse);
         }
         subjectRepos.push(oneGradeSubjectRepo);
-      }
-      if (subjectRepos === undefined || subjectRepos!.length === 0) {
-        throw new Error('Cannot get subjects information!');
       }
       setAllSubject(subjectRepos);
       setErr('');

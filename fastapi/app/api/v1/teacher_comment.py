@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.core.exceptions import (
@@ -11,6 +11,7 @@ from app.crud.teacher import TeacherCRUD
 from app.models import TeacherComment
 from app.models.teacher import Teacher
 from app.schemas import CreateTeacherCommentSchema, UpdateTeacherCommentSchema
+from fastapi_pagination import Page, paginate
 from sqlalchemy import and_
 
 from fastapi import Request
@@ -23,13 +24,13 @@ class TeacherCommentAPI:
         request: Request,
         teacher_uuid: Optional[UUID] = None,
         user_uuid: Optional[UUID] = None,
-    ) -> List[TeacherComment]:
+    ) -> Page[TeacherComment]:
         q = True
         if teacher_uuid:
             q = and_(q, TeacherComment.teacher_uuid == teacher_uuid)
         if user_uuid:
             q = and_(q, TeacherComment.user_uuid == user_uuid)
-        return TeacherCommentCRUD(request.state.db_session).gets(q)
+        return paginate(TeacherCommentCRUD(request.state.db_session).gets(q))
 
     @classmethod
     def get(cls, request: Request, uuid: UUID) -> Optional[TeacherComment]:

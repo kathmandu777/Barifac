@@ -26,14 +26,18 @@ export interface CreateEditRequestRequest {
   evaluation_uuid?: string;
 }
 
+interface EditRequestPage {
+  items: EditRequest[];
+}
+
 export class EditRequestRepository {
-  static async getsBySubject(subjectUuid: string) {
+  static async getsBySubject(subjectUuid: string, page: number) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<EditRequest[]>(
-      `/api/v1/edit_requests?subject_uuid=${subjectUuid}`,
+    const res = await authClientObject.get<EditRequestPage>(
+      `/api/v1/edit_requests?subject_uuid=${subjectUuid}&page=${page}`,
     );
-    return res.data;
+    return res.data.items;
   }
   static async create(data: CreateEditRequestRequest) {
     const authClientObject = authClient();

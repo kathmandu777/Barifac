@@ -12,6 +12,8 @@ import {
 
 import { DeleteIcon } from '@chakra-ui/icons';
 
+import { useInView } from 'react-intersection-observer';
+
 import {
   SubjectComment,
   SubjectCommentRepository,
@@ -33,40 +35,43 @@ const SubjectCommentList: React.FC<SubjectCommentListProps> = ({
   userUuid,
 }) => {
   const [subjectComments, setSubjectComments] = useState<SubjectComment[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const { ref, inView } = useInView();
 
-  const getSubjectsComments = async () => {
+  const loadMore = async (page: number) => {
     setLoading(true);
-    try {
-      const res = await SubjectCommentRepository.getsBySubject(subjectUuid);
-      if (res) {
-        setSubjectComments(res);
-      }
-    } catch (e) {
-      setError('コメントの取得に失敗しました');
+    const res = await SubjectCommentRepository.getsBySubject(subjectUuid, page);
+    if (!res) {
       setLoading(false);
+      setError('コメントの取得に失敗しました');
+      setHasMore(false);
       return;
     }
     setLoading(false);
+    if (res.length === 0) {
+      setHasMore(false);
+    } else {
+      setSubjectComments([...subjectComments, ...res]);
+      setPage(current => current + 1);
+    }
   };
 
   const handleDeleteSubjectComment = async (uuid: string) => {
     try {
       await SubjectCommentRepository.delete(uuid);
-      getSubjectsComments();
     } catch {
       setError('削除に失敗しました');
     }
   };
-
   useEffect(() => {
-    getSubjectsComments();
-  }, []);
+    if (inView && hasMore) {
+      loadMore(page);
+    }
+  }, [inView]);
 
-  if (loading) {
-    return <Spinner />;
-  }
   return (
     <Box w='100%'>
       {error && <Text color='tomato'>{error}</Text>}
@@ -84,6 +89,8 @@ const SubjectCommentList: React.FC<SubjectCommentListProps> = ({
           </Box>
         );
       })}
+      {loading && <Spinner />}
+      <div ref={ref}></div>
     </Box>
   );
 };

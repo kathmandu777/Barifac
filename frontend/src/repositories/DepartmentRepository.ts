@@ -7,14 +7,18 @@ interface DepartmentCreateRequest {
   name: string;
 }
 
+interface DepartmentPage {
+  items: DepartmentObject[];
+}
+
 export class DepartmentRepository {
-  static async gets(schoolUuid: string) {
+  static async gets(schoolUuid: string, page: number) {
     const authClientObject = authClient();
     if (!authClientObject) return;
-    const res = await authClientObject.get<DepartmentObject[]>(
-      `/api/v1/departments?school_uuid=${schoolUuid}`,
+    const res = await authClientObject.get<DepartmentPage>(
+      `/api/v1/departments/?school_uuid=${schoolUuid}&page=${page}`,
     );
-    return res.data.map(department =>
+    return res.data.items.map(department =>
       DepartmentFactory.createFromResponseObject(department),
     );
   }

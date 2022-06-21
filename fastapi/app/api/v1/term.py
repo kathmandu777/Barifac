@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from app.crud import TermCRUD
 from app.models import SemesterEnum, Term
 from app.schemas import CreateTermSchema, UpdateTermSchema
+from fastapi_pagination import Page, paginate
 
 from fastapi import Request
 
@@ -15,9 +16,11 @@ class TermAPI:
         request: Request,
         academic_year: Optional[int] = None,
         semester: Optional[SemesterEnum] = None,
-    ) -> List[Term]:
-        return TermCRUD(request.state.db_session).gets_by_year_and_semester(
-            academic_year, semester
+    ) -> Page[Term]:
+        return paginate(
+            TermCRUD(request.state.db_session).gets_by_year_and_semester(
+                academic_year, semester
+            )
         )
 
     @classmethod

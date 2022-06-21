@@ -37,6 +37,10 @@ export interface SubjectInterface {
   };
 }
 
+interface SubjectPage {
+  items: SubjectInterface[];
+}
+
 export class SubjectRepository {
   static async gets(
     school: string,
@@ -44,19 +48,20 @@ export class SubjectRepository {
     term: string,
     category: string,
     grade: number,
+    page: number,
   ) {
     const authClientObject = authClient();
     if (!authClientObject) return;
     if (category === '一般') {
-      const res = await authClientObject.get<SubjectInterface[]>(
-        `/api/v1/subjects/?school_uuid=${school}&term_uuid=${term}&category=${category}&target_grade=${grade}`,
+      const res = await authClientObject.get<SubjectPage>(
+        `/api/v1/subjects/?school_uuid=${school}&term_uuid=${term}&category=${category}&target_grade=${grade}&page=${page}`,
       );
-      return res.data;
+      return res.data.items;
     } else if (category === '専門') {
-      const res = await authClientObject.get<SubjectInterface[]>(
-        `/api/v1/subjects/?school_uuid=${school}&department_uuid=${department}&term_uuid=${term}&category=${category}&target_grade=${grade}`,
+      const res = await authClientObject.get<SubjectPage>(
+        `/api/v1/subjects/?school_uuid=${school}&department_uuid=${department}&term_uuid=${term}&category=${category}&target_grade=${grade}&page=${page}`,
       );
-      return res.data;
+      return res.data.items;
     }
   }
   static async get(uuid: string) {

@@ -13,6 +13,8 @@ import {
 import { EditRequest, EditRequestRepository } from 'temp/EditRequestRepository';
 import { DeleteIcon } from '@chakra-ui/icons';
 
+import { useInView } from 'react-intersection-observer';
+
 export type EditRequestListProps = {
   subjectUuid: string;
   evaluationUuids: string[];
@@ -31,56 +33,42 @@ const EditRequestList: React.FC<EditRequestListProps> = ({
   userUuid,
 }) => {
   const [editRequests, setEditRequests] = useState<EditRequest[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const { ref, inView } = useInView();
 
-  const getEditRequests = async () => {
+  const loadMore = async (page: number) => {
     setLoading(true);
-    const tmp: EditRequest[] = [];
-    try {
-      const res = await EditRequestRepository.getsBySubject(subjectUuid);
-      if (res) {
-        tmp.push(...res);
-      }
-    } catch (e) {
+    const res = await EditRequestRepository.getsBySubject(subjectUuid, page);
+    if (!res) {
+      setLoading(false);
       setError('コメントの取得に失敗しました');
-      setLoading(false);
       return;
     }
-
-    try {
-      for (const i in evaluationUuids) {
-        const res = await EditRequestRepository.getsByEvaluation(
-          evaluationUuids[i],
-        );
-        if (res) {
-          tmp.push(...res);
-        }
-      }
-    } catch {
-      setError('データの取得に失敗しました');
-      setLoading(false);
-      return;
-    }
-    setEditRequests([...tmp]);
     setLoading(false);
+    if (res.length === 0) {
+      setHasMore(false);
+    } else {
+      setEditRequests([...editRequests, ...res]);
+      setPage(current => current + 1);
+    }
   };
 
   const handleDeleteEditRequest = async (uuid: string) => {
     try {
       await EditRequestRepository.delete(uuid);
-      getEditRequests();
     } catch {
       setError('削除に失敗しました');
     }
   };
-
   useEffect(() => {
-    getEditRequests();
-  }, []);
-  if (loading) {
-    return <Spinner />;
-  }
+    if (inView && hasMore) {
+      loadMore(page);
+    }
+  }, [inView]);
+
   return (
     <Box w='100%'>
       {error && <Text color='tomato'>{error}</Text>}
@@ -98,6 +86,8 @@ const EditRequestList: React.FC<EditRequestListProps> = ({
           </Box>
         );
       })}
+      {loading && <Spinner />}
+      <div ref={ref}></div>
     </Box>
   );
 };
